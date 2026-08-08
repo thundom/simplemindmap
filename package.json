@@ -1,12 +1,13 @@
 {
   "name": "simplemindmap",
   "productName": "Simple Mindmap",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Interactive mindmap editor — collapsible tree, branch colors, Markdown/JSON import-export, PDF output",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder --win"
+    "dist": "electron-builder --win",
+    "test": "node i18n-check.js"
   },
   "author": "Jarvis Qi",
   "license": "MIT",

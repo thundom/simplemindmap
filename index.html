@@ -66,7 +66,8 @@
   html, body { height: 100%; }
   body {
     margin: 0;
-    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB",
+      "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", system-ui, sans-serif;
     background: var(--bg);
     color: var(--ink);
   }
@@ -120,6 +121,7 @@
   .btn.danger:hover { border-color: var(--danger); color: var(--danger); }
   .btn.on { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); border-color: var(--accent); color: var(--accent); }
   .btn.sm { font-size: 11.5px; padding: 3px 8px; }
+  select.btn { padding-right: 6px; }
   .sep { width: 1px; height: 22px; background: var(--line); }
 
   .hint {
@@ -148,6 +150,7 @@
 
   /* ---------- color palette ---------- */
   .pal { display: flex; align-items: center; gap: 7px; }
+  .pal[hidden] { display: none; }
   .pal .pal-label { font-size: 12px; color: var(--ink-soft); }
   .sw {
     width: 20px; height: 20px; padding: 0;
@@ -216,13 +219,15 @@
   .doc-name { font-size: 13px; font-weight: 600; overflow-wrap: break-word; }
   .doc-name[contenteditable="true"] { outline: none; border-bottom: 1px dashed var(--accent); cursor: text; }
   .doc-meta {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 4px 8px; flex-wrap: wrap;
     font-size: 11px; color: var(--ink-soft); margin-top: 3px;
     font-variant-numeric: tabular-nums;
   }
+  .doc-meta > span:first-child { white-space: nowrap; }
   .doc-acts { display: flex; gap: 6px; margin-left: auto; }
   .doc-act {
     font: inherit; font-size: 11px; padding: 0 5px;
+    white-space: nowrap;
     border: 1px solid transparent; border-radius: 4px;
     background: none; color: var(--ink-soft); cursor: pointer;
   }
@@ -425,14 +430,14 @@
 
 <div class="app">
   <div class="strip" id="roBar" hidden>
-    <span><b>只读分享视图</b> — 这是别人分享给你的导图。你可以查看、折叠和导出，但改动不会保存，也不会影响分享者。</span>
+    <span><b data-i18n="roTitle"></b> — <span data-i18n="roBody"></span></span>
     <span class="grow"></span>
-    <button class="btn" id="btnFork">复制一份来编辑</button>
+    <button class="btn" id="btnFork" data-i18n="fork"></button>
   </div>
   <div class="strip" id="webNote" hidden>
-    <span><b>提示</b> — 导图保存在你当前这个浏览器里，不会上传到服务器；换设备或清除浏览数据后不保留。需要跨设备请用「备份」导出 JSON，在另一端「导入」。</span>
+    <span><b data-i18n="noteTitle"></b> — <span data-i18n="noteBody"></span></span>
     <span class="grow"></span>
-    <button class="btn sm" id="btnDismissNote">知道了</button>
+    <button class="btn sm" id="btnDismissNote" data-i18n="gotIt"></button>
   </div>
 
   <div class="bar">
@@ -442,55 +447,55 @@
     </div>
     <div class="grow"></div>
     <div class="btns">
-      <button class="btn" id="btnDrawer" title="打开保存的导图列表">我的导图</button>
-      <button class="btn" id="btnSave" title="保存当前导图">保存</button>
-      <button class="btn" id="btnShare" title="生成只读分享链接">分享</button>
+      <select class="btn" id="langSel" aria-label="Language">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+      </select>
       <span class="sep"></span>
-      <button class="btn" id="btnNew" title="新建一张空白思维导图">新建</button>
-      <button class="btn" id="btnImport" title="导入 Markdown 或 JSON 备份">导入</button>
-      <button class="btn" id="btnMd" title="导出为 Markdown 文件">导出 MD</button>
-      <button class="btn" id="btnBackup" title="下载 JSON 备份（含颜色与折叠状态）">备份</button>
+      <button class="btn" id="btnDrawer" data-i18n="myMaps" data-i18n-title="myMapsTip"></button>
+      <button class="btn" id="btnSave" data-i18n="save" data-i18n-title="saveTip"></button>
+      <button class="btn" id="btnShare" data-i18n="share" data-i18n-title="shareTip"></button>
       <span class="sep"></span>
-      <button class="btn" id="btnExpand">展开</button>
-      <button class="btn" id="btnCollapse">折叠</button>
+      <button class="btn" id="btnNew" data-i18n="newMap" data-i18n-title="newMapTip"></button>
+      <button class="btn" id="btnImport" data-i18n="importBtn" data-i18n-title="importTip"></button>
+      <button class="btn" id="btnMd" data-i18n="exportMd" data-i18n-title="exportMdTip"></button>
+      <button class="btn" id="btnBackup" data-i18n="backup" data-i18n-title="backupTip"></button>
+      <span class="sep"></span>
+      <button class="btn" id="btnExpand" data-i18n="expand"></button>
+      <button class="btn" id="btnCollapse" data-i18n="collapse"></button>
       <span class="sep" id="sepEdit"></span>
-      <button class="btn" id="btnChild">＋ 子节点</button>
-      <button class="btn" id="btnSibling">＋ 同级</button>
-      <button class="btn danger" id="btnDel">删除</button>
+      <button class="btn" id="btnChild" data-i18n="addChild"></button>
+      <button class="btn" id="btnSibling" data-i18n="addSibling"></button>
+      <button class="btn danger" id="btnDel" data-i18n="del"></button>
       <span class="sep"></span>
-      <button class="btn" id="btnReset" title="载入内置的 EBA 合规规则库示例">载入示例</button>
-      <button class="btn primary" id="btnPdf">导出 PDF</button>
+      <button class="btn" id="btnReset" data-i18n="loadSample" data-i18n-title="loadSampleTip"></button>
+      <button class="btn primary" id="btnPdf" data-i18n="exportPdf"></button>
     </div>
   </div>
 
   <div class="strip" id="sharePanel" hidden>
-    <span>只读链接</span>
-    <input id="shareUrl" readonly aria-label="只读分享链接">
-    <button class="btn sm" id="btnCopyShare">复制</button>
+    <span data-i18n="shareLabel"></span>
+    <input id="shareUrl" readonly aria-label="Share link">
+    <button class="btn sm" id="btnCopyShare" data-i18n="copy"></button>
     <span id="shareSize"></span>
-    <button class="btn sm" id="btnCloseShare">关闭</button>
+    <button class="btn sm" id="btnCloseShare" data-i18n="close"></button>
   </div>
 
   <div class="hint" id="hintBar">
-    <span>
-      <b>双击</b> 编辑 ·
-      <b>拖动</b> 节点可换父级、调顺序，拖到中心节点左半边即移到左侧 ·
-      <b>Tab</b> 子节点 ·
-      <b>Enter</b> 同级 ·
-      <b>Delete</b> 删除
-    </span>
+    <span id="hintText"></span>
     <span class="grow"></span>
     <span class="pal" id="palette">
-      <span class="pal-label">所选分支颜色</span>
+      <span class="pal-label" data-i18n="palLabel"></span>
     </span>
   </div>
 
   <div class="body">
     <aside class="drawer closed" id="drawer">
       <div class="drawer-head">
-        <h2>我的导图</h2>
+        <h2 data-i18n="myMaps"></h2>
         <span class="grow"></span>
-        <button class="btn sm" id="btnSaveAs" title="把当前导图另存为一条新记录">另存为</button>
+        <button class="btn sm" id="btnSaveAs" data-i18n="saveAs" data-i18n-title="saveAsTip"></button>
       </div>
       <div class="drawer-note" id="drawerNote"></div>
       <ul class="doc-list" id="docList"></ul>
@@ -506,6 +511,325 @@
 <script>
 (function () {
   "use strict";
+
+  /* ---------- translations ---------- */
+  var I18N = {
+    en: {
+      langName: "English",
+      myMaps: "My maps",
+      myMapsTip: "Show the list of saved maps",
+      save: "Save",
+      saveTip: "Save the current map",
+      saveAs: "Save as new",
+      saveAsTip: "Store the current map as a separate entry",
+      share: "Share",
+      shareTip: "Create a read-only link",
+      newMap: "New",
+      newMapTip: "Start a blank mindmap",
+      importBtn: "Import",
+      importTip: "Import Markdown or a JSON backup",
+      exportMd: "Export MD",
+      exportMdTip: "Export as a Markdown file",
+      backup: "Backup",
+      backupTip: "Download a JSON backup including colours and collapse state",
+      expand: "Expand",
+      collapse: "Collapse",
+      addChild: "＋ Child",
+      addSibling: "＋ Sibling",
+      del: "Delete",
+      loadSample: "Load sample",
+      loadSampleTip: "Load the bundled EBA compliance rule library",
+      exportPdf: "Export PDF",
+      rename: "Rename",
+      removeDoc: "Delete",
+      hint: "<b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it on the left half of the centre node to move that branch to the left · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes",
+      palLabel: "Branch colour",
+      colorDefault: "Default",
+      colorDefaultTip: "Reset to the inherited colour",
+      cTeal: "Teal", cBlue: "Blue", cIndigo: "Indigo", cSteel: "Steel blue",
+      cGreen: "Green", cOrange: "Orange", cCoral: "Coral", cPlum: "Plum",
+      cPurple: "Purple", cSlate: "Slate",
+      roTitle: "Read-only shared view",
+      roBody: "Someone shared this map with you. You can view, collapse and export it, but your changes are not saved and never reach the sender.",
+      fork: "Copy it to edit",
+      noteTitle: "Note",
+      noteBody: "Maps are stored in this browser only and are never uploaded. They do not follow you to another device and are lost if you clear browsing data. To move one, use Backup to export JSON and Import at the other end.",
+      gotIt: "Got it",
+      shareLabel: "Read-only link",
+      copy: "Copy",
+      close: "Close",
+      chars: function (n) { return n.toLocaleString() + " characters"; },
+      noteWeb: "Stored in this browser only, never uploaded. Not carried to other devices and lost if you clear browsing data — export anything important with Backup.",
+      folderLabel: "Save location",
+      changeFolder: "Change location",
+      openFolder: "Open folder",
+      emptyWeb: "No saved maps yet. Click Save to store the current one.",
+      emptyDesktop: "No maps in this folder yet. Click Save to store the current one as a .json file.",
+      docMeta: function (when, nodes) { return when + " · " + nodes + " nodes"; },
+      stats: function (name, nodes, branches) { return name + " · " + nodes + " nodes · " + branches + " main branches"; },
+      pExportDate: function (date) { return "Exported " + date; },
+      pMeta: function (nodes, branches) { return nodes + " nodes · " + branches + " main branches"; },
+      defNewMap: "New mindmap",
+      defNewNode: "New node",
+      defImported: "Imported mindmap",
+      tSaved: function (name) { return "Saved “" + name + "” to My maps"; },
+      tUpdated: function (name) { return "Updated “" + name + "”"; },
+      tSavedFile: function (file) { return "Saved as " + file; },
+      tOpened: function (name) { return "Opened “" + name + "”"; },
+      tRenamed: function (name) { return "Renamed to “" + name + "”"; },
+      tDeletedDoc: function (name) { return "Deleted “" + name + "”"; },
+      tTrashed: function (name) { return "Moved to the recycle bin: " + name; },
+      tWriteFail: "Could not write the file — check the folder's permissions",
+      tRenameFail: "Rename failed",
+      tDeleteFail: "Could not delete the file",
+      tListFail: "Could not read the save folder — check that it still exists",
+      tFolderChanged: function (folder) { return "Save location changed to " + folder; },
+      tPickFail: "Could not open the folder picker",
+      tStorageFull: "Browser storage is full — nothing was saved",
+      tDeletedNode: function (name) { return "Deleted “" + name + "”"; },
+      tConfirmDelete: function (n) { return "This node has " + n + " descendants. Click delete again to confirm."; },
+      tRootNoDelete: "The centre node cannot be deleted",
+      tConfirmNew: "New will clear the canvas — save first if you need it. Click again to confirm.",
+      tConfirmReset: "This replaces the current map with the bundled sample. Click again to confirm.",
+      tConfirmDeleteDoc: function (name) { return "Delete “" + name + "”? Click again to confirm."; },
+      tSampleLoaded: "Loaded the EBA compliance rule library sample",
+      tImported: function (name, n) { return "Imported “" + name + "” — " + n + " nodes"; },
+      tImportFail: "Unrecognised file: expected a Markdown list or a JSON backup from this app",
+      tReadFail: "Could not read the file, please try again",
+      tMdExported: "Markdown exported (colours are not included — use Backup for those)",
+      tBackupExported: "JSON backup downloaded, including colours and collapse state",
+      tPdfHint: "Choose “Save as PDF” in the print dialog",
+      tMoved: function (name) { return "Moved “" + name + "”"; },
+      tNoCycle: "A node cannot be moved inside its own subtree",
+      tPickBranchFirst: "Select a branch node first (the centre node has no colour)",
+      tShareCopied: "Read-only link copied to the clipboard",
+      tShareManual: "Link ready — copy it manually",
+      tShareLong: function (n) { return "Link created but long (" + n + " characters); some chat apps truncate it — use a JSON backup if needed"; },
+      tShareFail: "Could not create the share link",
+      tCopied: "Copied",
+      tCopyFail: "Copy failed — please select and copy manually",
+      tShareBroken: "That share link is damaged or incomplete — showing your own map instead",
+      tForked: "Now an editable copy — click Save to keep it",
+      tReadOnlyGuard: "Read-only shared view — click “Copy it to edit” first"
+    },
+    zh: {
+      langName: "中文",
+      myMaps: "我的导图",
+      myMapsTip: "打开保存的导图列表",
+      save: "保存",
+      saveTip: "保存当前导图",
+      saveAs: "另存为",
+      saveAsTip: "把当前导图另存为一条新记录",
+      share: "分享",
+      shareTip: "生成只读分享链接",
+      newMap: "新建",
+      newMapTip: "新建一张空白思维导图",
+      importBtn: "导入",
+      importTip: "导入 Markdown 或 JSON 备份",
+      exportMd: "导出 MD",
+      exportMdTip: "导出为 Markdown 文件",
+      backup: "备份",
+      backupTip: "下载 JSON 备份（含颜色与折叠状态）",
+      expand: "展开",
+      collapse: "折叠",
+      addChild: "＋ 子节点",
+      addSibling: "＋ 同级",
+      del: "删除",
+      loadSample: "载入示例",
+      loadSampleTip: "载入内置的 EBA 合规规则库示例",
+      exportPdf: "导出 PDF",
+      rename: "重命名",
+      removeDoc: "删除",
+      hint: "<b>双击</b> 编辑 · <b>拖动</b> 节点可换父级、调顺序，拖到中心节点左半边即移到左侧 · <b>Tab</b> 子节点 · <b>Enter</b> 同级 · <b>Delete</b> 删除",
+      palLabel: "所选分支颜色",
+      colorDefault: "默认",
+      colorDefaultTip: "恢复默认 / 跟随上级颜色",
+      cTeal: "青绿", cBlue: "蓝", cIndigo: "靛蓝", cSteel: "青蓝",
+      cGreen: "绿", cOrange: "橙", cCoral: "珊瑚红", cPlum: "梅红",
+      cPurple: "紫", cSlate: "灰蓝",
+      roTitle: "只读分享视图",
+      roBody: "这是别人分享给你的导图。你可以查看、折叠和导出，但改动不会保存，也不会影响分享者。",
+      fork: "复制一份来编辑",
+      noteTitle: "提示",
+      noteBody: "导图保存在你当前这个浏览器里，不会上传到服务器；换设备或清除浏览数据后不保留。需要跨设备请用「备份」导出 JSON，在另一端「导入」。",
+      gotIt: "知道了",
+      shareLabel: "只读链接",
+      copy: "复制",
+      close: "关闭",
+      chars: function (n) { return n.toLocaleString() + " 字符"; },
+      noteWeb: "保存在本浏览器中，不上传服务器。换设备或清除浏览数据后不保留——重要内容请用「备份」导出 JSON。",
+      folderLabel: "保存位置",
+      changeFolder: "更改位置",
+      openFolder: "打开文件夹",
+      emptyWeb: "还没有保存的导图。点「保存」把当前这张存进来。",
+      emptyDesktop: "这个文件夹里还没有导图。点「保存」把当前这张存成 .json 文件。",
+      docMeta: function (when, nodes) { return when + " · " + nodes + " 节点"; },
+      stats: function (name, nodes, branches) { return name + " · 共 " + nodes + " 个节点 · " + branches + " 个一级分支"; },
+      pExportDate: function (date) { return "导出日期 " + date; },
+      pMeta: function (nodes, branches) { return "共 " + nodes + " 个节点 · " + branches + " 个一级分支"; },
+      defNewMap: "新思维导图",
+      defNewNode: "新节点",
+      defImported: "导入的思维导图",
+      tSaved: function (name) { return "已保存「" + name + "」到我的导图"; },
+      tUpdated: function (name) { return "已更新「" + name + "」"; },
+      tSavedFile: function (file) { return "已保存为 " + file; },
+      tOpened: function (name) { return "已打开「" + name + "」"; },
+      tRenamed: function (name) { return "已重命名为「" + name + "」"; },
+      tDeletedDoc: function (name) { return "已删除「" + name + "」"; },
+      tTrashed: function (name) { return "已移到回收站：" + name; },
+      tWriteFail: "写入文件失败，请检查保存位置的权限",
+      tRenameFail: "重命名失败",
+      tDeleteFail: "删除文件失败",
+      tListFail: "读取保存目录失败，请检查该位置是否存在",
+      tFolderChanged: function (folder) { return "保存位置已改为 " + folder; },
+      tPickFail: "无法打开文件夹选择器",
+      tStorageFull: "浏览器存储空间不足，未能保存",
+      tDeletedNode: function (name) { return "已删除「" + name + "」"; },
+      tConfirmDelete: function (n) { return "该节点含 " + n + " 个子节点，再次点击删除以确认"; },
+      tRootNoDelete: "根节点不能删除",
+      tConfirmNew: "新建将清空当前画布（可先点「保存」存起来），再次点击确认",
+      tConfirmReset: "将载入内置示例并覆盖当前内容，再次点击确认",
+      tConfirmDeleteDoc: function (name) { return "确定删除「" + name + "」？再次点击确认"; },
+      tSampleLoaded: "已载入 EBA 合规规则库示例",
+      tImported: function (name, n) { return "已导入「" + name + "」，共 " + n + " 个节点"; },
+      tImportFail: "无法识别文件内容：需要 Markdown 列表或本应用的 JSON 备份",
+      tReadFail: "读取文件失败，请重试",
+      tMdExported: "已导出 Markdown（不含颜色；完整备份请用 JSON）",
+      tBackupExported: "已下载 JSON 备份，含颜色与折叠状态",
+      tPdfHint: "在打印对话框中选择「另存为 PDF」",
+      tMoved: function (name) { return "已移动「" + name + "」"; },
+      tNoCycle: "不能把节点移动到它自己的子树里",
+      tPickBranchFirst: "请先选中一个分支节点（根节点不着色）",
+      tShareCopied: "只读链接已复制到剪贴板",
+      tShareManual: "链接已生成，请手动复制",
+      tShareLong: function (n) { return "链接已生成但较长（" + n + " 字符），部分聊天工具可能截断，必要时改用 JSON 备份"; },
+      tShareFail: "生成分享链接失败",
+      tCopied: "已复制",
+      tCopyFail: "复制失败，请手动选择复制",
+      tShareBroken: "分享链接已损坏或不完整，显示的是你自己的导图",
+      tForked: "已转为可编辑副本，点「保存」可存起来",
+      tReadOnlyGuard: "只读分享视图，请先点「复制一份来编辑」"
+    },
+    ja: {
+      langName: "日本語",
+      myMaps: "マイマップ",
+      myMapsTip: "保存したマップの一覧を開く",
+      save: "保存",
+      saveTip: "現在のマップを保存",
+      saveAs: "別名で保存",
+      saveAsTip: "現在のマップを新しい項目として保存",
+      share: "共有",
+      shareTip: "読み取り専用リンクを作成",
+      newMap: "新規",
+      newMapTip: "空のマインドマップを作成",
+      importBtn: "読み込み",
+      importTip: "Markdown または JSON バックアップを読み込む",
+      exportMd: "MD 書き出し",
+      exportMdTip: "Markdown ファイルとして書き出す",
+      backup: "バックアップ",
+      backupTip: "色と折りたたみ状態を含む JSON をダウンロード",
+      expand: "展開",
+      collapse: "折りたたむ",
+      addChild: "＋ 子ノード",
+      addSibling: "＋ 兄弟",
+      del: "削除",
+      loadSample: "サンプル",
+      loadSampleTip: "内蔵の EBA コンプライアンス規則サンプルを読み込む",
+      exportPdf: "PDF 書き出し",
+      rename: "名称変更",
+      removeDoc: "削除",
+      hint: "<b>ダブルクリック</b>で編集 · <b>ドラッグ</b>で親子関係や並び順を変更、中心ノードの左半分にドロップするとそのブランチが左側へ移動 · <b>Tab</b> 子ノード · <b>Enter</b> 兄弟 · <b>Delete</b> 削除",
+      palLabel: "ブランチの色",
+      colorDefault: "既定",
+      colorDefaultTip: "継承した色に戻す",
+      cTeal: "ティール", cBlue: "ブルー", cIndigo: "インディゴ", cSteel: "スチールブルー",
+      cGreen: "グリーン", cOrange: "オレンジ", cCoral: "コーラル", cPlum: "プラム",
+      cPurple: "パープル", cSlate: "スレート",
+      roTitle: "読み取り専用の共有ビュー",
+      roBody: "共有されたマップです。閲覧・折りたたみ・書き出しはできますが、変更は保存されず、共有した人にも反映されません。",
+      fork: "コピーして編集",
+      noteTitle: "お知らせ",
+      noteBody: "マップはこのブラウザー内にのみ保存され、サーバーへ送信されることはありません。別の端末には引き継がれず、閲覧データを消去すると失われます。移す場合は「バックアップ」で JSON を書き出し、移行先で「読み込み」してください。",
+      gotIt: "了解",
+      shareLabel: "読み取り専用リンク",
+      copy: "コピー",
+      close: "閉じる",
+      chars: function (n) { return n.toLocaleString() + " 文字"; },
+      noteWeb: "このブラウザー内にのみ保存され、アップロードされません。他の端末には引き継がれず、閲覧データの消去で失われます — 大切なものは「バックアップ」で書き出してください。",
+      folderLabel: "保存先",
+      changeFolder: "場所を変更",
+      openFolder: "フォルダーを開く",
+      emptyWeb: "保存されたマップはまだありません。「保存」で現在のマップを保存できます。",
+      emptyDesktop: "このフォルダーにはまだマップがありません。「保存」で .json ファイルとして保存できます。",
+      docMeta: function (when, nodes) { return when + " · " + nodes + " ノード"; },
+      stats: function (name, nodes, branches) { return name + " · " + nodes + " ノード · メインブランチ " + branches + " 本"; },
+      pExportDate: function (date) { return "書き出し日 " + date; },
+      pMeta: function (nodes, branches) { return nodes + " ノード · メインブランチ " + branches + " 本"; },
+      defNewMap: "新しいマインドマップ",
+      defNewNode: "新しいノード",
+      defImported: "読み込んだマインドマップ",
+      tSaved: function (name) { return "「" + name + "」をマイマップに保存しました"; },
+      tUpdated: function (name) { return "「" + name + "」を更新しました"; },
+      tSavedFile: function (file) { return file + " として保存しました"; },
+      tOpened: function (name) { return "「" + name + "」を開きました"; },
+      tRenamed: function (name) { return "「" + name + "」に名前を変更しました"; },
+      tDeletedDoc: function (name) { return "「" + name + "」を削除しました"; },
+      tTrashed: function (name) { return "ごみ箱に移動しました：" + name; },
+      tWriteFail: "ファイルを書き込めませんでした。保存先の権限を確認してください",
+      tRenameFail: "名前の変更に失敗しました",
+      tDeleteFail: "ファイルを削除できませんでした",
+      tListFail: "保存フォルダーを読み込めませんでした。場所が存在するか確認してください",
+      tFolderChanged: function (folder) { return "保存先を " + folder + " に変更しました"; },
+      tPickFail: "フォルダー選択ダイアログを開けませんでした",
+      tStorageFull: "ブラウザーの保存容量が不足しているため保存できませんでした",
+      tDeletedNode: function (name) { return "「" + name + "」を削除しました"; },
+      tConfirmDelete: function (n) { return "このノードには " + n + " 個の子孫があります。もう一度クリックすると削除します"; },
+      tRootNoDelete: "中心ノードは削除できません",
+      tConfirmNew: "新規作成すると現在の内容が消えます（先に「保存」できます）。もう一度クリックで確定",
+      tConfirmReset: "現在の内容を内蔵サンプルで置き換えます。もう一度クリックで確定",
+      tConfirmDeleteDoc: function (name) { return "「" + name + "」を削除しますか？もう一度クリックで確定"; },
+      tSampleLoaded: "EBA コンプライアンス規則のサンプルを読み込みました",
+      tImported: function (name, n) { return "「" + name + "」を読み込みました（" + n + " ノード）"; },
+      tImportFail: "ファイルを認識できません：Markdown のリストか、このアプリの JSON バックアップが必要です",
+      tReadFail: "ファイルを読み込めませんでした。もう一度お試しください",
+      tMdExported: "Markdown を書き出しました（色は含まれません。完全な保存は JSON をご利用ください）",
+      tBackupExported: "色と折りたたみ状態を含む JSON バックアップをダウンロードしました",
+      tPdfHint: "印刷ダイアログで「PDF として保存」を選んでください",
+      tMoved: function (name) { return "「" + name + "」を移動しました"; },
+      tNoCycle: "ノードを自分の子孫の中へ移動することはできません",
+      tPickBranchFirst: "先にブランチノードを選択してください（中心ノードには色を設定できません）",
+      tShareCopied: "読み取り専用リンクをクリップボードにコピーしました",
+      tShareManual: "リンクを作成しました。手動でコピーしてください",
+      tShareLong: function (n) { return "リンクを作成しましたが長め（" + n + " 文字）です。チャットアプリで切れる場合は JSON バックアップをご利用ください"; },
+      tShareFail: "共有リンクを作成できませんでした",
+      tCopied: "コピーしました",
+      tCopyFail: "コピーに失敗しました。手動で選択してコピーしてください",
+      tShareBroken: "共有リンクが壊れているか不完全です。ご自身のマップを表示しています",
+      tForked: "編集可能なコピーになりました。「保存」で保存できます",
+      tReadOnlyGuard: "読み取り専用の共有ビューです。先に「コピーして編集」を押してください"
+    }
+  };
+
+  var LANG_STORE = "simplemindmap-lang-v1";
+  var lang = "en";
+
+  function t(key) {
+    var dict = I18N[lang] || I18N.en;
+    var v = dict[key];
+    if (v === undefined) v = I18N.en[key];
+    if (typeof v === "function") return v.apply(null, [].slice.call(arguments, 1));
+    return v;
+  }
+  function detectLang() {
+    try {
+      var stored = localStorage.getItem(LANG_STORE);
+      if (stored && I18N[stored]) return stored;
+    } catch (e) { /* storage unavailable */ }
+    var nav = (navigator.language || "en").toLowerCase();
+    if (nav.indexOf("zh") === 0) return "zh";
+    if (nav.indexOf("ja") === 0) return "ja";
+    return "en";
+  }
 
   var DEFAULT = ["EBA Compliance Rule Library", [
     ["A. 规则来源与优先级", [
@@ -535,18 +859,17 @@
     ]]
   ]];
 
-  /* comfortable mainstream colors; hex values live in CSS vars per theme */
   var PALETTE = [
-    { k: "teal",   n: "青绿" },
-    { k: "blue",   n: "蓝" },
-    { k: "indigo", n: "靛蓝" },
-    { k: "steel",  n: "青蓝" },
-    { k: "green",  n: "绿" },
-    { k: "orange", n: "橙" },
-    { k: "coral",  n: "珊瑚红" },
-    { k: "plum",   n: "梅红" },
-    { k: "purple", n: "紫" },
-    { k: "slate",  n: "灰蓝" }
+    { k: "teal",   n: "cTeal" },
+    { k: "blue",   n: "cBlue" },
+    { k: "indigo", n: "cIndigo" },
+    { k: "steel",  n: "cSteel" },
+    { k: "green",  n: "cGreen" },
+    { k: "orange", n: "cOrange" },
+    { k: "coral",  n: "cCoral" },
+    { k: "plum",   n: "cPlum" },
+    { k: "purple", n: "cPurple" },
+    { k: "slate",  n: "cSlate" }
   ];
   var DEFAULT_KEYS = ["teal", "indigo", "orange", "plum", "green", "purple"];
   var PRINT_HEX = {
@@ -575,11 +898,13 @@
   }
   function revive(o) {
     o.id = "n" + (uid++);
-    if (typeof o.text !== "string") o.text = String(o.text || "节点");
+    if (typeof o.text !== "string") o.text = String(o.text || "node");
     if (!Array.isArray(o.children)) o.children = [];
     o.children.forEach(revive);
     return o;
   }
+
+  lang = detectLang();
 
   var root;
   try {
@@ -644,7 +969,7 @@
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   }
   function guard() {
-    if (readOnly) { toast("只读分享视图，请先点「复制一份来编辑」"); return true; }
+    if (readOnly) { toast(t("tReadOnlyGuard")); return true; }
     return false;
   }
 
@@ -722,7 +1047,7 @@
     if (node.children.length) {
       var tg = document.createElement("button");
       tg.className = "toggle";
-      tg.title = node.collapsed ? "展开" : "折叠";
+      tg.title = node.collapsed ? t("expand") : t("collapse");
       tg.textContent = node.collapsed ? String(countNodes(node) - 1) : "−";
       tg.draggable = false;
       tg.addEventListener("click", function (e) {
@@ -737,12 +1062,12 @@
       var ops = document.createElement("span");
       ops.className = "ops";
       var addBtn = document.createElement("button");
-      addBtn.className = "op"; addBtn.textContent = "+"; addBtn.title = "添加子节点";
+      addBtn.className = "op"; addBtn.textContent = "+"; addBtn.title = t("addChild");
       addBtn.addEventListener("click", function (e) { e.stopPropagation(); addChild(node.id); });
       ops.appendChild(addBtn);
       if (depth > 0) {
         var delBtn = document.createElement("button");
-        delBtn.className = "op del"; delBtn.textContent = "×"; delBtn.title = "删除节点";
+        delBtn.className = "op del"; delBtn.textContent = "×"; delBtn.title = t("del");
         delBtn.addEventListener("click", function (e) { e.stopPropagation(); removeNode(node.id); });
         ops.appendChild(delBtn);
       }
@@ -822,7 +1147,7 @@
     treeEl.textContent = "";
     treeEl.appendChild(renderRoot());
     document.getElementById("stats").textContent =
-      root.text + " · 共 " + countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支";
+      t("stats", root.text, countNodes(root), root.children.length);
     document.title = root.text + " · Simple Mindmap";
     updatePalette();
   }
@@ -896,7 +1221,7 @@
     if (guard()) return;
     var src = findNode(srcId), tgt = findNode(targetId);
     if (!src || !tgt || !src.parent) return;
-    if (contains(src.node, tgt.node)) { toast("不能把节点移动到它自己的子树里"); return; }
+    if (contains(src.node, tgt.node)) { toast(t("tNoCycle")); return; }
 
     var prev = snapshot();
     src.parent.children.splice(src.parent.children.indexOf(src.node), 1);
@@ -922,7 +1247,7 @@
 
     selectedId = src.node.id;
     save(); render(); flip(prev); fadeLines();
-    toast("已移动「" + src.node.text + "」");
+    toast(t("tMoved", src.node.text));
   }
 
   /* ---------- color palette ---------- */
@@ -931,23 +1256,20 @@
     var sw = document.createElement("button");
     sw.className = "sw";
     sw.dataset.key = p.k;
-    sw.title = p.n;
-    sw.setAttribute("aria-label", "颜色：" + p.n);
+    sw.dataset.name = p.n;
     sw.style.setProperty("--sc", "var(--c-" + p.k + ")");
     sw.addEventListener("click", function () { applyColor(p.k); });
     palEl.appendChild(sw);
   });
   var clearBtn = document.createElement("button");
   clearBtn.className = "sw-clear";
-  clearBtn.textContent = "默认";
-  clearBtn.title = "恢复默认 / 跟随上级颜色";
   clearBtn.addEventListener("click", function () { applyColor(null); });
   palEl.appendChild(clearBtn);
 
   function applyColor(key) {
     if (guard()) return;
     var r = findNode(selectedId);
-    if (!r || !r.parent) { toast("请先选中一个分支节点（根节点不着色）"); return; }
+    if (!r || !r.parent) { toast(t("tPickBranchFirst")); return; }
     if (key) r.node.color = key; else delete r.node.color;
     save(); render();
   }
@@ -997,7 +1319,7 @@
     if (guard()) return;
     var r = findNode(id || selectedId);
     if (!r) return;
-    var n = { id: "n" + (uid++), text: "新节点", collapsed: false, children: [] };
+    var n = { id: "n" + (uid++), text: t("defNewNode"), collapsed: false, children: [] };
     r.node.collapsed = false;
     r.node.children.push(n);
     selectedId = n.id;
@@ -1008,7 +1330,7 @@
     var r = findNode(id || selectedId);
     if (!r) return;
     if (!r.parent) { addChild(root.id); return; }
-    var n = { id: "n" + (uid++), text: "新节点", collapsed: false, children: [] };
+    var n = { id: "n" + (uid++), text: t("defNewNode"), collapsed: false, children: [] };
     if (r.parent === root && r.node.side === "left") n.side = "left";
     var idx = r.parent.children.indexOf(r.node);
     r.parent.children.splice(idx + 1, 0, n);
@@ -1020,16 +1342,16 @@
     id = id || selectedId;
     var r = findNode(id);
     if (!r) return;
-    if (!r.parent) { toast("根节点不能删除"); return; }
+    if (!r.parent) { toast(t("tRootNoDelete")); return; }
     var kids = countNodes(r.node) - 1;
-    if (kids > 0 && !confirmTwice("del:" + id, "该节点含 " + kids + " 个子节点，再次点击删除以确认")) return;
+    if (kids > 0 && !confirmTwice("del:" + id, t("tConfirmDelete", kids))) return;
     var idx = r.parent.children.indexOf(r.node);
     r.parent.children.splice(idx, 1);
     selectedId = r.parent.children[Math.min(idx, r.parent.children.length - 1)]
       ? r.parent.children[Math.min(idx, r.parent.children.length - 1)].id
       : r.parent.id;
     save(); animatedRender();
-    toast("已删除「" + r.node.text + "」");
+    toast(t("tDeletedNode", r.node.text));
   }
   function setAll(node, collapsed) {
     if (node.children.length) node.collapsed = collapsed;
@@ -1070,7 +1392,7 @@
         renderLibrary();
       }, function () {
         library = []; renderLibrary();
-        toast("读取保存目录失败，请检查该位置是否存在");
+        toast(t("tListFail"));
       });
     }
     try { library = JSON.parse(localStorage.getItem(LIB_STORE)) || []; } catch (e) { library = []; }
@@ -1080,7 +1402,7 @@
   }
   function libPersistWeb() {
     try { localStorage.setItem(LIB_STORE, JSON.stringify(library)); }
-    catch (e) { toast("浏览器存储空间不足，未能保存"); }
+    catch (e) { toast(t("tStorageFull")); }
     persistActive();
   }
 
@@ -1089,30 +1411,30 @@
     if (IS_DESKTOP) {
       var lab = document.createElement("span");
       lab.className = "folder-label";
-      lab.textContent = "保存位置";
+      lab.textContent = t("folderLabel");
       var p = document.createElement("code");
       p.className = "folder-path";
-      p.textContent = desktopFolder || "读取中…";
+      p.textContent = desktopFolder || "…";
       var acts = document.createElement("div");
       acts.className = "folder-acts";
       var change = document.createElement("button");
-      change.className = "btn sm"; change.textContent = "更改位置";
+      change.className = "btn sm"; change.textContent = t("changeFolder");
       change.addEventListener("click", function () {
         window.desktop.pickFolder().then(function (res) {
           desktopFolder = res.folder;
           renderDrawerNote();
-          if (res.changed) { activeDocId = null; persistActive(); toast("保存位置已改为 " + res.folder); }
+          if (res.changed) { activeDocId = null; persistActive(); toast(t("tFolderChanged", res.folder)); }
           libLoad();
-        }, function () { toast("无法打开文件夹选择器"); });
+        }, function () { toast(t("tPickFail")); });
       });
       var open = document.createElement("button");
-      open.className = "btn sm"; open.textContent = "打开文件夹";
+      open.className = "btn sm"; open.textContent = t("openFolder");
       open.addEventListener("click", function () { window.desktop.reveal(); });
       acts.appendChild(change); acts.appendChild(open);
       noteEl.appendChild(lab); noteEl.appendChild(p); noteEl.appendChild(acts);
       return;
     }
-    noteEl.textContent = "保存在本浏览器中，不上传服务器。换设备或清除浏览数据后不保留——重要内容请用「备份」导出 JSON。";
+    noteEl.textContent = t("noteWeb");
   }
 
   function renderLibrary() {
@@ -1121,9 +1443,7 @@
     if (!library.length) {
       var li = document.createElement("li");
       li.className = "empty";
-      li.textContent = IS_DESKTOP
-        ? "这个文件夹里还没有导图。点「保存」把当前这张存成 .json 文件。"
-        : "还没有保存的导图。点「保存」把当前这张存进来。";
+      li.textContent = IS_DESKTOP ? t("emptyDesktop") : t("emptyWeb");
       docListEl.appendChild(li);
       return;
     }
@@ -1131,7 +1451,7 @@
       .forEach(function (doc) {
         var li = document.createElement("li");
         li.className = "doc" + (doc.id === activeDocId ? " active" : "");
-        li.title = IS_DESKTOP ? doc.file : "点击打开这张导图";
+        li.title = IS_DESKTOP ? doc.file : t("myMapsTip");
 
         var name = document.createElement("div");
         name.className = "doc-name";
@@ -1141,16 +1461,16 @@
         var meta = document.createElement("div");
         meta.className = "doc-meta";
         var when = document.createElement("span");
-        when.textContent = stamp(doc.savedAt) + " · " + countNodes(doc.tree) + " 节点";
+        when.textContent = t("docMeta", stamp(doc.savedAt), countNodes(doc.tree));
         meta.appendChild(when);
 
         var acts = document.createElement("span");
         acts.className = "doc-acts";
         var ren = document.createElement("button");
-        ren.className = "doc-act"; ren.textContent = "重命名";
+        ren.className = "doc-act"; ren.textContent = t("rename");
         ren.addEventListener("click", function (e) { e.stopPropagation(); renameDoc(doc, name); });
         var del = document.createElement("button");
-        del.className = "doc-act del"; del.textContent = "删除";
+        del.className = "doc-act del"; del.textContent = t("removeDoc");
         del.addEventListener("click", function (e) { e.stopPropagation(); deleteDoc(doc); });
         acts.appendChild(ren); acts.appendChild(del);
         meta.appendChild(acts);
@@ -1167,7 +1487,7 @@
     activeDocId = doc.id;
     if (readOnly) exitReadOnly();
     persistActive(); save(); render(); renderLibrary();
-    toast("已打开「" + doc.name + "」");
+    toast(t("tOpened", doc.name));
   }
   function renameDoc(doc, nameEl) {
     nameEl.contentEditable = "true";
@@ -1176,6 +1496,7 @@
     range.selectNodeContents(nameEl);
     var sel = window.getSelection();
     sel.removeAllRanges(); sel.addRange(range);
+
     var done = false;
     function commit(cancel) {
       if (done) return;
@@ -1187,8 +1508,8 @@
         window.desktop.rename(doc.file, v).then(function (res) {
           if (activeDocId === doc.id) { activeDocId = res.file; persistActive(); }
           libLoad();
-          toast("已重命名为「" + v + "」");
-        }, function () { toast("重命名失败"); libLoad(); });
+          toast(t("tRenamed", v));
+        }, function () { toast(t("tRenameFail")); libLoad(); });
         return;
       }
       doc.name = v;
@@ -1202,18 +1523,18 @@
     });
   }
   function deleteDoc(doc) {
-    if (!confirmTwice("doc:" + doc.id, "确定删除「" + doc.name + "」？再次点击确认")) return;
+    if (!confirmTwice("doc:" + doc.id, t("tConfirmDeleteDoc", doc.name))) return;
     if (activeDocId === doc.id) activeDocId = null;
     if (IS_DESKTOP) {
       window.desktop.remove(doc.file).then(function (res) {
         persistActive(); libLoad();
-        toast(res && res.trashed ? "已移到回收站：" + doc.name : "已删除文件：" + doc.name);
-      }, function () { toast("删除文件失败"); libLoad(); });
+        toast(res && res.trashed ? t("tTrashed", doc.name) : t("tDeletedDoc", doc.name));
+      }, function () { toast(t("tDeleteFail")); libLoad(); });
       return;
     }
     library = library.filter(function (d) { return d.id !== doc.id; });
     libPersistWeb(); renderLibrary();
-    toast("已删除「" + doc.name + "」");
+    toast(t("tDeletedDoc", doc.name));
   }
   function saveDoc(asNew) {
     if (guard()) return;
@@ -1227,8 +1548,8 @@
       window.desktop.write(file, name, stripIds(root)).then(function (res) {
         activeDocId = res.file;
         persistActive(); libLoad(); openDrawer();
-        toast(existing ? "已更新「" + name + "」" : "已保存为 " + res.file);
-      }, function () { toast("写入文件失败，请检查保存位置的权限"); });
+        toast(existing ? t("tUpdated", name) : t("tSavedFile", res.file));
+      }, function () { toast(t("tWriteFail")); });
       return;
     }
 
@@ -1236,7 +1557,7 @@
       existing.tree = stripIds(root);
       existing.savedAt = new Date().toISOString();
       libPersistWeb(); renderLibrary();
-      toast("已更新「" + existing.name + "」");
+      toast(t("tUpdated", existing.name));
       return;
     }
     var doc = {
@@ -1248,7 +1569,7 @@
     library.push(doc);
     activeDocId = doc.id;
     libPersistWeb(); renderLibrary(); openDrawer();
-    toast("已保存「" + doc.name + "」到我的导图");
+    toast(t("tSaved", doc.name));
   }
 
   btnDrawer.addEventListener("click", function () {
@@ -1300,8 +1621,8 @@
       });
     }
     return text.then(function (json) {
-      var t = JSON.parse(json);
-      return (t && typeof t.text === "string") ? t : null;
+      var tree = JSON.parse(json);
+      return (tree && typeof tree.text === "string") ? tree : null;
     }).catch(function () { return null; });
   }
 
@@ -1329,20 +1650,17 @@
         : SHARE_BASE;
       var url = base + "#" + frag;
       shareUrlEl.value = url;
-      document.getElementById("shareSize").textContent = url.length.toLocaleString() + " 字符";
+      document.getElementById("shareSize").textContent = t("chars", url.length);
       sharePanel.hidden = false;
       shareUrlEl.focus(); shareUrlEl.select();
       copyText(url).then(function (ok) {
-        if (url.length > 8000) {
-          toast("链接已生成但较长（" + url.length + " 字符），部分聊天工具可能截断，必要时改用 JSON 备份");
-        } else {
-          toast(ok ? "只读链接已复制到剪贴板" : "链接已生成，请手动复制");
-        }
+        if (url.length > 8000) toast(t("tShareLong", url.length));
+        else toast(ok ? t("tShareCopied") : t("tShareManual"));
       });
-    }, function () { toast("生成分享链接失败"); });
+    }, function () { toast(t("tShareFail")); });
   });
   document.getElementById("btnCopyShare").addEventListener("click", function () {
-    copyText(shareUrlEl.value).then(function (ok) { toast(ok ? "已复制" : "复制失败，请手动选择复制"); });
+    copyText(shareUrlEl.value).then(function (ok) { toast(ok ? t("tCopied") : t("tCopyFail")); });
   });
   document.getElementById("btnCloseShare").addEventListener("click", function () { sharePanel.hidden = true; });
 
@@ -1358,10 +1676,42 @@
     exitReadOnly();
     activeDocId = null;
     persistActive(); save(); render();
-    toast("已转为可编辑副本，点「保存」可存进我的导图");
+    toast(t("tForked"));
   });
 
-  /* ---------- mode wiring ---------- */
+  /* ---------- language & mode wiring ---------- */
+  var langSel = document.getElementById("langSel");
+  langSel.addEventListener("change", function () {
+    setLang(langSel.value);
+  });
+  function setLang(next) {
+    if (!I18N[next]) return;
+    lang = next;
+    try { localStorage.setItem(LANG_STORE, lang); } catch (e) { /* best effort */ }
+    applyLang();
+  }
+  function applyLang() {
+    document.documentElement.lang = lang === "zh" ? "zh-CN" : lang;
+    langSel.value = lang;
+    document.querySelectorAll("[data-i18n]").forEach(function (el) {
+      el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll("[data-i18n-title]").forEach(function (el) {
+      el.title = t(el.dataset.i18nTitle);
+    });
+    /* the hint is the one string with inline markup, and it is a trusted constant */
+    document.getElementById("hintText").innerHTML = t("hint");
+    palEl.querySelectorAll(".sw").forEach(function (sw) {
+      var name = t(sw.dataset.name);
+      sw.title = name;
+      sw.setAttribute("aria-label", name);
+    });
+    clearBtn.textContent = t("colorDefault");
+    clearBtn.title = t("colorDefaultTip");
+    render();
+    renderLibrary();
+  }
+
   function applyMode() {
     document.body.classList.toggle("ro", readOnly);
     document.getElementById("roBar").hidden = !readOnly;
@@ -1423,7 +1773,7 @@
       if (it.indent > 0 && (unit === null || it.indent < unit)) unit = it.indent;
     });
     unit = unit || 2;
-    var r = { id: "n" + (uid++), text: rootText || "导入的思维导图", collapsed: false, children: [] };
+    var r = { id: "n" + (uid++), text: rootText || t("defImported"), collapsed: false, children: [] };
     var stack = [{ node: r, level: -1 }];
     items.forEach(function (it) {
       var level = Math.round(it.indent / unit);
@@ -1447,13 +1797,13 @@
     } else {
       tree = parseMarkdown(text);
     }
-    if (!tree) { toast("无法识别文件内容：需要 Markdown 列表或本应用的 JSON 备份"); return; }
+    if (!tree) { toast(t("tImportFail")); return; }
     if (readOnly) exitReadOnly();
     root = tree;
     selectedId = root.id;
     activeDocId = null;
     persistActive(); save(); render(); renderLibrary();
-    toast("已导入「" + root.text + "」，共 " + countNodes(root) + " 个节点");
+    toast(t("tImported", root.text, countNodes(root)));
   }
 
   var fileInput = document.getElementById("fileInput");
@@ -1462,15 +1812,15 @@
     if (!f) return;
     var reader = new FileReader();
     reader.onload = function () { importText(String(reader.result), f.name); };
-    reader.onerror = function () { toast("读取文件失败，请重试"); };
+    reader.onerror = function () { toast(t("tReadFail")); };
     reader.readAsText(f, "utf-8");
     fileInput.value = "";
   });
 
   document.getElementById("btnNew").addEventListener("click", function () {
     if (guard()) return;
-    if (!confirmTwice("NEW", "新建将清空当前画布（可先点「保存」存起来），再次点击确认")) return;
-    root = { id: "n" + (uid++), text: "新思维导图", collapsed: false, children: [] };
+    if (!confirmTwice("NEW", t("tConfirmNew"))) return;
+    root = { id: "n" + (uid++), text: t("defNewMap"), collapsed: false, children: [] };
     selectedId = root.id;
     activeDocId = null;
     persistActive(); save(); render(); renderLibrary(); startEdit(root.id);
@@ -1478,7 +1828,7 @@
   document.getElementById("btnImport").addEventListener("click", function () { fileInput.click(); });
   document.getElementById("btnMd").addEventListener("click", function () {
     download(safeName(root.text) + "-" + fileStamp() + ".md", toMarkdown(), "text/markdown;charset=utf-8");
-    toast("已导出 Markdown（不含颜色；完整备份请用 JSON）");
+    toast(t("tMdExported"));
   });
   document.getElementById("btnBackup").addEventListener("click", function () {
     var payload = {
@@ -1491,7 +1841,7 @@
     };
     download(safeName(root.text) + "-backup-" + fileStamp() + ".json",
       JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
-    toast("已下载 JSON 备份，含颜色与折叠状态");
+    toast(t("tBackupExported"));
   });
 
   /* ---------- toolbar ---------- */
@@ -1505,14 +1855,14 @@
   document.getElementById("btnDel").addEventListener("click", function () { removeNode(); });
   document.getElementById("btnReset").addEventListener("click", function () {
     if (guard()) return;
-    if (!confirmTwice("RESET", "将载入内置 EBA 示例并覆盖当前内容，再次点击确认")) return;
+    if (!confirmTwice("RESET", t("tConfirmReset"))) return;
     root = build(DEFAULT); selectedId = root.id; activeDocId = null;
     persistActive(); save(); render(); renderLibrary();
-    toast("已载入 EBA 合规规则库示例");
+    toast(t("tSampleLoaded"));
   });
   document.getElementById("btnPdf").addEventListener("click", function () {
     buildPrint();
-    toast("在打印对话框中选择「另存为 PDF / Save as PDF」");
+    toast(t("tPdfHint"));
     setTimeout(function () { window.print(); }, 150);
   });
   window.addEventListener("beforeprint", buildPrint);
@@ -1533,8 +1883,8 @@
     var d = new Date();
     var date = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
     var h = '<div class="p-head"><h1 class="p-title">' + esc(root.text) + "</h1>" +
-      '<div class="p-meta"><span>导出日期 ' + date + "</span><span>共 " +
-      countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支</span></div></div>";
+      '<div class="p-meta"><span>' + esc(t("pExportDate", date)) + "</span><span>" +
+      esc(t("pMeta", countNodes(root), root.children.length)) + "</span></div></div>";
 
     root.children.forEach(function (sec, i) {
       var secKey = childKey(sec, 0, null, i);
@@ -1562,14 +1912,14 @@
     catch (e) { return location.hash.slice(1); }
   }
 
-  /** Load a share payload from the URL. Returns a promise that resolves once handled. */
+  /** Load a share payload from the URL. Resolves once handled. */
   function loadShare(frag) {
-    return decodeShare(frag).then(function (t) {
-      if (!t) {
-        toast("分享链接已损坏或不完整，显示的是你自己的导图");
+    return decodeShare(frag).then(function (tree) {
+      if (!tree) {
+        toast(t("tShareBroken"));
         return false;
       }
-      root = revive(t);
+      root = revive(tree);
       selectedId = root.id;
       readOnly = true;
       sharePanel.hidden = true;
@@ -1588,8 +1938,8 @@
 
   function finishBoot() {
     applyMode();
-    render();
-    save();   /* completes the migration from LEGACY_STORE on first run */
+    applyLang();   /* also performs the first render */
+    save();        /* completes the migration from LEGACY_STORE on first run */
     if (IS_DESKTOP) {
       window.desktop.folder().then(function (f) { desktopFolder = f; renderDrawerNote(); },
         function () { renderDrawerNote(); });
