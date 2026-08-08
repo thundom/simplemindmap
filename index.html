@@ -135,6 +135,49 @@
   select.btn { padding-right: 6px; }
   .sep { width: 1px; height: 22px; background: var(--line); }
 
+  /* ---------- open mind-map tabs ---------- */
+  .tabs-bar {
+    display: flex; align-items: stretch; gap: 6px;
+    padding: 6px 10px 0;
+    background: var(--bg); border-bottom: 1px solid var(--line);
+  }
+  .tabs-bar[hidden] { display: none; }
+  .map-tabs {
+    min-width: 0; display: flex; align-items: stretch; gap: 4px;
+    overflow-x: auto; overflow-y: hidden; scrollbar-width: thin;
+    overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+  }
+  .map-tab {
+    flex: none; max-width: 240px; min-width: 110px;
+    display: flex; align-items: center;
+    border: 1px solid var(--line); border-bottom: 0;
+    border-radius: 8px 8px 0 0;
+    background: var(--surface); color: var(--ink-soft);
+  }
+  .map-tab.active {
+    color: var(--ink); border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    box-shadow: inset 0 2px 0 var(--accent);
+  }
+  .tab-open {
+    min-width: 0; flex: 1; padding: 8px 6px 8px 10px;
+    border: 0; background: transparent; color: inherit;
+    font: inherit; font-size: 12.5px; text-align: left;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
+  }
+  .tab-close {
+    flex: none; width: 28px; height: 28px; margin-right: 2px;
+    border: 0; border-radius: 5px; background: transparent;
+    color: var(--ink-soft); font: inherit; font-size: 16px; cursor: pointer;
+  }
+  .tab-close:hover { background: color-mix(in srgb, var(--danger) 12%, transparent); color: var(--danger); }
+  .tab-add {
+    flex: none; align-self: center; width: 32px; height: 32px; padding: 0;
+    border: 1px solid var(--line); border-radius: 7px 7px 0 0;
+    background: var(--surface); color: var(--accent); font-size: 20px; cursor: pointer;
+  }
+  .tab-add:hover { border-color: var(--accent); }
+
   .hint {
     display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
     font-size: 12px; color: var(--ink-soft);
@@ -475,6 +518,11 @@
     .btn { min-height: 36px; padding: 7px 10px; font-size: 12px; }
     .btn.sm { min-height: 32px; padding: 5px 8px; font-size: 11.5px; }
     .sep { height: 26px; }
+    .tabs-bar { padding-left: 7px; padding-right: 7px; }
+    .map-tab { min-width: 104px; max-width: 190px; }
+    .tab-open { min-height: 36px; padding-top: 9px; padding-bottom: 9px; }
+    .tab-close { width: 32px; height: 32px; }
+    .tab-add { width: 36px; height: 36px; }
     #sharePanel { align-items: center; }
     #sharePanel > span:first-child { flex: 1 1 100%; }
     #shareUrl {
@@ -617,6 +665,11 @@
     <span class="share-help" data-i18n="shareHelp">Anyone with this link can view, collapse and export this snapshot. Editing and saving are disabled.</span>
   </div>
 
+  <div class="tabs-bar" id="tabsBar">
+    <div class="map-tabs" id="mapTabs" role="tablist" aria-label="Open mind maps"></div>
+    <button class="tab-add" id="btnAddTab" type="button" title="New mind map" aria-label="New mind map">+</button>
+  </div>
+
   <section class="history-panel" id="historyPanel" hidden>
     <div class="history-head">
       <h2 data-i18n="historyTitle">Modification history</h2>
@@ -684,6 +737,7 @@
     if (reset) reset.addEventListener("click", function () {
       try {
         ["simplemindmap-v1", "eba-mindmap-v1", "simplemindmap-library-v1",
+         "simplemindmap-tabs-v1",
          "simplemindmap-active-v1", "simplemindmap-lang-v1",
          "simplemindmap-note-dismissed-v1"].forEach(function (k) { localStorage.removeItem(k); });
       } catch (e) { /* nothing more we can do */ }
@@ -722,6 +776,9 @@
       clearHistory: "Clear history",
       newMap: "New",
       newMapTip: "Start a blank mindmap",
+      mapTabsLabel: "Open mind maps",
+      newTab: "New mind map tab",
+      closeTab: "Close tab",
       importBtn: "Import",
       importTip: "Import Markdown or a JSON backup",
       exportMd: "Export MD",
@@ -817,6 +874,7 @@
       tCopied: "Copied",
       tCopyFail: "Copy failed — please select and copy manually",
       tShareBroken: "That share link is damaged or incomplete — showing your own map instead",
+      tConfirmCloseTab: function (name) { return "Click close again to discard the unsaved tab “" + name + "”"; },
       tReadOnlyGuard: "This shared snapshot is read-only"
     },
     zh: {
@@ -842,6 +900,9 @@
       clearHistory: "清空历史",
       newMap: "新建",
       newMapTip: "新建一张空白思维导图",
+      mapTabsLabel: "已打开的思维导图",
+      newTab: "新建思维导图标签页",
+      closeTab: "关闭标签页",
       importBtn: "导入",
       importTip: "导入 Markdown 或 JSON 备份",
       exportMd: "导出 MD",
@@ -937,6 +998,7 @@
       tCopied: "已复制",
       tCopyFail: "复制失败，请手动选择复制",
       tShareBroken: "分享链接已损坏或不完整，显示的是你自己的导图",
+      tConfirmCloseTab: function (name) { return "再次点击关闭，将丢弃未保存的标签页“" + name + "”"; },
       tReadOnlyGuard: "此分享快照为只读版本"
     },
     ja: {
@@ -962,6 +1024,9 @@
       clearHistory: "履歴を消去",
       newMap: "新規",
       newMapTip: "空のマインドマップを作成",
+      mapTabsLabel: "開いているマインドマップ",
+      newTab: "新しいマインドマップタブ",
+      closeTab: "タブを閉じる",
       importBtn: "読み込み",
       importTip: "Markdown または JSON バックアップを読み込む",
       exportMd: "MD 書き出し",
@@ -1057,6 +1122,7 @@
       tCopied: "コピーしました",
       tCopyFail: "コピーに失敗しました。手動で選択してコピーしてください",
       tShareBroken: "共有リンクが壊れているか不完全です。ご自身のマップを表示しています",
+      tConfirmCloseTab: function (name) { return "もう一度閉じると、未保存のタブ「" + name + "」を破棄します"; },
       tReadOnlyGuard: "この共有スナップショットは読み取り専用です"
     }
   };
@@ -1133,6 +1199,7 @@
   var LEGACY_STORE = "eba-mindmap-v1";
   var LIB_STORE = "simplemindmap-library-v1";
   var ACTIVE_STORE = "simplemindmap-active-v1";
+  var TABS_STORE = "simplemindmap-tabs-v1";
   var NOTE_STORE = "simplemindmap-note-dismissed-v1";
   /* share links from the desktop app point at the published web build */
   var SHARE_BASE = "https://thundom.github.io/simplemindmap/";
@@ -1167,6 +1234,8 @@
   var library = [];
   var activeDocId = null;
   try { activeDocId = localStorage.getItem(ACTIVE_STORE) || null; } catch (e) { activeDocId = null; }
+  var openTabs = [];
+  var activeTabId = null;
 
   var selectedId = root.id;
   var pending = null;   /* two-click confirmation token */
@@ -1182,6 +1251,169 @@
       return k === "id" ? undefined : v;
     }));
   }
+
+  /* ---------- persistent multi-map tab session ---------- */
+  var tabsBarEl = document.getElementById("tabsBar");
+  var mapTabsEl = document.getElementById("mapTabs");
+  var btnAddTab = document.getElementById("btnAddTab");
+
+  function nextTabId() {
+    return "t" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+  function activeTab() {
+    return openTabs.filter(function (tab) { return tab.id === activeTabId; })[0] || null;
+  }
+  function persistTabs() {
+    try {
+      localStorage.setItem(TABS_STORE, JSON.stringify({ activeId: activeTabId, tabs: openTabs }));
+    } catch (e) { /* session remains available until the window closes */ }
+  }
+  function captureActiveTab() {
+    var tab = activeTab();
+    if (!tab || readOnly) return;
+    tab.docId = activeDocId || null;
+    tab.name = root.text;
+    tab.tree = stripIds(root);
+  }
+  function initTabs() {
+    var state = null;
+    try { state = JSON.parse(localStorage.getItem(TABS_STORE) || "null"); }
+    catch (e) { state = null; }
+    if (state && Array.isArray(state.tabs)) {
+      openTabs = state.tabs.filter(function (tab) {
+        return tab && typeof tab.id === "string" && tab.tree && typeof tab.tree.text === "string";
+      }).map(function (tab) {
+        return { id: tab.id, docId: tab.docId || null, name: tab.name || tab.tree.text, tree: tab.tree };
+      });
+      activeTabId = state.activeId;
+    }
+    var tab = activeTab();
+    if (!tab && openTabs.length) {
+      activeTabId = openTabs[0].id;
+      tab = openTabs[0];
+    }
+    if (tab) {
+      root = revive(JSON.parse(JSON.stringify(tab.tree)));
+      activeDocId = tab.docId || null;
+    } else {
+      tab = { id: nextTabId(), docId: activeDocId || null, name: root.text, tree: stripIds(root) };
+      openTabs = [tab];
+      activeTabId = tab.id;
+    }
+    selectedId = root.id;
+    persistTabs();
+  }
+  function bindActiveTab(docId, name) {
+    var tab = activeTab();
+    if (!tab) return;
+    tab.docId = docId || null;
+    tab.name = name || root.text;
+    tab.tree = stripIds(root);
+    persistTabs();
+    renderTabs();
+  }
+  function detachDocTabs(docId) {
+    openTabs.forEach(function (tab) {
+      if (tab.docId === docId) tab.docId = null;
+    });
+    var tab = activeTab();
+    if (tab && !tab.docId) activeDocId = null;
+    persistActive(); persistTabs(); renderTabs();
+  }
+  function replaceTabDocId(oldId, newId, name) {
+    openTabs.forEach(function (tab) {
+      if (tab.docId === oldId) {
+        tab.docId = newId;
+        if (name) tab.name = name;
+      }
+    });
+    if (activeDocId === oldId) activeDocId = newId;
+    persistActive(); persistTabs(); renderTabs();
+  }
+  function activateTab(tabId) {
+    if (readOnly || tabId === activeTabId) return;
+    captureActiveTab(); persistTabs();
+    var tab = openTabs.filter(function (item) { return item.id === tabId; })[0];
+    if (!tab) return;
+    activeTabId = tab.id;
+    activeDocId = tab.docId || null;
+    root = revive(JSON.parse(JSON.stringify(tab.tree)));
+    selectedId = root.id;
+    clearHistory(); persistActive(); save(); render(); renderLibrary(); scheduleRootCenter();
+  }
+  function openTreeTab(tree, docId, name) {
+    captureActiveTab();
+    var tab = {
+      id: nextTabId(), docId: docId || null,
+      name: name || tree.text, tree: stripIds(tree)
+    };
+    openTabs.push(tab);
+    activeTabId = tab.id;
+    activeDocId = tab.docId;
+    root = revive(JSON.parse(JSON.stringify(tab.tree)));
+    selectedId = root.id;
+    clearHistory(); persistActive(); save(); render(); renderLibrary(); scheduleRootCenter();
+    return tab;
+  }
+  function createBlankTab() {
+    if (guard()) return;
+    var tree = { id: "n" + (uid++), text: t("defNewMap"), collapsed: false, children: [] };
+    openTreeTab(tree, null, tree.text);
+    startEdit(root.id);
+  }
+  function closeMapTab(tabId) {
+    if (readOnly) return;
+    var idx = openTabs.findIndex(function (tab) { return tab.id === tabId; });
+    if (idx < 0) return;
+    var tab = openTabs[idx];
+    if (!tab.docId && !confirmTwice("close-tab:" + tab.id, t("tConfirmCloseTab", tab.name || tab.tree.text))) return;
+    if (tab.id === activeTabId) captureActiveTab();
+    openTabs.splice(idx, 1);
+    if (!openTabs.length) {
+      var blank = { id: nextTabId(), text: t("defNewMap"), collapsed: false, children: [] };
+      openTabs.push({ id: blank.id, docId: null, name: blank.text, tree: stripIds(blank) });
+    }
+    if (tab.id === activeTabId) {
+      var next = openTabs[Math.min(idx, openTabs.length - 1)];
+      activeTabId = null;
+      activateTab(next.id);
+    } else {
+      persistTabs(); renderTabs();
+    }
+  }
+  function renderTabs() {
+    if (!mapTabsEl) return;
+    mapTabsEl.textContent = "";
+    mapTabsEl.setAttribute("aria-label", t("mapTabsLabel"));
+    btnAddTab.title = t("newTab");
+    btnAddTab.setAttribute("aria-label", t("newTab"));
+    openTabs.forEach(function (tab) {
+      var wrap = document.createElement("div");
+      wrap.className = "map-tab" + (tab.id === activeTabId ? " active" : "");
+      wrap.setAttribute("role", "presentation");
+      var open = document.createElement("button");
+      open.className = "tab-open";
+      open.type = "button";
+      open.setAttribute("role", "tab");
+      open.setAttribute("aria-selected", tab.id === activeTabId ? "true" : "false");
+      var label = tab.id === activeTabId && !readOnly ? root.text : (tab.name || tab.tree.text);
+      open.textContent = label;
+      open.title = label;
+      open.addEventListener("click", function () { activateTab(tab.id); });
+      var close = document.createElement("button");
+      close.className = "tab-close";
+      close.type = "button";
+      close.textContent = "×";
+      close.title = t("closeTab") + ": " + label;
+      close.setAttribute("aria-label", close.title);
+      close.addEventListener("click", function (e) { e.stopPropagation(); closeMapTab(tab.id); });
+      wrap.appendChild(open); wrap.appendChild(close); mapTabsEl.appendChild(wrap);
+    });
+    var current = mapTabsEl.querySelector(".map-tab.active");
+    if (current) current.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
+
+  initTabs();
   function historyLabel(entry) {
     return t.apply(null, [entry.key].concat(entry.args || []));
   }
@@ -1280,6 +1512,8 @@
     if (readOnly) return;   /* never let a shared view overwrite the viewer's own work */
     try { localStorage.setItem(STORE, JSON.stringify(stripIds(root))); }
     catch (e) { /* storage unavailable — session-only */ }
+    captureActiveTab();
+    persistTabs();
   }
   function persistActive() {
     try {
@@ -1514,6 +1748,7 @@
       t("stats", root.text, countNodes(root), root.children.length);
     document.title = root.text + " · Simple Mindmap";
     updatePalette();
+    renderTabs();
   }
 
   /* Keep the map discoverable on small screens and after device rotation. */
@@ -1908,7 +2143,11 @@
         window.desktop.pickFolder().then(function (res) {
           desktopFolder = res.folder;
           renderDrawerNote();
-          if (res.changed) { activeDocId = null; persistActive(); toast(t("tFolderChanged", res.folder)); }
+          if (res.changed) {
+            openTabs.forEach(function (tab) { tab.docId = null; });
+            activeDocId = null; persistActive(); persistTabs(); renderTabs();
+            toast(t("tFolderChanged", res.folder));
+          }
           libLoad();
         }, function () { toast(t("tPickFail")); });
       });
@@ -1967,12 +2206,10 @@
   }
 
   function openDoc(doc) {
-    clearHistory();
-    root = revive(JSON.parse(JSON.stringify(doc.tree)));
-    selectedId = root.id;
-    activeDocId = doc.id;
     if (readOnly) exitReadOnly();
-    persistActive(); save(); render(); renderLibrary();
+    var existing = openTabs.filter(function (tab) { return tab.docId === doc.id; })[0];
+    if (existing) activateTab(existing.id);
+    else openTreeTab(doc.tree, doc.id, doc.name);
     toast(t("tOpened", doc.name));
   }
   function renameDoc(doc, nameEl) {
@@ -1991,15 +2228,17 @@
       var v = nameEl.textContent.replace(/\s+/g, " ").trim();
       if (cancel || !v || v === doc.name) { renderLibrary(); return; }
       if (IS_DESKTOP) {
+        var oldId = doc.id;
         window.desktop.rename(doc.file, v).then(function (res) {
-          if (activeDocId === doc.id) { activeDocId = res.file; persistActive(); }
+          replaceTabDocId(oldId, res.file, v);
           libLoad();
           toast(t("tRenamed", v));
         }, function () { toast(t("tRenameFail")); libLoad(); });
         return;
       }
       doc.name = v;
-      libPersistWeb(); renderLibrary();
+      openTabs.forEach(function (tab) { if (tab.docId === doc.id) tab.name = v; });
+      libPersistWeb(); persistTabs(); renderLibrary(); renderTabs();
     }
     nameEl.addEventListener("blur", function () { commit(false); });
     nameEl.addEventListener("keydown", function (e) {
@@ -2010,16 +2249,15 @@
   }
   function deleteDoc(doc) {
     if (!confirmTwice("doc:" + doc.id, t("tConfirmDeleteDoc", doc.name))) return;
-    if (activeDocId === doc.id) activeDocId = null;
     if (IS_DESKTOP) {
       window.desktop.remove(doc.file).then(function (res) {
-        persistActive(); libLoad();
+        detachDocTabs(doc.id); libLoad();
         toast(res && res.trashed ? t("tTrashed", doc.name) : t("tDeletedDoc", doc.name));
       }, function () { toast(t("tDeleteFail")); libLoad(); });
       return;
     }
     library = library.filter(function (d) { return d.id !== doc.id; });
-    libPersistWeb(); renderLibrary();
+    detachDocTabs(doc.id); libPersistWeb(); renderLibrary();
     toast(t("tDeletedDoc", doc.name));
   }
   function saveDoc(asNew) {
@@ -2033,6 +2271,7 @@
       var name = existing ? existing.name : root.text;
       window.desktop.write(file, name, stripIds(root)).then(function (res) {
         activeDocId = res.file;
+        bindActiveTab(res.file, name);
         persistActive(); libLoad(); openDrawer();
         toast(existing ? t("tUpdated", name) : t("tSavedFile", res.file));
       }, function () { toast(t("tWriteFail")); });
@@ -2042,6 +2281,7 @@
     if (existing) {
       existing.tree = stripIds(root);
       existing.savedAt = new Date().toISOString();
+      bindActiveTab(existing.id, existing.name);
       libPersistWeb(); renderLibrary();
       toast(t("tUpdated", existing.name));
       return;
@@ -2054,6 +2294,7 @@
     };
     library.push(doc);
     activeDocId = doc.id;
+    bindActiveTab(doc.id, doc.name);
     libPersistWeb(); renderLibrary(); openDrawer();
     toast(t("tSaved", doc.name));
   }
@@ -2064,6 +2305,7 @@
   });
   document.getElementById("btnSave").addEventListener("click", function () { saveDoc(false); });
   document.getElementById("btnSaveAs").addEventListener("click", function () { saveDoc(true); });
+  btnAddTab.addEventListener("click", createBlankTab);
 
   /* ---------- read-only sharing via the URL fragment ---------- */
   function b64url(bytes) {
@@ -2157,7 +2399,15 @@
     if (location.hash) {
       history.replaceState(null, "", location.pathname + location.search);
     }
+    var tab = activeTab();
+    if (tab) {
+      root = revive(JSON.parse(JSON.stringify(tab.tree)));
+      activeDocId = tab.docId || null;
+      selectedId = root.id;
+      persistActive();
+    }
     applyMode();
+    render(); renderLibrary(); scheduleRootCenter();
   }
   /* ---------- language & mode wiring ---------- */
   var langSel = document.getElementById("langSel");
@@ -2191,12 +2441,14 @@
     updateHistoryUi();
     render();
     renderLibrary();
+    renderTabs();
   }
 
   function applyMode() {
     document.body.classList.toggle("ro", readOnly);
     document.getElementById("roBar").hidden = !readOnly;
     document.getElementById("hintBar").hidden = readOnly;
+    tabsBarEl.hidden = readOnly;
     ["btnDrawer", "btnSave", "btnSaveAs", "btnShare", "btnNew", "btnImport", "btnUndo", "btnHistory", "btnChild", "btnSibling", "btnDel", "btnReset", "sepEdit"]
       .forEach(function (id) { document.getElementById(id).hidden = readOnly; });
     if (readOnly) {
@@ -2285,11 +2537,7 @@
     }
     if (!tree) { toast(t("tImportFail")); return; }
     if (readOnly) exitReadOnly();
-    recordHistory("hImport");
-    root = tree;
-    selectedId = root.id;
-    activeDocId = null;
-    persistActive(); save(); render(); renderLibrary();
+    openTreeTab(tree, null, tree.text);
     toast(t("tImported", root.text, countNodes(root)));
   }
 
@@ -2305,13 +2553,7 @@
   });
 
   document.getElementById("btnNew").addEventListener("click", function () {
-    if (guard()) return;
-    if (!confirmTwice("NEW", t("tConfirmNew"))) return;
-    recordHistory("hNewMap");
-    root = { id: "n" + (uid++), text: t("defNewMap"), collapsed: false, children: [] };
-    selectedId = root.id;
-    activeDocId = null;
-    persistActive(); save(); render(); renderLibrary(); startEdit(root.id);
+    createBlankTab();
   });
   document.getElementById("btnImport").addEventListener("click", function () { fileInput.click(); });
   document.getElementById("btnMd").addEventListener("click", function () {
