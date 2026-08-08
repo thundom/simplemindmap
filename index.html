@@ -344,6 +344,19 @@
     content: ""; position: absolute; left: -26px; top: 50%;
     width: 26px; border-top: 2px solid var(--edge);
   }
+  /* generous hit areas make dropping a branch beside the root practical */
+  .root-side-drop {
+    position: absolute; top: -22px; bottom: -22px;
+    width: 58px; z-index: 2;
+    border: 2px dashed transparent; border-radius: 10px;
+  }
+  .root-side-drop.left { right: 100%; }
+  .root-side-drop.right { left: 100%; }
+  .card.root.dz-side-left .root-side-drop.left,
+  .card.root.dz-side-right .root-side-drop.right {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
   .card.selected { outline: 2px solid var(--accent); outline-offset: 2px; }
   .card.dragging { opacity: 0.4; cursor: grabbing; }
   .card .txt { min-width: 0; overflow-wrap: break-word; }
@@ -496,7 +509,7 @@
   </div>
 
   <div class="hint" id="hintBar">
-    <span id="hintText"><b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it on the left half of the centre node to move that branch to the left · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes</span>
+    <span id="hintText"><b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it beside the left or right side of the centre node to choose the branch direction · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes</span>
     <span class="grow"></span>
     <span class="pal" id="palette">
       <span class="pal-label" data-i18n="palLabel">Branch colour</span>
@@ -593,7 +606,7 @@
       exportPdf: "Export PDF",
       rename: "Rename",
       removeDoc: "Delete",
-      hint: "<b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it on the left half of the centre node to move that branch to the left · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes",
+      hint: "<b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it beside the left or right side of the centre node to choose the branch direction · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes",
       palLabel: "Branch colour",
       colorDefault: "Default",
       colorDefaultTip: "Reset to the inherited colour",
@@ -691,7 +704,7 @@
       exportPdf: "导出 PDF",
       rename: "重命名",
       removeDoc: "删除",
-      hint: "<b>双击</b> 编辑 · <b>拖动</b> 节点可换父级、调顺序，拖到中心节点左半边即移到左侧 · <b>Tab</b> 子节点 · <b>Enter</b> 同级 · <b>Delete</b> 删除",
+      hint: "<b>双击</b> 编辑 · <b>拖动</b> 节点可换父级、调顺序，拖到中心节点左侧或右侧即可切换分支放射方向 · <b>Tab</b> 子节点 · <b>Enter</b> 同级 · <b>Delete</b> 删除",
       palLabel: "所选分支颜色",
       colorDefault: "默认",
       colorDefaultTip: "恢复默认 / 跟随上级颜色",
@@ -789,7 +802,7 @@
       exportPdf: "PDF 書き出し",
       rename: "名称変更",
       removeDoc: "削除",
-      hint: "<b>ダブルクリック</b>で編集 · <b>ドラッグ</b>で親子関係や並び順を変更、中心ノードの左半分にドロップするとそのブランチが左側へ移動 · <b>Tab</b> 子ノード · <b>Enter</b> 兄弟 · <b>Delete</b> 削除",
+      hint: "<b>ダブルクリック</b>で編集 · <b>ドラッグ</b>で親子関係や並び順を変更、中心ノードの左側または右側にドロップするとブランチの向きを切り替え · <b>Tab</b> 子ノード · <b>Enter</b> 兄弟 · <b>Delete</b> 削除",
       palLabel: "ブランチの色",
       colorDefault: "既定",
       colorDefaultTip: "継承した色に戻す",
@@ -1165,6 +1178,16 @@
     row.className = "row";
     var card = makeCard(root, 0, null);
 
+    if (!readOnly) {
+      ["left", "right"].forEach(function (side) {
+        var zone = document.createElement("i");
+        zone.className = "root-side-drop " + side;
+        zone.setAttribute("aria-hidden", "true");
+        wireRootSideDrop(zone, card, side);
+        card.appendChild(zone);
+      });
+    }
+
     function sideKids(side, mirrored) {
       var kids = document.createElement("div");
       kids.className = "kids" + (mirrored ? " mirror" : "");
@@ -1221,6 +1244,32 @@
   function clearDz() {
     treeEl.querySelectorAll(".card").forEach(function (c) {
       c.classList.remove("dz-before", "dz-after", "dz-child", "dz-side-left", "dz-side-right");
+    });
+  }
+  function wireRootSideDrop(zone, card, side) {
+    zone.addEventListener("dragover", function (e) {
+      if (!dragId) return;
+      var src = findNode(dragId);
+      if (!src || !src.parent) return;
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = "move";
+      clearDz();
+      card.classList.add("dz-side-" + side);
+    });
+    zone.addEventListener("dragleave", function () {
+      card.classList.remove("dz-side-" + side);
+    });
+    zone.addEventListener("drop", function (e) {
+      var srcId = dragId;
+      if (!srcId) {
+        try { srcId = e.dataTransfer.getData("text/plain"); } catch (err) { /* guard */ }
+      }
+      if (!srcId) return;
+      e.preventDefault();
+      e.stopPropagation();
+      clearDz();
+      moveNode(srcId, root.id, "side-" + side);
     });
   }
   function dropMode(card, node, depth, e) {
