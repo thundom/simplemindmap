@@ -318,7 +318,10 @@
   /* ---------- mirrored (left-of-root) subtrees ---------- */
   .mirror .row { flex-direction: row-reverse; }
   .kids.mirror, .mirror .kids { margin-left: 0; margin-right: 26px; }
-  .mirror .branch { padding: 5px 34px 5px 0; }
+  .mirror .branch {
+    padding: 5px 34px 5px 0;
+    justify-content: flex-end; /* keep every mirrored row flush with its connector stub */
+  }
   .mirror .branch::before { left: auto; right: 0; }
   .mirror .branch::after {
     left: auto; right: 0;
