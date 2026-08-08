@@ -320,8 +320,10 @@
     line-height: 1.45;
     cursor: grab;
     user-select: none;
+    touch-action: manipulation;
   }
   body.ro .card { cursor: default; }
+  body.node-dragging, body.node-dragging * { cursor: grabbing !important; }
   /* stub from a parent card out to its children's trunk */
   .card.open::after {
     content: ""; position: absolute; right: -26px; top: 50%;
@@ -1098,10 +1100,10 @@
     var card = document.createElement("div");
     card.className = "card depth-" + depth + (depth === 0 ? " root" : "");
     card.dataset.id = node.id;
+    card.dataset.depth = String(depth);
     if (key) card.style.setProperty("--bc", "var(--c-" + key + ")");
     if (node.id === selectedId) card.classList.add("selected");
     card.tabIndex = 0;
-    if (depth > 0 && !readOnly) card.draggable = true;
 
     var txt = document.createElement("span");
     txt.className = "txt";
@@ -1142,7 +1144,10 @@
       card.appendChild(dz);
     }
 
-    card.addEventListener("click", function () { select(node.id); });
+    card.addEventListener("click", function () {
+      if (performance.now() < suppressClickUntil) return;
+      select(node.id);
+    });
     card.addEventListener("dblclick", function () { startEdit(node.id); });
     card.addEventListener("keydown", onCardKey);
     if (!readOnly) wireDrag(card, node, depth);
@@ -1183,7 +1188,6 @@
         var zone = document.createElement("i");
         zone.className = "root-side-drop " + side;
         zone.setAttribute("aria-hidden", "true");
-        wireRootSideDrop(zone, card, side);
         card.appendChild(zone);
       });
     }
@@ -1239,37 +1243,16 @@
   }
 
   /* ---------- drag & drop ---------- */
-  var dragId = null;
+  var pointerDrag = null;
+  var suppressClickUntil = 0;
+
+  window.addEventListener("pointermove", onPointerDragMove);
+  window.addEventListener("pointerup", function (e) { finishPointerDrag(e, false); });
+  window.addEventListener("pointercancel", function (e) { finishPointerDrag(e, true); });
 
   function clearDz() {
     treeEl.querySelectorAll(".card").forEach(function (c) {
       c.classList.remove("dz-before", "dz-after", "dz-child", "dz-side-left", "dz-side-right");
-    });
-  }
-  function wireRootSideDrop(zone, card, side) {
-    zone.addEventListener("dragover", function (e) {
-      if (!dragId) return;
-      var src = findNode(dragId);
-      if (!src || !src.parent) return;
-      e.preventDefault();
-      e.stopPropagation();
-      e.dataTransfer.dropEffect = "move";
-      clearDz();
-      card.classList.add("dz-side-" + side);
-    });
-    zone.addEventListener("dragleave", function () {
-      card.classList.remove("dz-side-" + side);
-    });
-    zone.addEventListener("drop", function (e) {
-      var srcId = dragId;
-      if (!srcId) {
-        try { srcId = e.dataTransfer.getData("text/plain"); } catch (err) { /* guard */ }
-      }
-      if (!srcId) return;
-      e.preventDefault();
-      e.stopPropagation();
-      clearDz();
-      moveNode(srcId, root.id, "side-" + side);
     });
   }
   function dropMode(card, node, depth, e) {
@@ -1282,39 +1265,68 @@
   }
 
   function wireDrag(card, node, depth) {
-    if (depth > 0) {
-      card.addEventListener("dragstart", function (e) {
-        dragId = node.id;
-        card.classList.add("dragging");
-        e.dataTransfer.effectAllowed = "move";
-        try { e.dataTransfer.setData("text/plain", node.id); } catch (err) { /* guard */ }
-      });
-      card.addEventListener("dragend", function () {
-        dragId = null;
-        card.classList.remove("dragging");
-        clearDz();
-      });
+    if (depth === 0) return;
+
+    card.addEventListener("pointerdown", function (e) {
+      if (!e.isPrimary || e.button !== 0) return;
+      if (e.target.closest("button, [contenteditable='true']")) return;
+      pointerDrag = {
+        id: node.id,
+        card: card,
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startY: e.clientY,
+        active: false,
+        targetId: null,
+        mode: null
+      };
+    });
+  }
+
+  function onPointerDragMove(e) {
+    var d = pointerDrag;
+    if (!d || d.pointerId !== e.pointerId) return;
+    if (!d.active && Math.hypot(e.clientX - d.startX, e.clientY - d.startY) < 6) return;
+    if (!d.active) {
+      d.active = true;
+      d.card.classList.add("dragging");
+      document.body.classList.add("node-dragging");
     }
-    card.addEventListener("dragover", function (e) {
-      if (!dragId || dragId === node.id) return;
-      var src = findNode(dragId);
-      if (!src || contains(src.node, node)) return;   /* no dropping into own subtree */
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "move";
-      var mode = dropMode(card, node, depth, e);
-      clearDz();
-      card.classList.add("dz-" + mode);
-    });
-    card.addEventListener("dragleave", function () {
-      card.classList.remove("dz-before", "dz-after", "dz-child", "dz-side-left", "dz-side-right");
-    });
-    card.addEventListener("drop", function (e) {
-      if (!dragId || dragId === node.id) return;
-      e.preventDefault();
-      var mode = dropMode(card, node, depth, e);
-      clearDz();
-      moveNode(dragId, node.id, mode);
-    });
+    e.preventDefault();
+    clearDz();
+    d.targetId = null;
+    d.mode = null;
+
+    var hit = document.elementFromPoint(e.clientX, e.clientY);
+    var targetCard = hit && hit.closest ? hit.closest(".card") : null;
+    if (!targetCard || targetCard.dataset.id === d.id) return;
+
+    var src = findNode(d.id);
+    var tgt = findNode(targetCard.dataset.id);
+    if (!src || !src.parent || !tgt || contains(src.node, tgt.node)) return;
+
+    var targetDepth = Number(targetCard.dataset.depth || 0);
+    var mode = dropMode(targetCard, tgt.node, targetDepth, e);
+    targetCard.classList.add("dz-" + mode);
+    d.targetId = tgt.node.id;
+    d.mode = mode;
+  }
+
+  function finishPointerDrag(e, cancelled) {
+    var d = pointerDrag;
+    if (!d || d.pointerId !== e.pointerId) return;
+    var active = d.active;
+    var targetId = d.targetId;
+    var mode = d.mode;
+    pointerDrag = null;
+    d.card.classList.remove("dragging");
+    document.body.classList.remove("node-dragging");
+    clearDz();
+    if (!active) return;
+    suppressClickUntil = performance.now() + 250;
+    e.preventDefault();
+    e.stopPropagation();
+    if (!cancelled && targetId && mode) moveNode(d.id, targetId, mode);
   }
 
   function moveNode(srcId, targetId, mode) {
