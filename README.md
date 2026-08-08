@@ -33,7 +33,7 @@ Do not want to install Node.js? Open `index.html` directly. The complete web app
 | --- | --- |
 | Map library | A side drawer lists saved maps with their name, modification time, and node count. Open, rename, or delete any map. |
 | Flexible storage | The desktop app saves each map as an individual `.json` file in a folder you choose. The web app stores maps in the browser. |
-| Read-only sharing | Generate a shareable URL containing a compressed copy of the entire map. Recipients can view and export it without changing it or adding it to their library. |
+| Locked read-only sharing | Select Share to generate and copy a URL containing a compressed snapshot of the map. Recipients can view, collapse and export it, while editing, saving and adding it to My maps remain disabled. |
 | New maps | Clear the canvas and begin with a single root node. A double confirmation prevents accidental data loss. |
 | Fast editing | Double-click a node to edit its text. Press Tab to add a child, Enter to add a sibling, or Delete to remove a node. |
 | Canvas-based drag and drop | Drag any node at any depth. Drop near another node to change its parent or order, or drop into blank canvas space to promote it to a main branch. |
@@ -47,6 +47,7 @@ Do not want to install Node.js? Open `index.html` directly. The complete web app
 | PDF export | Generate a structured, print-ready A4 document and save it as a PDF from the print dialog. |
 | Built-in example | Load the included EBA compliance rule library to explore the app with a substantial sample map. |
 | Multilingual interface | Switch between Chinese, English, and Japanese from the top-left toolbar. All interface text and messages change together. |
+| Responsive interface | The toolbar, panels, saved-map drawer, touch controls and canvas spacing adapt to desktop, tablet and phone screen sizes. |
 | Automatic theme | The interface follows the system light or dark color scheme. |
 
 ## Markdown format
