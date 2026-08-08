@@ -121,6 +121,8 @@
     cursor: pointer;
   }
   .btn[hidden] { display: none; }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn:disabled:hover { border-color: var(--line); color: var(--ink); }
   .btn:hover { border-color: var(--accent); color: var(--accent); }
   .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
@@ -139,6 +141,33 @@
   }
   .hint[hidden] { display: none; }
   .hint b { font-weight: 600; color: var(--ink); }
+
+  /* ---------- edit history ---------- */
+  .history-panel {
+    position: fixed; top: 104px; right: 20px; z-index: 30;
+    width: min(360px, calc(100vw - 40px)); max-height: min(520px, calc(100vh - 140px));
+    display: flex; flex-direction: column;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: 0 12px 34px rgba(20, 31, 44, 0.2);
+  }
+  .history-panel[hidden] { display: none; }
+  .history-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px; border-bottom: 1px solid var(--line);
+  }
+  .history-head h2 { margin: 0; font-size: 13px; font-weight: 650; }
+  .history-list { list-style: none; margin: 0; padding: 6px; overflow: auto; }
+  .history-item { margin: 0; }
+  .history-restore {
+    width: 100%; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px;
+    padding: 8px 9px; border: 0; border-radius: 7px;
+    background: transparent; color: var(--ink); text-align: left; cursor: pointer;
+  }
+  .history-restore:hover { background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+  .history-action { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; }
+  .history-time { color: var(--ink-soft); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .history-empty { padding: 22px 14px; color: var(--ink-soft); font-size: 12px; text-align: center; }
+  .history-foot { padding: 8px 12px; border-top: 1px solid var(--line); text-align: right; }
 
   /* ---------- share panel ---------- */
   #sharePanel {
@@ -484,6 +513,8 @@
       <button class="btn" id="btnDrawer" data-i18n="myMaps" data-i18n-title="myMapsTip">My maps</button>
       <button class="btn" id="btnSave" data-i18n="save" data-i18n-title="saveTip">Save</button>
       <button class="btn" id="btnShare" data-i18n="share" data-i18n-title="shareTip">Share</button>
+      <button class="btn" id="btnUndo" data-i18n="undo" data-i18n-title="undoTip" disabled>Undo</button>
+      <button class="btn" id="btnHistory" data-i18n-title="historyTip">History (0)</button>
       <span class="sep"></span>
       <button class="btn" id="btnNew" data-i18n="newMap" data-i18n-title="newMapTip">New</button>
       <button class="btn" id="btnImport" data-i18n="importBtn" data-i18n-title="importTip">Import</button>
@@ -510,8 +541,20 @@
     <button class="btn sm" id="btnCloseShare" data-i18n="close">Close</button>
   </div>
 
+  <section class="history-panel" id="historyPanel" hidden>
+    <div class="history-head">
+      <h2 data-i18n="historyTitle">Modification history</h2>
+      <span class="grow"></span>
+      <button class="btn sm" id="btnCloseHistory" data-i18n="close">Close</button>
+    </div>
+    <ol class="history-list" id="historyList"></ol>
+    <div class="history-foot">
+      <button class="btn sm" id="btnClearHistory" data-i18n="clearHistory">Clear history</button>
+    </div>
+  </section>
+
   <div class="hint" id="hintBar">
-    <span id="hintText"><b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it beside the left or right side of the centre node to choose the branch direction · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes</span>
+    <span id="hintText"><b>Double-click</b> to edit · <b>Drag anywhere on the canvas</b> to change parent, order or side · <b>Ctrl+Z</b> undo · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes</span>
     <span class="grow"></span>
     <span class="pal" id="palette">
       <span class="pal-label" data-i18n="palLabel">Branch colour</span>
@@ -590,6 +633,15 @@
       saveAsTip: "Store the current map as a separate entry",
       share: "Share",
       shareTip: "Create a read-only link",
+      undo: "Undo",
+      undoTip: "Undo the last change (Ctrl+Z)",
+      history: "History",
+      historyTip: "View and restore recent changes",
+      historyTitle: "Modification history",
+      historyCount: function (n) { return "History (" + n + ")"; },
+      historyEmpty: "No changes recorded in this session yet.",
+      historyRestore: "Restore to before this change",
+      clearHistory: "Clear history",
       newMap: "New",
       newMapTip: "Start a blank mindmap",
       importBtn: "Import",
@@ -608,7 +660,7 @@
       exportPdf: "Export PDF",
       rename: "Rename",
       removeDoc: "Delete",
-      hint: "<b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it beside the left or right side of the centre node to choose the branch direction · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes",
+      hint: "<b>Double-click</b> to edit · <b>Drag anywhere on the canvas</b> to change parent, order or side · <b>Ctrl+Z</b> undo · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes",
       palLabel: "Branch colour",
       colorDefault: "Default",
       colorDefaultTip: "Reset to the inherited colour",
@@ -666,6 +718,19 @@
       tBackupExported: "JSON backup downloaded, including colours and collapse state",
       tPdfHint: "Choose “Save as PDF” in the print dialog",
       tMoved: function (name) { return "Moved “" + name + "”"; },
+      tUndoEmpty: "Nothing to undo",
+      tUndone: function (action) { return "Undid: " + action; },
+      hMove: function (name) { return "Move “" + name + "”"; },
+      hRename: function (name) { return "Rename “" + name + "”"; },
+      hAdd: function (name) { return "Add “" + name + "”"; },
+      hDelete: function (name) { return "Delete “" + name + "”"; },
+      hColor: function (name) { return "Change colour of “" + name + "”"; },
+      hToggle: function (name) { return "Expand or collapse “" + name + "”"; },
+      hExpandAll: "Expand all branches",
+      hCollapseAll: "Collapse all branches",
+      hNewMap: "Create a new map",
+      hImport: "Import a map",
+      hLoadSample: "Load the sample map",
       tNoCycle: "A node cannot be moved inside its own subtree",
       tPickBranchFirst: "Select a branch node first (the centre node has no colour)",
       tShareCopied: "Read-only link copied to the clipboard",
@@ -688,6 +753,15 @@
       saveAsTip: "把当前导图另存为一条新记录",
       share: "分享",
       shareTip: "生成只读分享链接",
+      undo: "回退",
+      undoTip: "回退上一步修改（Ctrl+Z）",
+      history: "历史记录",
+      historyTip: "查看并恢复最近的修改",
+      historyTitle: "修改历史记录",
+      historyCount: function (n) { return "历史记录（" + n + "）"; },
+      historyEmpty: "本次使用还没有修改记录。",
+      historyRestore: "恢复到此次修改之前",
+      clearHistory: "清空历史",
       newMap: "新建",
       newMapTip: "新建一张空白思维导图",
       importBtn: "导入",
@@ -706,7 +780,7 @@
       exportPdf: "导出 PDF",
       rename: "重命名",
       removeDoc: "删除",
-      hint: "<b>双击</b> 编辑 · <b>拖动</b> 节点可换父级、调顺序，拖到中心节点左侧或右侧即可切换分支放射方向 · <b>Tab</b> 子节点 · <b>Enter</b> 同级 · <b>Delete</b> 删除",
+      hint: "<b>双击</b> 编辑 · <b>在画布上自由拖动</b> 可换父级、顺序或左右方向 · <b>Ctrl+Z</b> 回退 · <b>Tab</b> 子节点 · <b>Enter</b> 同级 · <b>Delete</b> 删除",
       palLabel: "所选分支颜色",
       colorDefault: "默认",
       colorDefaultTip: "恢复默认 / 跟随上级颜色",
@@ -764,6 +838,19 @@
       tBackupExported: "已下载 JSON 备份，含颜色与折叠状态",
       tPdfHint: "在打印对话框中选择「另存为 PDF」",
       tMoved: function (name) { return "已移动「" + name + "」"; },
+      tUndoEmpty: "没有可以回退的修改",
+      tUndone: function (action) { return "已回退：" + action; },
+      hMove: function (name) { return "移动「" + name + "」"; },
+      hRename: function (name) { return "重命名「" + name + "」"; },
+      hAdd: function (name) { return "添加「" + name + "」"; },
+      hDelete: function (name) { return "删除「" + name + "」"; },
+      hColor: function (name) { return "修改「" + name + "」的颜色"; },
+      hToggle: function (name) { return "展开或折叠「" + name + "」"; },
+      hExpandAll: "展开全部分支",
+      hCollapseAll: "折叠全部分支",
+      hNewMap: "新建导图",
+      hImport: "导入导图",
+      hLoadSample: "载入示例导图",
       tNoCycle: "不能把节点移动到它自己的子树里",
       tPickBranchFirst: "请先选中一个分支节点（根节点不着色）",
       tShareCopied: "只读链接已复制到剪贴板",
@@ -786,6 +873,15 @@
       saveAsTip: "現在のマップを新しい項目として保存",
       share: "共有",
       shareTip: "読み取り専用リンクを作成",
+      undo: "元に戻す",
+      undoTip: "直前の変更を元に戻す（Ctrl+Z）",
+      history: "履歴",
+      historyTip: "最近の変更を表示して復元",
+      historyTitle: "変更履歴",
+      historyCount: function (n) { return "履歴（" + n + "）"; },
+      historyEmpty: "このセッションにはまだ変更履歴がありません。",
+      historyRestore: "この変更の直前に戻す",
+      clearHistory: "履歴を消去",
       newMap: "新規",
       newMapTip: "空のマインドマップを作成",
       importBtn: "読み込み",
@@ -804,7 +900,7 @@
       exportPdf: "PDF 書き出し",
       rename: "名称変更",
       removeDoc: "削除",
-      hint: "<b>ダブルクリック</b>で編集 · <b>ドラッグ</b>で親子関係や並び順を変更、中心ノードの左側または右側にドロップするとブランチの向きを切り替え · <b>Tab</b> 子ノード · <b>Enter</b> 兄弟 · <b>Delete</b> 削除",
+      hint: "<b>ダブルクリック</b>で編集 · <b>キャンバス上を自由にドラッグ</b>して親・順序・左右を変更 · <b>Ctrl+Z</b> 元に戻す · <b>Tab</b> 子ノード · <b>Enter</b> 兄弟 · <b>Delete</b> 削除",
       palLabel: "ブランチの色",
       colorDefault: "既定",
       colorDefaultTip: "継承した色に戻す",
@@ -862,6 +958,19 @@
       tBackupExported: "色と折りたたみ状態を含む JSON バックアップをダウンロードしました",
       tPdfHint: "印刷ダイアログで「PDF として保存」を選んでください",
       tMoved: function (name) { return "「" + name + "」を移動しました"; },
+      tUndoEmpty: "元に戻せる変更はありません",
+      tUndone: function (action) { return "元に戻しました：" + action; },
+      hMove: function (name) { return "「" + name + "」を移動"; },
+      hRename: function (name) { return "「" + name + "」の名前を変更"; },
+      hAdd: function (name) { return "「" + name + "」を追加"; },
+      hDelete: function (name) { return "「" + name + "」を削除"; },
+      hColor: function (name) { return "「" + name + "」の色を変更"; },
+      hToggle: function (name) { return "「" + name + "」を展開または折りたたむ"; },
+      hExpandAll: "すべてのブランチを展開",
+      hCollapseAll: "すべてのブランチを折りたたむ",
+      hNewMap: "新しいマップを作成",
+      hImport: "マップを読み込み",
+      hLoadSample: "サンプルマップを読み込み",
       tNoCycle: "ノードを自分の子孫の中へ移動することはできません",
       tPickBranchFirst: "先にブランチノードを選択してください（中心ノードには色を設定できません）",
       tShareCopied: "読み取り専用リンクをクリップボードにコピーしました",
@@ -985,12 +1094,112 @@
 
   var selectedId = root.id;
   var pending = null;   /* two-click confirmation token */
+  var changeHistory = [];
+  var HISTORY_LIMIT = 50;
+  var historyPanelEl = document.getElementById("historyPanel");
+  var historyListEl = document.getElementById("historyList");
+  var btnUndo = document.getElementById("btnUndo");
+  var btnHistory = document.getElementById("btnHistory");
 
   function stripIds(node) {
     return JSON.parse(JSON.stringify(node, function (k, v) {
       return k === "id" ? undefined : v;
     }));
   }
+  function historyLabel(entry) {
+    return t.apply(null, [entry.key].concat(entry.args || []));
+  }
+  function historyTime(iso) {
+    var d = new Date(iso);
+    return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") +
+      ":" + String(d.getSeconds()).padStart(2, "0");
+  }
+  function updateHistoryUi() {
+    if (!btnHistory) return;
+    btnUndo.disabled = changeHistory.length === 0;
+    btnHistory.textContent = t("historyCount", changeHistory.length);
+    historyListEl.textContent = "";
+    if (!changeHistory.length) {
+      var empty = document.createElement("li");
+      empty.className = "history-empty";
+      empty.textContent = t("historyEmpty");
+      historyListEl.appendChild(empty);
+      return;
+    }
+    for (var i = changeHistory.length - 1; i >= 0; i--) {
+      (function (index) {
+        var entry = changeHistory[index];
+        var li = document.createElement("li");
+        li.className = "history-item";
+        var restore = document.createElement("button");
+        restore.className = "history-restore";
+        restore.title = t("historyRestore");
+        var action = document.createElement("span");
+        action.className = "history-action";
+        action.textContent = historyLabel(entry);
+        var time = document.createElement("time");
+        time.className = "history-time";
+        time.dateTime = entry.at;
+        time.textContent = historyTime(entry.at);
+        restore.appendChild(action);
+        restore.appendChild(time);
+        restore.addEventListener("click", function () { undoTo(index); });
+        li.appendChild(restore);
+        historyListEl.appendChild(li);
+      })(i);
+    }
+  }
+  function recordHistory(key) {
+    if (readOnly) return;
+    changeHistory.push({
+      key: key,
+      args: [].slice.call(arguments, 1),
+      tree: stripIds(root),
+      activeDocId: activeDocId,
+      at: new Date().toISOString()
+    });
+    if (changeHistory.length > HISTORY_LIMIT) changeHistory.shift();
+    updateHistoryUi();
+  }
+  function clearHistory() {
+    changeHistory.length = 0;
+    historyPanelEl.hidden = true;
+    updateHistoryUi();
+  }
+  function undoTo(index) {
+    if (guard()) return;
+    var entry = changeHistory[index];
+    if (!entry) { toast(t("tUndoEmpty")); return; }
+    var label = historyLabel(entry);
+    var prev = snapshot();
+    root = revive(JSON.parse(JSON.stringify(entry.tree)));
+    selectedId = root.id;
+    activeDocId = entry.activeDocId || null;
+    changeHistory.splice(index);
+    persistActive(); save(); render(); renderLibrary(); flip(prev); fadeLines();
+    updateHistoryUi();
+    toast(t("tUndone", label));
+  }
+  function undoLast() {
+    if (!changeHistory.length) { toast(t("tUndoEmpty")); return; }
+    undoTo(changeHistory.length - 1);
+  }
+
+  btnUndo.addEventListener("click", undoLast);
+  btnHistory.addEventListener("click", function () {
+    historyPanelEl.hidden = !historyPanelEl.hidden;
+  });
+  document.getElementById("btnCloseHistory").addEventListener("click", function () {
+    historyPanelEl.hidden = true;
+  });
+  document.getElementById("btnClearHistory").addEventListener("click", clearHistory);
+  window.addEventListener("keydown", function (e) {
+    if (!(e.ctrlKey || e.metaKey) || e.shiftKey || e.altKey || e.key.toLowerCase() !== "z") return;
+    var target = e.target;
+    if (target && target.closest && target.closest("input, textarea, select, [contenteditable='true']")) return;
+    e.preventDefault();
+    undoLast();
+  });
   function save() {
     if (readOnly) return;   /* never let a shared view overwrite the viewer's own work */
     try { localStorage.setItem(STORE, JSON.stringify(stripIds(root))); }
@@ -1118,6 +1327,7 @@
       tg.draggable = false;
       tg.addEventListener("click", function (e) {
         e.stopPropagation();
+        recordHistory("hToggle", node.text);
         node.collapsed = !node.collapsed;
         save(); animatedRender();
       });
@@ -1264,6 +1474,37 @@
     return "child";
   }
 
+  function validDropCard(card, srcNode) {
+    if (!card || card.dataset.id === srcNode.id) return false;
+    var target = findNode(card.dataset.id);
+    return !!target && !contains(srcNode, target.node);
+  }
+
+  /* Find the node nearest the pointer so blank canvas space is also a useful drop area. */
+  function nearestDropCard(srcNode, x, y) {
+    var best = null, bestDistance = 150;
+    treeEl.querySelectorAll(".card").forEach(function (card) {
+      if (!validDropCard(card, srcNode)) return;
+      var r = card.getBoundingClientRect();
+      var dx = Math.max(r.left - x, 0, x - r.right);
+      var dy = Math.max(r.top - y, 0, y - r.bottom);
+      var distance = Math.hypot(dx, dy);
+      if (distance < bestDistance) { best = card; bestDistance = distance; }
+    });
+    return best;
+  }
+
+  function setPointerDrop(d, targetCard, e) {
+    var target = findNode(targetCard.dataset.id);
+    if (!target) return;
+    var targetDepth = Number(targetCard.dataset.depth || 0);
+    var mode = dropMode(targetCard, target.node, targetDepth, e);
+    targetCard.classList.add("dz-" + mode);
+    d.targetId = target.node.id;
+    d.mode = mode;
+    d.dropY = e.clientY;
+  }
+
   function wireDrag(card, node, depth) {
     if (depth === 0) return;
 
@@ -1278,7 +1519,8 @@
         startY: e.clientY,
         active: false,
         targetId: null,
-        mode: null
+        mode: null,
+        dropY: null
       };
     });
   }
@@ -1296,20 +1538,21 @@
     clearDz();
     d.targetId = null;
     d.mode = null;
-
-    var hit = document.elementFromPoint(e.clientX, e.clientY);
-    var targetCard = hit && hit.closest ? hit.closest(".card") : null;
-    if (!targetCard || targetCard.dataset.id === d.id) return;
+    d.dropY = null;
 
     var src = findNode(d.id);
-    var tgt = findNode(targetCard.dataset.id);
-    if (!src || !src.parent || !tgt || contains(src.node, tgt.node)) return;
+    if (!src || !src.parent) return;
+    var hit = document.elementFromPoint(e.clientX, e.clientY);
+    var targetCard = hit && hit.closest ? hit.closest(".card") : null;
+    if (!validDropCard(targetCard, src.node)) targetCard = null;
 
-    var targetDepth = Number(targetCard.dataset.depth || 0);
-    var mode = dropMode(targetCard, tgt.node, targetDepth, e);
-    targetCard.classList.add("dz-" + mode);
-    d.targetId = tgt.node.id;
-    d.mode = mode;
+    var canvasRect = canvasEl.getBoundingClientRect();
+    var insideCanvas = e.clientX >= canvasRect.left && e.clientX <= canvasRect.right &&
+      e.clientY >= canvasRect.top && e.clientY <= canvasRect.bottom;
+    if (!targetCard && insideCanvas) targetCard = nearestDropCard(src.node, e.clientX, e.clientY);
+    /* Far-away blank space promotes any node to a main branch on that side. */
+    if (!targetCard && insideCanvas) targetCard = cardEl(root.id);
+    if (targetCard) setPointerDrop(d, targetCard, e);
   }
 
   function finishPointerDrag(e, cancelled) {
@@ -1326,22 +1569,44 @@
     suppressClickUntil = performance.now() + 250;
     e.preventDefault();
     e.stopPropagation();
-    if (!cancelled && targetId && mode) moveNode(d.id, targetId, mode);
+    if (!cancelled && targetId && mode) moveNode(d.id, targetId, mode, d.dropY);
   }
 
-  function moveNode(srcId, targetId, mode) {
+  function insertRootBranch(node, side, clientY) {
+    var before = null;
+    root.children.some(function (candidate) {
+      if (candidate === node || (candidate.side === "left") !== (side === "left")) return false;
+      var card = cardEl(candidate.id);
+      if (!card) return false;
+      var r = card.getBoundingClientRect();
+      if (clientY < r.top + r.height / 2) { before = candidate; return true; }
+      return false;
+    });
+    if (before) root.children.splice(root.children.indexOf(before), 0, node);
+    else {
+      var last = -1;
+      root.children.forEach(function (candidate, index) {
+        if ((candidate.side === "left") === (side === "left")) last = index;
+      });
+      root.children.splice(last < 0 ? root.children.length : last + 1, 0, node);
+    }
+  }
+
+  function moveNode(srcId, targetId, mode, dropY) {
     if (guard()) return;
     var src = findNode(srcId), tgt = findNode(targetId);
     if (!src || !tgt || !src.parent) return;
     if (contains(src.node, tgt.node)) { toast(t("tNoCycle")); return; }
 
+    recordHistory("hMove", src.node.text);
     var prev = snapshot();
     src.parent.children.splice(src.parent.children.indexOf(src.node), 1);
 
     if (mode === "side-left" || mode === "side-right") {
-      if (mode === "side-left") src.node.side = "left"; else delete src.node.side;
+      var side = mode === "side-left" ? "left" : "right";
+      if (side === "left") src.node.side = "left"; else delete src.node.side;
       root.collapsed = false;
-      root.children.push(src.node);
+      insertRootBranch(src.node, side, dropY == null ? Infinity : dropY);
     } else if (mode === "child") {
       delete src.node.side;
       tgt.node.collapsed = false;
@@ -1382,6 +1647,7 @@
     if (guard()) return;
     var r = findNode(selectedId);
     if (!r || !r.parent) { toast(t("tPickBranchFirst")); return; }
+    recordHistory("hColor", r.node.text);
     if (key) r.node.color = key; else delete r.node.color;
     save(); render();
   }
@@ -1415,7 +1681,10 @@
       done = true;
       txt.contentEditable = "false";
       var v = txt.textContent.replace(/\s+/g, " ").trim();
-      if (!cancel && v) { r.node.text = v; save(); }
+      if (!cancel && v && v !== r.node.text) {
+        recordHistory("hRename", r.node.text);
+        r.node.text = v; save();
+      }
       render();
     }
     txt.addEventListener("blur", function () { commit(false); });
@@ -1432,6 +1701,7 @@
     var r = findNode(id || selectedId);
     if (!r) return;
     var n = { id: "n" + (uid++), text: t("defNewNode"), collapsed: false, children: [] };
+    recordHistory("hAdd", n.text);
     r.node.collapsed = false;
     r.node.children.push(n);
     selectedId = n.id;
@@ -1443,6 +1713,7 @@
     if (!r) return;
     if (!r.parent) { addChild(root.id); return; }
     var n = { id: "n" + (uid++), text: t("defNewNode"), collapsed: false, children: [] };
+    recordHistory("hAdd", n.text);
     if (r.parent === root && r.node.side === "left") n.side = "left";
     var idx = r.parent.children.indexOf(r.node);
     r.parent.children.splice(idx + 1, 0, n);
@@ -1457,6 +1728,7 @@
     if (!r.parent) { toast(t("tRootNoDelete")); return; }
     var kids = countNodes(r.node) - 1;
     if (kids > 0 && !confirmTwice("del:" + id, t("tConfirmDelete", kids))) return;
+    recordHistory("hDelete", r.node.text);
     var idx = r.parent.children.indexOf(r.node);
     r.parent.children.splice(idx, 1);
     selectedId = r.parent.children[Math.min(idx, r.parent.children.length - 1)]
@@ -1594,6 +1866,7 @@
   }
 
   function openDoc(doc) {
+    clearHistory();
     root = revive(JSON.parse(JSON.stringify(doc.tree)));
     selectedId = root.id;
     activeDocId = doc.id;
@@ -1786,6 +2059,7 @@
   }
   document.getElementById("btnFork").addEventListener("click", function () {
     exitReadOnly();
+    clearHistory();
     activeDocId = null;
     persistActive(); save(); render();
     toast(t("tForked"));
@@ -1820,6 +2094,7 @@
     });
     clearBtn.textContent = t("colorDefault");
     clearBtn.title = t("colorDefaultTip");
+    updateHistoryUi();
     render();
     renderLibrary();
   }
@@ -1828,8 +2103,9 @@
     document.body.classList.toggle("ro", readOnly);
     document.getElementById("roBar").hidden = !readOnly;
     document.getElementById("hintBar").hidden = readOnly;
-    ["btnSave", "btnSaveAs", "btnNew", "btnImport", "btnChild", "btnSibling", "btnDel", "btnReset", "sepEdit"]
+    ["btnSave", "btnSaveAs", "btnNew", "btnImport", "btnUndo", "btnHistory", "btnChild", "btnSibling", "btnDel", "btnReset", "sepEdit"]
       .forEach(function (id) { document.getElementById(id).hidden = readOnly; });
+    if (readOnly) historyPanelEl.hidden = true;
 
     var noteDismissed = false;
     try { noteDismissed = localStorage.getItem(NOTE_STORE) === "1"; } catch (e) { /* ignore */ }
@@ -1911,6 +2187,7 @@
     }
     if (!tree) { toast(t("tImportFail")); return; }
     if (readOnly) exitReadOnly();
+    recordHistory("hImport");
     root = tree;
     selectedId = root.id;
     activeDocId = null;
@@ -1932,6 +2209,7 @@
   document.getElementById("btnNew").addEventListener("click", function () {
     if (guard()) return;
     if (!confirmTwice("NEW", t("tConfirmNew"))) return;
+    recordHistory("hNewMap");
     root = { id: "n" + (uid++), text: t("defNewMap"), collapsed: false, children: [] };
     selectedId = root.id;
     activeDocId = null;
@@ -1957,8 +2235,11 @@
   });
 
   /* ---------- toolbar ---------- */
-  document.getElementById("btnExpand").addEventListener("click", function () { setAll(root, false); save(); animatedRender(); });
+  document.getElementById("btnExpand").addEventListener("click", function () {
+    recordHistory("hExpandAll"); setAll(root, false); save(); animatedRender();
+  });
   document.getElementById("btnCollapse").addEventListener("click", function () {
+    recordHistory("hCollapseAll");
     root.children.forEach(function (c) { setAll(c, true); });
     root.collapsed = false; save(); animatedRender();
   });
@@ -1968,6 +2249,7 @@
   document.getElementById("btnReset").addEventListener("click", function () {
     if (guard()) return;
     if (!confirmTwice("RESET", t("tConfirmReset"))) return;
+    recordHistory("hLoadSample");
     root = build(DEFAULT); selectedId = root.id; activeDocId = null;
     persistActive(); save(); render(); renderLibrary();
     toast(t("tSampleLoaded"));
@@ -2034,6 +2316,7 @@
       root = revive(tree);
       selectedId = root.id;
       readOnly = true;
+      clearHistory();
       sharePanel.hidden = true;
       applyMode();
       render();
