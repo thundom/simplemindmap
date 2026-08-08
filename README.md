@@ -1,76 +1,78 @@
-# Simple Mindmap · 简易思维导图
+# Simple Mindmap
 
-一个单文件、零依赖的互动思维导图应用。支持层级展开/折叠、节点增删改、分支配色、Markdown 导入导出、JSON 备份恢复，以及排版精美的 PDF 导出。内置一份澳大利亚 EBA（Enterprise Agreement）薪酬合规规则库作为示例。
+A zero-dependency, single-file interactive mind map editor. Build and reorganize hierarchical maps, collapse branches, customize colors, import and export Markdown, back up data as JSON, and create polished PDF documents. The app includes an Australian Enterprise Agreement (EBA) compliance rule library as a ready-to-use example.
 
-## 在线使用
+## Try it online
 
 **<https://thundom.github.io/simplemindmap/>**
 
-打开即用，数据自动保存在浏览器 localStorage 中，无任何服务器、无需登录。
+Open the page and start working immediately. Your maps are stored locally in your browser with `localStorage`; there is no server, account, or sign-in requirement.
 
-## 桌面版（Windows）
+## Windows desktop app
 
-到 [Releases](../../releases) 页面下载：
+Download the latest build from [Releases](../../releases):
 
-- `Simple Mindmap-Setup-x.x.x.exe` — 安装版（可选安装目录）
-- `Simple Mindmap-Portable-x.x.x.exe` — 便携版，无需安装，双击即用
+- `Simple Mindmap-Setup-x.x.x.exe` — installer with a selectable installation directory
+- `Simple Mindmap-Portable-x.x.x.exe` — portable version that runs without installation
 
-推送 `v*` 标签（如 `v1.0.0`）会由 GitHub Actions 自动构建并发布。
+Pushing a `v*` tag, such as `v1.0.0`, automatically builds and publishes both Windows packages through GitHub Actions.
 
-## 本地开发 / 自行打包
+## Local development and packaging
 
 ```bash
 npm install
-npm start        # 以 Electron 桌面窗口运行
-npm run dist     # 打包 Windows 安装版 + 便携版（输出到 dist/）
+npm start        # Run the app in an Electron desktop window
+npm run dist     # Build the Windows installer and portable app in dist/
 ```
 
-不想装 Node？直接双击 `index.html` 也能用——整个应用就是这一个文件。
+Do not want to install Node.js? Open `index.html` directly. The complete web application lives in that single file.
 
-## 功能
+## Features
 
-| 功能 | 说明 |
+| Feature | Description |
 | --- | --- |
-| 我的导图 | 左侧抽屉列出保存过的导图（名称、时间、节点数），可打开、重命名、删除 |
-| 保存位置 | 桌面版把每张导图存成独立的 `.json` 文件，可自选文件夹；网页版存在浏览器里 |
-| 分享 | 生成只读链接，整张导图压缩进 URL；收到的人能看和导出，但改不了、也存不进对方的库 |
-| 新建 | 清空画布，从一个根节点开始（双击确认，防误触） |
-| 编辑 | 双击节点改文字；Tab 加子节点、Enter 加同级、Delete 删除 |
-| 拖动 | 拖到节点中部＝成为其子节点，拖到上/下边缘＝插到该节点前/后 |
-| 左右布局 | 把分支拖到中心节点左半边，该分支就镜像显示在左侧 |
-| 折叠 | 每个节点可折叠，折叠后显示隐藏的子节点数；展开收起带平滑动画 |
-| 配色 | 10 色色板；主节点换色整条分支联动，次节点可单独覆盖 |
-| 导出 MD | 导出为标准 Markdown 嵌套列表（`# 标题` + `- ` 缩进列表） |
-| 备份 JSON | 完整备份，含颜色与折叠状态 |
-| 导入 | 接受 Markdown（`.md`/`.txt`）或本应用的 JSON 备份 |
-| 导出 PDF | 生成按分区排版的 A4 文档（打印对话框中选"另存为 PDF"） |
-| 载入示例 | 载入内置的 EBA 合规规则库示例 |
-| 语言 | 中文 / English / 日本語，工具栏左上角切换，界面与全部提示文案一起变 |
-| 主题 | 自动跟随系统浅色/深色模式 |
+| Map library | A side drawer lists saved maps with their name, modification time, and node count. Open, rename, or delete any map. |
+| Flexible storage | The desktop app saves each map as an individual `.json` file in a folder you choose. The web app stores maps in the browser. |
+| Read-only sharing | Generate a shareable URL containing a compressed copy of the entire map. Recipients can view and export it without changing it or adding it to their library. |
+| New maps | Clear the canvas and begin with a single root node. A double confirmation prevents accidental data loss. |
+| Fast editing | Double-click a node to edit its text. Press Tab to add a child, Enter to add a sibling, or Delete to remove a node. |
+| Drag and drop | Drop onto the center of a node to make it the parent, or onto the upper or lower edge to insert before or after it. |
+| Two-sided layout | Drag a branch onto the left half of the root node to mirror that branch on the left side of the map. |
+| Collapsible branches | Collapse any node to hide its descendants and display the hidden-node count. Expanding and collapsing use smooth animations. |
+| Branch colors | Choose from a 10-color palette. A top-level color applies to its entire branch, while individual descendants can override it. |
+| Markdown export | Export a standard Markdown nested list with a `# Heading` followed by indented `- ` list items. |
+| JSON backup | Create a complete backup that preserves content, colors, and collapsed states. |
+| Import | Import Markdown (`.md` or `.txt`) or a JSON backup created by Simple Mindmap. |
+| PDF export | Generate a structured, print-ready A4 document and save it as a PDF from the print dialog. |
+| Built-in example | Load the included EBA compliance rule library to explore the app with a substantial sample map. |
+| Multilingual interface | Switch between Chinese, English, and Japanese from the top-left toolbar. All interface text and messages change together. |
+| Automatic theme | The interface follows the system light or dark color scheme. |
 
-## Markdown 格式
+## Markdown format
 
 ```markdown
-# 导图标题
+# Mind Map Title
 
-- 一级分支
-  - 二级节点
-    - 三级节点
-- 另一个一级分支
+- First branch
+  - Child node
+    - Grandchild node
+- Another branch
 ```
 
-缩进单位自动识别（2 空格 / 4 空格 / Tab 均可）。Markdown 只承载内容；颜色与折叠状态请用 JSON 备份保留。
+Indentation is detected automatically, so two spaces, four spaces, and tabs are all supported. Markdown stores content only; use a JSON backup to preserve colors and collapsed states.
 
-## 翻译
+## Localization
 
-界面文案集中在 `index.html` 的 `I18N` 字典里，三种语言并列。首次打开按浏览器语言自动选择，之后记住你的选择。改动后跑一下检查，确保三种语言的键完全对齐、参数个数一致、页面引用的键都存在：
+Interface copy is stored in the `I18N` dictionary in `index.html`, with Chinese, English, and Japanese translations kept side by side. On first launch, the app selects a language from the browser locale and remembers the user's choice afterward.
+
+Run the localization check after changing interface text. It verifies that every locale has the same keys and placeholder counts and that every translation key referenced by the page exists:
 
 ```bash
 npm test
 ```
 
-这项检查也会在每次推送时由 GitHub Actions 自动执行。
+The same check runs automatically in GitHub Actions on every push.
 
 ## License
 
-MIT
+[MIT](LICENSE)
