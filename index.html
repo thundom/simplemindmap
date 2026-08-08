@@ -9,6 +9,7 @@
     --edge: #9fb0bc;
     --accent: #0e7c7b;
     --danger: #b3382e;
+    --notice: #b26a2b;
     --root-bg: #22303c;
     --root-ink: #f3f5f6;
     --shadow: 0 1px 3px rgba(34, 48, 60, 0.12);
@@ -33,6 +34,7 @@
       --edge: #4d5d68;
       --accent: #3aa8a0;
       --danger: #d4695f;
+      --notice: #d1934f;
       --root-bg: #dde5ea;
       --root-ink: #171e24;
       --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -44,6 +46,7 @@
   :root[data-theme="dark"] {
     --bg: #171e24; --surface: #212a33; --ink: #dde5ea; --ink-soft: #93a3af;
     --line: #3a4750; --edge: #4d5d68; --accent: #3aa8a0; --danger: #d4695f;
+    --notice: #d1934f;
     --root-bg: #dde5ea; --root-ink: #171e24; --shadow: 0 1px 3px rgba(0,0,0,0.4);
     --c-teal: #3aa8a0; --c-blue: #6ba3dd; --c-indigo: #8b97d6; --c-steel: #62aec6;
     --c-green: #86a878; --c-orange: #d1934f; --c-coral: #d97a6f; --c-plum: #c07a9d;
@@ -52,6 +55,7 @@
   :root[data-theme="light"] {
     --bg: #f3f5f6; --surface: #ffffff; --ink: #22303c; --ink-soft: #5b6b78;
     --line: #c6cfd6; --edge: #9fb0bc; --accent: #0e7c7b; --danger: #b3382e;
+    --notice: #b26a2b;
     --root-bg: #22303c; --root-ink: #f3f5f6; --shadow: 0 1px 3px rgba(34,48,60,0.12);
     --c-teal: #0e7c7b; --c-blue: #2f6db4; --c-indigo: #4a5899; --c-steel: #2b7a94;
     --c-green: #557a46; --c-orange: #b26a2b; --c-coral: #b3463c; --c-plum: #96496b;
@@ -67,6 +71,26 @@
     color: var(--ink);
   }
   .app { display: flex; flex-direction: column; height: 100vh; }
+
+  /* ---------- top notice strips ---------- */
+  .strip {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 8px 20px;
+    font-size: 12.5px; line-height: 1.5;
+  }
+  .strip[hidden] { display: none; }
+  .strip b { font-weight: 650; }
+  #roBar {
+    background: color-mix(in srgb, var(--notice) 16%, var(--surface));
+    border-bottom: 1px solid color-mix(in srgb, var(--notice) 45%, var(--line));
+    color: var(--ink);
+  }
+  #webNote {
+    background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+    color: var(--ink-soft);
+  }
+  #webNote b { color: var(--ink); }
 
   /* ---------- toolbar ---------- */
   .bar {
@@ -88,12 +112,14 @@
     color: var(--ink);
     cursor: pointer;
   }
+  .btn[hidden] { display: none; }
   .btn:hover { border-color: var(--accent); color: var(--accent); }
   .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
   .btn.primary:hover { filter: brightness(1.08); color: #fff; }
   .btn.danger:hover { border-color: var(--danger); color: var(--danger); }
   .btn.on { background: color-mix(in srgb, var(--accent) 14%, var(--surface)); border-color: var(--accent); color: var(--accent); }
+  .btn.sm { font-size: 11.5px; padding: 3px 8px; }
   .sep { width: 1px; height: 22px; background: var(--line); }
 
   .hint {
@@ -102,7 +128,23 @@
     padding: 7px 20px;
     border-bottom: 1px solid var(--line); background: var(--surface);
   }
+  .hint[hidden] { display: none; }
   .hint b { font-weight: 600; color: var(--ink); }
+
+  /* ---------- share panel ---------- */
+  #sharePanel {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  #shareUrl {
+    flex: 1; min-width: 220px;
+    font: inherit; font-size: 12px;
+    font-family: ui-monospace, Consolas, "Courier New", monospace;
+    padding: 5px 9px;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: var(--bg); color: var(--ink);
+  }
+  #shareSize { font-size: 11.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 
   /* ---------- color palette ---------- */
   .pal { display: flex; align-items: center; gap: 7px; }
@@ -147,6 +189,21 @@
     border-bottom: 1px solid var(--line);
   }
   .drawer-head h2 { font-size: 13px; margin: 0; font-weight: 650; }
+  /* the note sits at the TOP of the drawer so it is read before saving */
+  .drawer-note {
+    margin: 0; padding: 10px 14px;
+    font-size: 11.5px; line-height: 1.55; color: var(--ink-soft);
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+  }
+  .folder-label { font-weight: 650; color: var(--ink); }
+  .folder-path {
+    display: block; margin: 3px 0 7px;
+    font-family: ui-monospace, Consolas, "Courier New", monospace;
+    font-size: 11px; color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .folder-acts { display: flex; gap: 6px; flex-wrap: wrap; }
   .doc-list { list-style: none; margin: 0; padding: 8px; overflow-y: auto; flex: 1; }
   .doc {
     padding: 8px 10px; margin-bottom: 6px;
@@ -171,12 +228,7 @@
   }
   .doc-act:hover { color: var(--accent); border-color: var(--accent); }
   .doc-act.del:hover { color: var(--danger); border-color: var(--danger); }
-  .drawer-note {
-    margin: 0; padding: 9px 14px;
-    font-size: 11px; line-height: 1.5; color: var(--ink-soft);
-    border-top: 1px solid var(--line);
-  }
-  .empty { padding: 18px 12px; font-size: 12px; color: var(--ink-soft); text-align: center; }
+  .empty { padding: 18px 12px; font-size: 12px; color: var(--ink-soft); text-align: center; line-height: 1.6; }
 
   /* ---------- canvas ---------- */
   .canvas { flex: 1; overflow: auto; padding: 48px 64px; }
@@ -257,6 +309,7 @@
     cursor: grab;
     user-select: none;
   }
+  body.ro .card { cursor: default; }
   /* stub from a parent card out to its children's trunk */
   .card.open::after {
     content: ""; position: absolute; right: -26px; top: 50%;
@@ -313,6 +366,7 @@
     display: none; gap: 4px;
   }
   .card:hover .ops { display: flex; }
+  body.ro .card .ops { display: none !important; }
   .op {
     width: 20px; height: 20px;
     display: flex; align-items: center; justify-content: center;
@@ -370,6 +424,17 @@
 </style>
 
 <div class="app">
+  <div class="strip" id="roBar" hidden>
+    <span><b>只读分享视图</b> — 这是别人分享给你的导图。你可以查看、折叠和导出，但改动不会保存，也不会影响分享者。</span>
+    <span class="grow"></span>
+    <button class="btn" id="btnFork">复制一份来编辑</button>
+  </div>
+  <div class="strip" id="webNote" hidden>
+    <span><b>提示</b> — 导图保存在你当前这个浏览器里，不会上传到服务器；换设备或清除浏览数据后不保留。需要跨设备请用「备份」导出 JSON，在另一端「导入」。</span>
+    <span class="grow"></span>
+    <button class="btn sm" id="btnDismissNote">知道了</button>
+  </div>
+
   <div class="bar">
     <div>
       <h1 id="docTitle">Simple Mindmap</h1>
@@ -378,7 +443,8 @@
     <div class="grow"></div>
     <div class="btns">
       <button class="btn" id="btnDrawer" title="打开保存的导图列表">我的导图</button>
-      <button class="btn" id="btnSave" title="保存当前导图到列表">保存</button>
+      <button class="btn" id="btnSave" title="保存当前导图">保存</button>
+      <button class="btn" id="btnShare" title="生成只读分享链接">分享</button>
       <span class="sep"></span>
       <button class="btn" id="btnNew" title="新建一张空白思维导图">新建</button>
       <button class="btn" id="btnImport" title="导入 Markdown 或 JSON 备份">导入</button>
@@ -387,7 +453,7 @@
       <span class="sep"></span>
       <button class="btn" id="btnExpand">展开</button>
       <button class="btn" id="btnCollapse">折叠</button>
-      <span class="sep"></span>
+      <span class="sep" id="sepEdit"></span>
       <button class="btn" id="btnChild">＋ 子节点</button>
       <button class="btn" id="btnSibling">＋ 同级</button>
       <button class="btn danger" id="btnDel">删除</button>
@@ -396,7 +462,16 @@
       <button class="btn primary" id="btnPdf">导出 PDF</button>
     </div>
   </div>
-  <div class="hint">
+
+  <div class="strip" id="sharePanel" hidden>
+    <span>只读链接</span>
+    <input id="shareUrl" readonly aria-label="只读分享链接">
+    <button class="btn sm" id="btnCopyShare">复制</button>
+    <span id="shareSize"></span>
+    <button class="btn sm" id="btnCloseShare">关闭</button>
+  </div>
+
+  <div class="hint" id="hintBar">
     <span>
       <b>双击</b> 编辑 ·
       <b>拖动</b> 节点可换父级、调顺序，拖到中心节点左半边即移到左侧 ·
@@ -409,18 +484,16 @@
       <span class="pal-label">所选分支颜色</span>
     </span>
   </div>
+
   <div class="body">
     <aside class="drawer closed" id="drawer">
       <div class="drawer-head">
         <h2>我的导图</h2>
         <span class="grow"></span>
-        <button class="btn" id="btnSaveAs" title="把当前导图另存为一条新记录">另存为</button>
+        <button class="btn sm" id="btnSaveAs" title="把当前导图另存为一条新记录">另存为</button>
       </div>
+      <div class="drawer-note" id="drawerNote"></div>
       <ul class="doc-list" id="docList"></ul>
-      <p class="drawer-note">
-        保存在本浏览器中，换设备或清除浏览数据后不保留。
-        需要跨设备请用「备份」导出 JSON，再在另一端「导入」。
-      </p>
     </aside>
     <div class="canvas" id="canvas"><div id="tree"></div></div>
   </div>
@@ -486,6 +559,13 @@
   var LEGACY_STORE = "eba-mindmap-v1";
   var LIB_STORE = "simplemindmap-library-v1";
   var ACTIVE_STORE = "simplemindmap-active-v1";
+  var NOTE_STORE = "simplemindmap-note-dismissed-v1";
+  /* share links from the desktop app point at the published web build */
+  var SHARE_BASE = "https://thundom.github.io/simplemindmap/";
+
+  var IS_DESKTOP = !!(window.desktop && window.desktop.list);
+  var readOnly = false;
+  var desktopFolder = "";
   var uid = 0;
 
   function build(arr) {
@@ -509,8 +589,6 @@
   } catch (e) { root = build(DEFAULT); }
 
   var library = [];
-  try { library = JSON.parse(localStorage.getItem(LIB_STORE)) || []; } catch (e) { library = []; }
-  if (!Array.isArray(library)) library = [];
   var activeDocId = null;
   try { activeDocId = localStorage.getItem(ACTIVE_STORE) || null; } catch (e) { activeDocId = null; }
 
@@ -523,15 +601,15 @@
     }));
   }
   function save() {
+    if (readOnly) return;   /* never let a shared view overwrite the viewer's own work */
     try { localStorage.setItem(STORE, JSON.stringify(stripIds(root))); }
     catch (e) { /* storage unavailable — session-only */ }
   }
-  function saveLibrary() {
+  function persistActive() {
     try {
-      localStorage.setItem(LIB_STORE, JSON.stringify(library));
       if (activeDocId) localStorage.setItem(ACTIVE_STORE, activeDocId);
       else localStorage.removeItem(ACTIVE_STORE);
-    } catch (e) { toast("浏览器存储空间不足，未能保存"); }
+    } catch (e) { /* best effort */ }
   }
 
   function findNode(id, node, parent) {
@@ -550,13 +628,11 @@
     if (ancestor === node) return true;
     return ancestor.children.some(function (c) { return contains(c, node); });
   }
-  /* resolved color key of a child node: own choice, else inherited */
   function childKey(child, parentDepth, parentKey, idx) {
     if (child.color && PRINT_HEX[child.color]) return child.color;
     if (parentDepth === 0) return DEFAULT_KEYS[idx % DEFAULT_KEYS.length];
     return parentKey;
   }
-  /* two-click confirmation helper: returns true when confirmed */
   function confirmTwice(token, msg) {
     if (pending === token) { pending = null; return true; }
     pending = token;
@@ -566,6 +642,10 @@
   }
   function reduceMotion() {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+  function guard() {
+    if (readOnly) { toast("只读分享视图，请先点「复制一份来编辑」"); return true; }
+    return false;
   }
 
   /* ---------- render ---------- */
@@ -612,7 +692,6 @@
       }
     });
   }
-  /* fade the connector lines back in so they don't snap while cards glide */
   function fadeLines() {
     if (reduceMotion()) return;
     treeEl.querySelectorAll(".branch").forEach(function (b) {
@@ -633,7 +712,7 @@
     if (key) card.style.setProperty("--bc", "var(--c-" + key + ")");
     if (node.id === selectedId) card.classList.add("selected");
     card.tabIndex = 0;
-    if (depth > 0) card.draggable = true;
+    if (depth > 0 && !readOnly) card.draggable = true;
 
     var txt = document.createElement("span");
     txt.className = "txt";
@@ -654,28 +733,30 @@
       card.appendChild(tg);
     }
 
-    var ops = document.createElement("span");
-    ops.className = "ops";
-    var addBtn = document.createElement("button");
-    addBtn.className = "op"; addBtn.textContent = "+"; addBtn.title = "添加子节点";
-    addBtn.addEventListener("click", function (e) { e.stopPropagation(); addChild(node.id); });
-    ops.appendChild(addBtn);
-    if (depth > 0) {
-      var delBtn = document.createElement("button");
-      delBtn.className = "op del"; delBtn.textContent = "×"; delBtn.title = "删除节点";
-      delBtn.addEventListener("click", function (e) { e.stopPropagation(); removeNode(node.id); });
-      ops.appendChild(delBtn);
-    }
-    card.appendChild(ops);
+    if (!readOnly) {
+      var ops = document.createElement("span");
+      ops.className = "ops";
+      var addBtn = document.createElement("button");
+      addBtn.className = "op"; addBtn.textContent = "+"; addBtn.title = "添加子节点";
+      addBtn.addEventListener("click", function (e) { e.stopPropagation(); addChild(node.id); });
+      ops.appendChild(addBtn);
+      if (depth > 0) {
+        var delBtn = document.createElement("button");
+        delBtn.className = "op del"; delBtn.textContent = "×"; delBtn.title = "删除节点";
+        delBtn.addEventListener("click", function (e) { e.stopPropagation(); removeNode(node.id); });
+        ops.appendChild(delBtn);
+      }
+      card.appendChild(ops);
 
-    var dz = document.createElement("i");
-    dz.className = "dz";
-    card.appendChild(dz);
+      var dz = document.createElement("i");
+      dz.className = "dz";
+      card.appendChild(dz);
+    }
 
     card.addEventListener("click", function () { select(node.id); });
     card.addEventListener("dblclick", function () { startEdit(node.id); });
     card.addEventListener("keydown", onCardKey);
-    wireDrag(card, node, depth);
+    if (!readOnly) wireDrag(card, node, depth);
     return card;
   }
 
@@ -744,7 +825,6 @@
       root.text + " · 共 " + countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支";
     document.title = root.text + " · Simple Mindmap";
     updatePalette();
-    renderLibrary();
   }
 
   function select(id) {
@@ -767,8 +847,6 @@
       c.classList.remove("dz-before", "dz-after", "dz-child", "dz-side-left", "dz-side-right");
     });
   }
-
-  /* where a drop on this card would land, given the pointer position */
   function dropMode(card, node, depth, e) {
     var r = card.getBoundingClientRect();
     if (depth === 0) return e.clientX < r.left + r.width / 2 ? "side-left" : "side-right";
@@ -784,7 +862,7 @@
         dragId = node.id;
         card.classList.add("dragging");
         e.dataTransfer.effectAllowed = "move";
-        try { e.dataTransfer.setData("text/plain", node.id); } catch (err) { /* IE guard */ }
+        try { e.dataTransfer.setData("text/plain", node.id); } catch (err) { /* guard */ }
       });
       card.addEventListener("dragend", function () {
         dragId = null;
@@ -802,7 +880,9 @@
       clearDz();
       card.classList.add("dz-" + mode);
     });
-    card.addEventListener("dragleave", function () { card.classList.remove("dz-before", "dz-after", "dz-child", "dz-side-left", "dz-side-right"); });
+    card.addEventListener("dragleave", function () {
+      card.classList.remove("dz-before", "dz-after", "dz-child", "dz-side-left", "dz-side-right");
+    });
     card.addEventListener("drop", function (e) {
       if (!dragId || dragId === node.id) return;
       e.preventDefault();
@@ -813,6 +893,7 @@
   }
 
   function moveNode(srcId, targetId, mode) {
+    if (guard()) return;
     var src = findNode(srcId), tgt = findNode(targetId);
     if (!src || !tgt || !src.parent) return;
     if (contains(src.node, tgt.node)) { toast("不能把节点移动到它自己的子树里"); return; }
@@ -832,7 +913,6 @@
       var siblings = tgt.parent.children;
       var at = siblings.indexOf(tgt.node) + (mode === "after" ? 1 : 0);
       if (tgt.parent === root) {
-        /* keep a re-ordered top-level branch on the same side as its new neighbour */
         if (tgt.node.side === "left") src.node.side = "left"; else delete src.node.side;
       } else {
         delete src.node.side;
@@ -865,6 +945,7 @@
   palEl.appendChild(clearBtn);
 
   function applyColor(key) {
+    if (guard()) return;
     var r = findNode(selectedId);
     if (!r || !r.parent) { toast("请先选中一个分支节点（根节点不着色）"); return; }
     if (key) r.node.color = key; else delete r.node.color;
@@ -881,6 +962,7 @@
 
   /* ---------- editing ---------- */
   function startEdit(id) {
+    if (readOnly) return;
     var el = cardEl(id);
     if (!el) return;
     var txt = el.querySelector(".txt");
@@ -893,22 +975,26 @@
     var sel = window.getSelection();
     sel.removeAllRanges(); sel.addRange(range);
 
+    var done = false;
     function commit(cancel) {
+      if (done) return;   /* Enter/Escape commit directly; the later blur must not undo it */
+      done = true;
       txt.contentEditable = "false";
       var v = txt.textContent.replace(/\s+/g, " ").trim();
       if (!cancel && v) { r.node.text = v; save(); }
       render();
     }
-    txt.addEventListener("blur", function () { commit(false); }, { once: true });
+    txt.addEventListener("blur", function () { commit(false); });
     txt.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") { e.preventDefault(); txt.blur(); }
-      else if (e.key === "Escape") { e.preventDefault(); txt.removeEventListener("blur", commit); commit(true); }
+      if (e.key === "Enter") { e.preventDefault(); commit(false); }
+      else if (e.key === "Escape") { e.preventDefault(); commit(true); }
       e.stopPropagation();
     });
   }
 
   /* ---------- structure ops ---------- */
   function addChild(id) {
+    if (guard()) return;
     var r = findNode(id || selectedId);
     if (!r) return;
     var n = { id: "n" + (uid++), text: "新节点", collapsed: false, children: [] };
@@ -918,6 +1004,7 @@
     save(); animatedRender(); startEdit(n.id);
   }
   function addSibling(id) {
+    if (guard()) return;
     var r = findNode(id || selectedId);
     if (!r) return;
     if (!r.parent) { addChild(root.id); return; }
@@ -929,6 +1016,7 @@
     save(); animatedRender(); startEdit(n.id);
   }
   function removeNode(id) {
+    if (guard()) return;
     id = id || selectedId;
     var r = findNode(id);
     if (!r) return;
@@ -949,6 +1037,7 @@
   }
 
   function onCardKey(e) {
+    if (readOnly) return;
     var id = e.currentTarget.dataset.id;
     if (e.key === "Tab") { e.preventDefault(); addChild(id); }
     else if (e.key === "Enter") { e.preventDefault(); addSibling(id); }
@@ -956,9 +1045,10 @@
     else if (e.key === "F2" || e.key === " ") { e.preventDefault(); startEdit(id); }
   }
 
-  /* ---------- saved-document library ---------- */
+  /* ---------- saved-document library (files on desktop, localStorage on web) ---------- */
   var drawerEl = document.getElementById("drawer");
   var docListEl = document.getElementById("docList");
+  var noteEl = document.getElementById("drawerNote");
   var btnDrawer = document.getElementById("btnDrawer");
 
   function stamp(iso) {
@@ -968,13 +1058,72 @@
     return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()) +
       " " + p(d.getHours()) + ":" + p(d.getMinutes());
   }
+  function openDrawer() {
+    drawerEl.classList.remove("closed");
+    btnDrawer.classList.add("on");
+  }
+
+  function libLoad() {
+    if (IS_DESKTOP) {
+      return window.desktop.list().then(function (docs) {
+        library = Array.isArray(docs) ? docs : [];
+        renderLibrary();
+      }, function () {
+        library = []; renderLibrary();
+        toast("读取保存目录失败，请检查该位置是否存在");
+      });
+    }
+    try { library = JSON.parse(localStorage.getItem(LIB_STORE)) || []; } catch (e) { library = []; }
+    if (!Array.isArray(library)) library = [];
+    renderLibrary();
+    return Promise.resolve();
+  }
+  function libPersistWeb() {
+    try { localStorage.setItem(LIB_STORE, JSON.stringify(library)); }
+    catch (e) { toast("浏览器存储空间不足，未能保存"); }
+    persistActive();
+  }
+
+  function renderDrawerNote() {
+    noteEl.textContent = "";
+    if (IS_DESKTOP) {
+      var lab = document.createElement("span");
+      lab.className = "folder-label";
+      lab.textContent = "保存位置";
+      var p = document.createElement("code");
+      p.className = "folder-path";
+      p.textContent = desktopFolder || "读取中…";
+      var acts = document.createElement("div");
+      acts.className = "folder-acts";
+      var change = document.createElement("button");
+      change.className = "btn sm"; change.textContent = "更改位置";
+      change.addEventListener("click", function () {
+        window.desktop.pickFolder().then(function (res) {
+          desktopFolder = res.folder;
+          renderDrawerNote();
+          if (res.changed) { activeDocId = null; persistActive(); toast("保存位置已改为 " + res.folder); }
+          libLoad();
+        }, function () { toast("无法打开文件夹选择器"); });
+      });
+      var open = document.createElement("button");
+      open.className = "btn sm"; open.textContent = "打开文件夹";
+      open.addEventListener("click", function () { window.desktop.reveal(); });
+      acts.appendChild(change); acts.appendChild(open);
+      noteEl.appendChild(lab); noteEl.appendChild(p); noteEl.appendChild(acts);
+      return;
+    }
+    noteEl.textContent = "保存在本浏览器中，不上传服务器。换设备或清除浏览数据后不保留——重要内容请用「备份」导出 JSON。";
+  }
 
   function renderLibrary() {
+    renderDrawerNote();
     docListEl.textContent = "";
     if (!library.length) {
       var li = document.createElement("li");
       li.className = "empty";
-      li.textContent = "还没有保存的导图。点「保存」把当前这张存进来。";
+      li.textContent = IS_DESKTOP
+        ? "这个文件夹里还没有导图。点「保存」把当前这张存成 .json 文件。"
+        : "还没有保存的导图。点「保存」把当前这张存进来。";
       docListEl.appendChild(li);
       return;
     }
@@ -982,7 +1131,7 @@
       .forEach(function (doc) {
         var li = document.createElement("li");
         li.className = "doc" + (doc.id === activeDocId ? " active" : "");
-        li.title = "点击打开这张导图";
+        li.title = IS_DESKTOP ? doc.file : "点击打开这张导图";
 
         var name = document.createElement("div");
         name.className = "doc-name";
@@ -1016,7 +1165,8 @@
     root = revive(JSON.parse(JSON.stringify(doc.tree)));
     selectedId = root.id;
     activeDocId = doc.id;
-    save(); saveLibrary(); render();
+    if (readOnly) exitReadOnly();
+    persistActive(); save(); render(); renderLibrary();
     toast("已打开「" + doc.name + "」");
   }
   function renameDoc(doc, nameEl) {
@@ -1026,33 +1176,66 @@
     range.selectNodeContents(nameEl);
     var sel = window.getSelection();
     sel.removeAllRanges(); sel.addRange(range);
-    function commit() {
+    var done = false;
+    function commit(cancel) {
+      if (done) return;
+      done = true;
       nameEl.contentEditable = "false";
       var v = nameEl.textContent.replace(/\s+/g, " ").trim();
-      if (v) { doc.name = v; saveLibrary(); }
-      renderLibrary();
+      if (cancel || !v || v === doc.name) { renderLibrary(); return; }
+      if (IS_DESKTOP) {
+        window.desktop.rename(doc.file, v).then(function (res) {
+          if (activeDocId === doc.id) { activeDocId = res.file; persistActive(); }
+          libLoad();
+          toast("已重命名为「" + v + "」");
+        }, function () { toast("重命名失败"); libLoad(); });
+        return;
+      }
+      doc.name = v;
+      libPersistWeb(); renderLibrary();
     }
-    nameEl.addEventListener("blur", commit, { once: true });
+    nameEl.addEventListener("blur", function () { commit(false); });
     nameEl.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === "Escape") { e.preventDefault(); nameEl.blur(); }
+      if (e.key === "Enter") { e.preventDefault(); commit(false); }
+      else if (e.key === "Escape") { e.preventDefault(); commit(true); }
       e.stopPropagation();
     });
   }
   function deleteDoc(doc) {
     if (!confirmTwice("doc:" + doc.id, "确定删除「" + doc.name + "」？再次点击确认")) return;
-    library = library.filter(function (d) { return d.id !== doc.id; });
     if (activeDocId === doc.id) activeDocId = null;
-    saveLibrary(); renderLibrary();
+    if (IS_DESKTOP) {
+      window.desktop.remove(doc.file).then(function (res) {
+        persistActive(); libLoad();
+        toast(res && res.trashed ? "已移到回收站：" + doc.name : "已删除文件：" + doc.name);
+      }, function () { toast("删除文件失败"); libLoad(); });
+      return;
+    }
+    library = library.filter(function (d) { return d.id !== doc.id; });
+    libPersistWeb(); renderLibrary();
     toast("已删除「" + doc.name + "」");
   }
   function saveDoc(asNew) {
+    if (guard()) return;
     var existing = !asNew && activeDocId
       ? library.filter(function (d) { return d.id === activeDocId; })[0]
       : null;
+
+    if (IS_DESKTOP) {
+      var file = existing ? existing.file : null;
+      var name = existing ? existing.name : root.text;
+      window.desktop.write(file, name, stripIds(root)).then(function (res) {
+        activeDocId = res.file;
+        persistActive(); libLoad(); openDrawer();
+        toast(existing ? "已更新「" + name + "」" : "已保存为 " + res.file);
+      }, function () { toast("写入文件失败，请检查保存位置的权限"); });
+      return;
+    }
+
     if (existing) {
       existing.tree = stripIds(root);
       existing.savedAt = new Date().toISOString();
-      saveLibrary(); renderLibrary();
+      libPersistWeb(); renderLibrary();
       toast("已更新「" + existing.name + "」");
       return;
     }
@@ -1064,9 +1247,7 @@
     };
     library.push(doc);
     activeDocId = doc.id;
-    saveLibrary(); renderLibrary();
-    drawerEl.classList.remove("closed");
-    btnDrawer.classList.add("on");
+    libPersistWeb(); renderLibrary(); openDrawer();
     toast("已保存「" + doc.name + "」到我的导图");
   }
 
@@ -1076,6 +1257,126 @@
   });
   document.getElementById("btnSave").addEventListener("click", function () { saveDoc(false); });
   document.getElementById("btnSaveAs").addEventListener("click", function () { saveDoc(true); });
+
+  /* ---------- read-only sharing via the URL fragment ---------- */
+  function b64url(bytes) {
+    var s = "";
+    for (var i = 0; i < bytes.length; i += 0x8000) {
+      s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+    }
+    return btoa(s).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  }
+  function unb64url(s) {
+    s = s.replace(/-/g, "+").replace(/_/g, "/");
+    while (s.length % 4) s += "=";
+    var bin = atob(s);
+    var out = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  function encodeShare(tree) {
+    var bytes = new TextEncoder().encode(JSON.stringify(tree));
+    if (typeof CompressionStream !== "function") {
+      return Promise.resolve("s0." + b64url(bytes));
+    }
+    var stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate-raw"));
+    return new Response(stream).arrayBuffer().then(function (buf) {
+      return "s1." + b64url(new Uint8Array(buf));
+    });
+  }
+  function decodeShare(frag) {
+    var m = /^s([01])\.([A-Za-z0-9\-_]+)$/.exec(frag);
+    if (!m) return Promise.resolve(null);
+    var bytes;
+    try { bytes = unb64url(m[2]); } catch (e) { return Promise.resolve(null); }
+    var text;
+    if (m[1] === "0") {
+      text = Promise.resolve(new TextDecoder().decode(bytes));
+    } else {
+      if (typeof DecompressionStream !== "function") return Promise.resolve(null);
+      var stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      text = new Response(stream).arrayBuffer().then(function (buf) {
+        return new TextDecoder().decode(buf);
+      });
+    }
+    return text.then(function (json) {
+      var t = JSON.parse(json);
+      return (t && typeof t.text === "string") ? t : null;
+    }).catch(function () { return null; });
+  }
+
+  var sharePanel = document.getElementById("sharePanel");
+  var shareUrlEl = document.getElementById("shareUrl");
+
+  function copyText(s) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(s).then(function () { return true; }, function () { return legacyCopy(); });
+    }
+    return Promise.resolve(legacyCopy());
+  }
+  function legacyCopy() {
+    try {
+      shareUrlEl.select();
+      shareUrlEl.setSelectionRange(0, 999999);
+      return document.execCommand("copy");
+    } catch (e) { return false; }
+  }
+
+  document.getElementById("btnShare").addEventListener("click", function () {
+    encodeShare(stripIds(root)).then(function (frag) {
+      var base = /^https?:$/.test(location.protocol)
+        ? location.href.split("#")[0]
+        : SHARE_BASE;
+      var url = base + "#" + frag;
+      shareUrlEl.value = url;
+      document.getElementById("shareSize").textContent = url.length.toLocaleString() + " 字符";
+      sharePanel.hidden = false;
+      shareUrlEl.focus(); shareUrlEl.select();
+      copyText(url).then(function (ok) {
+        if (url.length > 8000) {
+          toast("链接已生成但较长（" + url.length + " 字符），部分聊天工具可能截断，必要时改用 JSON 备份");
+        } else {
+          toast(ok ? "只读链接已复制到剪贴板" : "链接已生成，请手动复制");
+        }
+      });
+    }, function () { toast("生成分享链接失败"); });
+  });
+  document.getElementById("btnCopyShare").addEventListener("click", function () {
+    copyText(shareUrlEl.value).then(function (ok) { toast(ok ? "已复制" : "复制失败，请手动选择复制"); });
+  });
+  document.getElementById("btnCloseShare").addEventListener("click", function () { sharePanel.hidden = true; });
+
+  function exitReadOnly() {
+    readOnly = false;
+    document.body.classList.remove("ro");
+    if (location.hash) {
+      history.replaceState(null, "", location.pathname + location.search);
+    }
+    applyMode();
+  }
+  document.getElementById("btnFork").addEventListener("click", function () {
+    exitReadOnly();
+    activeDocId = null;
+    persistActive(); save(); render();
+    toast("已转为可编辑副本，点「保存」可存进我的导图");
+  });
+
+  /* ---------- mode wiring ---------- */
+  function applyMode() {
+    document.body.classList.toggle("ro", readOnly);
+    document.getElementById("roBar").hidden = !readOnly;
+    document.getElementById("hintBar").hidden = readOnly;
+    ["btnSave", "btnSaveAs", "btnNew", "btnImport", "btnChild", "btnSibling", "btnDel", "btnReset", "sepEdit"]
+      .forEach(function (id) { document.getElementById(id).hidden = readOnly; });
+
+    var noteDismissed = false;
+    try { noteDismissed = localStorage.getItem(NOTE_STORE) === "1"; } catch (e) { /* ignore */ }
+    document.getElementById("webNote").hidden = IS_DESKTOP || readOnly || noteDismissed;
+  }
+  document.getElementById("btnDismissNote").addEventListener("click", function () {
+    document.getElementById("webNote").hidden = true;
+    try { localStorage.setItem(NOTE_STORE, "1"); } catch (e) { /* ignore */ }
+  });
 
   /* ---------- file: new / import / export ---------- */
   function download(name, text, type) {
@@ -1147,10 +1448,11 @@
       tree = parseMarkdown(text);
     }
     if (!tree) { toast("无法识别文件内容：需要 Markdown 列表或本应用的 JSON 备份"); return; }
+    if (readOnly) exitReadOnly();
     root = tree;
     selectedId = root.id;
     activeDocId = null;
-    save(); saveLibrary(); render();
+    persistActive(); save(); render(); renderLibrary();
     toast("已导入「" + root.text + "」，共 " + countNodes(root) + " 个节点");
   }
 
@@ -1166,11 +1468,12 @@
   });
 
   document.getElementById("btnNew").addEventListener("click", function () {
-    if (!confirmTwice("NEW", "新建将清空当前画布（可先点「保存」存进我的导图），再次点击确认")) return;
+    if (guard()) return;
+    if (!confirmTwice("NEW", "新建将清空当前画布（可先点「保存」存起来），再次点击确认")) return;
     root = { id: "n" + (uid++), text: "新思维导图", collapsed: false, children: [] };
     selectedId = root.id;
     activeDocId = null;
-    save(); saveLibrary(); render(); startEdit(root.id);
+    persistActive(); save(); render(); renderLibrary(); startEdit(root.id);
   });
   document.getElementById("btnImport").addEventListener("click", function () { fileInput.click(); });
   document.getElementById("btnMd").addEventListener("click", function () {
@@ -1181,7 +1484,9 @@
     var payload = {
       app: "simplemindmap",
       version: 1,
+      name: root.text,
       exportedAt: new Date().toISOString(),
+      savedAt: new Date().toISOString(),
       tree: stripIds(root)
     };
     download(safeName(root.text) + "-backup-" + fileStamp() + ".json",
@@ -1199,9 +1504,11 @@
   document.getElementById("btnSibling").addEventListener("click", function () { addSibling(); });
   document.getElementById("btnDel").addEventListener("click", function () { removeNode(); });
   document.getElementById("btnReset").addEventListener("click", function () {
+    if (guard()) return;
     if (!confirmTwice("RESET", "将载入内置 EBA 示例并覆盖当前内容，再次点击确认")) return;
     root = build(DEFAULT); selectedId = root.id; activeDocId = null;
-    save(); saveLibrary(); render(); toast("已载入 EBA 合规规则库示例");
+    persistActive(); save(); render(); renderLibrary();
+    toast("已载入 EBA 合规规则库示例");
   });
   document.getElementById("btnPdf").addEventListener("click", function () {
     buildPrint();
@@ -1249,7 +1556,52 @@
     document.getElementById("printDoc").innerHTML = h;
   }
 
-  render();
-  save();   /* completes the migration from LEGACY_STORE on first run */
+  /* ---------- boot ---------- */
+  function currentFragment() {
+    try { return decodeURIComponent(location.hash.slice(1)); }
+    catch (e) { return location.hash.slice(1); }
+  }
+
+  /** Load a share payload from the URL. Returns a promise that resolves once handled. */
+  function loadShare(frag) {
+    return decodeShare(frag).then(function (t) {
+      if (!t) {
+        toast("分享链接已损坏或不完整，显示的是你自己的导图");
+        return false;
+      }
+      root = revive(t);
+      selectedId = root.id;
+      readOnly = true;
+      sharePanel.hidden = true;
+      applyMode();
+      render();
+      return true;
+    });
+  }
+
+  /* a share link pasted into an already-open tab only changes the fragment */
+  window.addEventListener("hashchange", function () {
+    var f = currentFragment();
+    if (/^s[01]\./.test(f)) loadShare(f);
+    else if (readOnly) exitReadOnly();
+  });
+
+  function finishBoot() {
+    applyMode();
+    render();
+    save();   /* completes the migration from LEGACY_STORE on first run */
+    if (IS_DESKTOP) {
+      window.desktop.folder().then(function (f) { desktopFolder = f; renderDrawerNote(); },
+        function () { renderDrawerNote(); });
+    }
+    libLoad();
+  }
+
+  var bootFrag = currentFragment();
+  if (/^s[01]\./.test(bootFrag)) {
+    loadShare(bootFrag).then(finishBoot, finishBoot);
+  } else {
+    finishBoot();
+  }
 })();
 </script>
