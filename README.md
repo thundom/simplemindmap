@@ -4,13 +4,9 @@
 
 ## 在线使用
 
-仓库启用 GitHub Pages 后，直接访问：
+**<https://thundom.github.io/simplemindmap/>**
 
-```
-https://<你的用户名>.github.io/simplemindmap/
-```
-
-数据自动保存在浏览器 localStorage 中，无任何服务器、无需登录。
+打开即用，数据自动保存在浏览器 localStorage 中，无任何服务器、无需登录。
 
 ## 桌面版（Windows）
 
