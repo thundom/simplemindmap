@@ -36,8 +36,9 @@ Do not want to install Node.js? Open `index.html` directly. The complete web app
 | Read-only sharing | Generate a shareable URL containing a compressed copy of the entire map. Recipients can view and export it without changing it or adding it to their library. |
 | New maps | Clear the canvas and begin with a single root node. A double confirmation prevents accidental data loss. |
 | Fast editing | Double-click a node to edit its text. Press Tab to add a child, Enter to add a sibling, or Delete to remove a node. |
-| Drag and drop | Drop onto the center of a node to make it the parent, or onto the upper or lower edge to insert before or after it. |
-| Two-sided layout | Drop a top-level branch beside the left or right side of the root node to choose its direction and create a radial, snowflake-like map. |
+| Canvas-based drag and drop | Drag any node at any depth. Drop near another node to change its parent or order, or drop into blank canvas space to promote it to a main branch. |
+| Two-sided layout | Drop a branch anywhere on the left or right side of the root to choose its direction. Left and right main branches coexist in a radial, snowflake-like map. |
+| Undo and history | Every move, rename, add, delete, colour, and collapse action is recorded in a visible session history. Use the Undo button, select a history entry, or press `Ctrl+Z`. |
 | Collapsible branches | Collapse any node to hide its descendants and display the hidden-node count. Expanding and collapsing use smooth animations. |
 | Branch colors | Choose from a 10-color palette. A top-level color applies to its entire branch, while individual descendants can override it. |
 | Markdown export | Export a standard Markdown nested list with a `# Heading` followed by indented `- ` list items. |
