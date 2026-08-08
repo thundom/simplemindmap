@@ -32,9 +32,10 @@ Do not want to install Node.js? Open `index.html` directly. The complete web app
 | Feature | Description |
 | --- | --- |
 | Map library | A side drawer lists saved maps with their name, modification time, and node count. Open, rename, or delete any map. |
+| Persistent map tabs | Keep several mind maps open at once. Saving binds the current map to its own tab, `+` opens a new map without replacing the previous one, and open tabs return after a reload. |
 | Flexible storage | The desktop app saves each map as an individual `.json` file in a folder you choose. The web app stores maps in the browser. |
 | Locked read-only sharing | Select Share to generate and copy a URL containing a compressed snapshot of the map. Recipients can view, collapse and export it, while editing, saving and adding it to My maps remain disabled. |
-| New maps | Clear the canvas and begin with a single root node. A double confirmation prevents accidental data loss. |
+| New maps | Open a blank mind map in a new tab without replacing or closing the maps already open. |
 | Fast editing | Double-click a node to edit its text. Press Tab to add a child, Enter to add a sibling, or Delete to remove a node. |
 | Canvas-based drag and drop | Drag any node at any depth. Drop near another node to change its parent or order, or drop into blank canvas space to promote it to a main branch. |
 | Two-sided layout | Drop a branch anywhere on the left or right side of the root to choose its direction. Left and right main branches coexist in a radial, snowflake-like map. |
