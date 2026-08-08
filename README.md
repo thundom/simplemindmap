@@ -1,23 +1,23 @@
-# EBA Mindmap · 合规规则库思维导图
+# Simple Mindmap · 简易思维导图
 
-一个单文件、零依赖的互动思维导图应用，内置澳大利亚 EBA（Enterprise Agreement）薪酬合规规则库示例。支持层级展开/折叠、节点增删改、分支配色、Markdown 导入导出、JSON 备份恢复，以及排版精美的 PDF 导出。
+一个单文件、零依赖的互动思维导图应用。支持层级展开/折叠、节点增删改、分支配色、Markdown 导入导出、JSON 备份恢复，以及排版精美的 PDF 导出。内置一份澳大利亚 EBA（Enterprise Agreement）薪酬合规规则库作为示例。
 
 ## 在线使用
 
 仓库启用 GitHub Pages 后，直接访问：
 
 ```
-https://<你的用户名>.github.io/eba-mindmap/
+https://<你的用户名>.github.io/simplemindmap/
 ```
 
-数据自动保存在浏览器 localStorage 中，无任何服务器。
+数据自动保存在浏览器 localStorage 中，无任何服务器、无需登录。
 
 ## 桌面版（Windows）
 
 到 [Releases](../../releases) 页面下载：
 
-- `EBA Mindmap-Setup-x.x.x.exe` — 安装版（可选安装目录）
-- `EBA Mindmap-Portable-x.x.x.exe` — 便携版，无需安装，双击即用
+- `Simple Mindmap-Setup-x.x.x.exe` — 安装版（可选安装目录）
+- `Simple Mindmap-Portable-x.x.x.exe` — 便携版，无需安装，双击即用
 
 推送 `v*` 标签（如 `v1.0.0`）会由 GitHub Actions 自动构建并发布。
 
@@ -43,6 +43,7 @@ npm run dist     # 打包 Windows 安装版 + 便携版（输出到 dist/）
 | 备份 JSON | 完整备份，含颜色与折叠状态 |
 | 导入 | 接受 Markdown（`.md`/`.txt`）或本应用的 JSON 备份 |
 | 导出 PDF | 生成按分区排版的 A4 文档（打印对话框中选"另存为 PDF"） |
+| 载入示例 | 载入内置的 EBA 合规规则库示例 |
 | 主题 | 自动跟随系统浅色/深色模式 |
 
 ## Markdown 格式

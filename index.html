@@ -1,4 +1,4 @@
-<title>EBA 合规规则库 · Mindmap</title>
+<title>Simple Mindmap</title>
 <style>
   :root {
     --bg: #f3f5f6;
@@ -284,7 +284,7 @@
 <div class="app">
   <div class="bar">
     <div>
-      <h1 id="docTitle">EBA 合规规则库 · Compliance Rule Library</h1>
+      <h1 id="docTitle">Simple Mindmap</h1>
       <div class="sub" id="stats"></div>
     </div>
     <div class="grow"></div>
@@ -378,7 +378,8 @@
     purple: "#7d5ba6", slate: "#5b6b78"
   };
 
-  var STORE = "eba-mindmap-v1";
+  var STORE = "simplemindmap-v1";
+  var LEGACY_STORE = "eba-mindmap-v1";
   var uid = 0;
 
   function build(arr) {
@@ -396,7 +397,8 @@
 
   var root;
   try {
-    var saved = localStorage.getItem(STORE);
+    /* fall back to the pre-rename key so existing work survives the upgrade */
+    var saved = localStorage.getItem(STORE) || localStorage.getItem(LEGACY_STORE);
     root = saved ? revive(JSON.parse(saved)) : build(DEFAULT);
   } catch (e) { root = build(DEFAULT); }
 
@@ -521,8 +523,8 @@
     treeEl.textContent = "";
     treeEl.appendChild(renderNode(root, 0, null));
     document.getElementById("stats").textContent =
-      "共 " + countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支";
-    document.title = root.text + " · Mindmap";
+      root.text + " · 共 " + countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支";
+    document.title = root.text + " · Simple Mindmap";
     updatePalette();
   }
 
@@ -747,7 +749,7 @@
   });
   document.getElementById("btnBackup").addEventListener("click", function () {
     var payload = {
-      app: "eba-mindmap",
+      app: "simplemindmap",
       version: 1,
       exportedAt: new Date().toISOString(),
       tree: stripIds(root)
@@ -818,5 +820,6 @@
   }
 
   render();
+  save();   /* completes the migration from LEGACY_STORE on first run */
 })();
 </script>
