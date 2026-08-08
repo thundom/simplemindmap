@@ -1,8 +1,8 @@
 {
-  "name": "eba-mindmap",
-  "productName": "EBA Mindmap",
+  "name": "simplemindmap",
+  "productName": "Simple Mindmap",
   "version": "1.0.0",
-  "description": "Interactive EBA compliance rule library mindmap — edit, color, export to Markdown/JSON/PDF",
+  "description": "Interactive mindmap editor — collapsible tree, branch colors, Markdown/JSON import-export, PDF output",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
@@ -15,7 +15,7 @@
     "electron-builder": "^25.1.8"
   },
   "build": {
-    "appId": "com.jarvisqi.ebamindmap",
+    "appId": "com.jarvisqi.simplemindmap",
     "files": [
       "index.html",
       "electron/**"
