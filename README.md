@@ -1,0 +1,63 @@
+# EBA Mindmap · 合规规则库思维导图
+
+一个单文件、零依赖的互动思维导图应用，内置澳大利亚 EBA（Enterprise Agreement）薪酬合规规则库示例。支持层级展开/折叠、节点增删改、分支配色、Markdown 导入导出、JSON 备份恢复，以及排版精美的 PDF 导出。
+
+## 在线使用
+
+仓库启用 GitHub Pages 后，直接访问：
+
+```
+https://<你的用户名>.github.io/eba-mindmap/
+```
+
+数据自动保存在浏览器 localStorage 中，无任何服务器。
+
+## 桌面版（Windows）
+
+到 [Releases](../../releases) 页面下载：
+
+- `EBA Mindmap-Setup-x.x.x.exe` — 安装版（可选安装目录）
+- `EBA Mindmap-Portable-x.x.x.exe` — 便携版，无需安装，双击即用
+
+推送 `v*` 标签（如 `v1.0.0`）会由 GitHub Actions 自动构建并发布。
+
+## 本地开发 / 自行打包
+
+```bash
+npm install
+npm start        # 以 Electron 桌面窗口运行
+npm run dist     # 打包 Windows 安装版 + 便携版（输出到 dist/）
+```
+
+不想装 Node？直接双击 `index.html` 也能用——整个应用就是这一个文件。
+
+## 功能
+
+| 功能 | 说明 |
+| --- | --- |
+| 新建 | 清空画布，从一个根节点开始（双击确认，防误触） |
+| 编辑 | 双击节点改文字；Tab 加子节点、Enter 加同级、Delete 删除 |
+| 折叠 | 每个节点可折叠，折叠后显示隐藏的子节点数 |
+| 配色 | 10 色色板；主节点换色整条分支联动，次节点可单独覆盖 |
+| 导出 MD | 导出为标准 Markdown 嵌套列表（`# 标题` + `- ` 缩进列表） |
+| 备份 JSON | 完整备份，含颜色与折叠状态 |
+| 导入 | 接受 Markdown（`.md`/`.txt`）或本应用的 JSON 备份 |
+| 导出 PDF | 生成按分区排版的 A4 文档（打印对话框中选"另存为 PDF"） |
+| 主题 | 自动跟随系统浅色/深色模式 |
+
+## Markdown 格式
+
+```markdown
+# 导图标题
+
+- 一级分支
+  - 二级节点
+    - 三级节点
+- 另一个一级分支
+```
+
+缩进单位自动识别（2 空格 / 4 空格 / Tab 均可）。Markdown 只承载内容；颜色与折叠状态请用 JSON 备份保留。
+
+## License
+
+MIT

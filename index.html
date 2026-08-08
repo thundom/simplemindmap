@@ -1,0 +1,822 @@
+<title>EBA 合规规则库 · Mindmap</title>
+<style>
+  :root {
+    --bg: #f3f5f6;
+    --surface: #ffffff;
+    --ink: #22303c;
+    --ink-soft: #5b6b78;
+    --line: #c6cfd6;
+    --edge: #9fb0bc;
+    --accent: #0e7c7b;
+    --danger: #b3382e;
+    --root-bg: #22303c;
+    --root-ink: #f3f5f6;
+    --shadow: 0 1px 3px rgba(34, 48, 60, 0.12);
+    --c-teal: #0e7c7b;
+    --c-blue: #2f6db4;
+    --c-indigo: #4a5899;
+    --c-steel: #2b7a94;
+    --c-green: #557a46;
+    --c-orange: #b26a2b;
+    --c-coral: #b3463c;
+    --c-plum: #96496b;
+    --c-purple: #7d5ba6;
+    --c-slate: #5b6b78;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171e24;
+      --surface: #212a33;
+      --ink: #dde5ea;
+      --ink-soft: #93a3af;
+      --line: #3a4750;
+      --edge: #4d5d68;
+      --accent: #3aa8a0;
+      --danger: #d4695f;
+      --root-bg: #dde5ea;
+      --root-ink: #171e24;
+      --shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+      --c-teal: #3aa8a0; --c-blue: #6ba3dd; --c-indigo: #8b97d6; --c-steel: #62aec6;
+      --c-green: #86a878; --c-orange: #d1934f; --c-coral: #d97a6f; --c-plum: #c07a9d;
+      --c-purple: #a98fd0; --c-slate: #93a3af;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171e24; --surface: #212a33; --ink: #dde5ea; --ink-soft: #93a3af;
+    --line: #3a4750; --edge: #4d5d68; --accent: #3aa8a0; --danger: #d4695f;
+    --root-bg: #dde5ea; --root-ink: #171e24; --shadow: 0 1px 3px rgba(0,0,0,0.4);
+    --c-teal: #3aa8a0; --c-blue: #6ba3dd; --c-indigo: #8b97d6; --c-steel: #62aec6;
+    --c-green: #86a878; --c-orange: #d1934f; --c-coral: #d97a6f; --c-plum: #c07a9d;
+    --c-purple: #a98fd0; --c-slate: #93a3af;
+  }
+  :root[data-theme="light"] {
+    --bg: #f3f5f6; --surface: #ffffff; --ink: #22303c; --ink-soft: #5b6b78;
+    --line: #c6cfd6; --edge: #9fb0bc; --accent: #0e7c7b; --danger: #b3382e;
+    --root-bg: #22303c; --root-ink: #f3f5f6; --shadow: 0 1px 3px rgba(34,48,60,0.12);
+    --c-teal: #0e7c7b; --c-blue: #2f6db4; --c-indigo: #4a5899; --c-steel: #2b7a94;
+    --c-green: #557a46; --c-orange: #b26a2b; --c-coral: #b3463c; --c-plum: #96496b;
+    --c-purple: #7d5ba6; --c-slate: #5b6b78;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", "Hiragino Sans GB", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .app { display: flex; flex-direction: column; height: 100vh; }
+
+  /* ---------- toolbar ---------- */
+  .bar {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    padding: 12px 20px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar h1 { font-size: 16px; margin: 0; font-weight: 650; letter-spacing: 0.01em; }
+  .bar .sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .grow { flex: 1; }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    font: inherit; font-size: 13px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { filter: brightness(1.08); color: #fff; }
+  .btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+  .sep { width: 1px; height: 22px; background: var(--line); }
+
+  .hint {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    font-size: 12px; color: var(--ink-soft);
+    padding: 7px 20px;
+    border-bottom: 1px solid var(--line); background: var(--surface);
+  }
+  .hint b { font-weight: 600; color: var(--ink); }
+
+  /* ---------- color palette ---------- */
+  .pal { display: flex; align-items: center; gap: 7px; }
+  .pal .pal-label { font-size: 12px; color: var(--ink-soft); }
+  .sw {
+    width: 20px; height: 20px; padding: 0;
+    border-radius: 50%;
+    border: 2px solid var(--surface);
+    box-shadow: 0 0 0 1px var(--line);
+    background: var(--sc);
+    cursor: pointer;
+  }
+  .sw:hover { box-shadow: 0 0 0 2px var(--sc); }
+  .sw.cur { box-shadow: 0 0 0 2px var(--ink); }
+  .sw:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .sw-clear {
+    font: inherit; font-size: 11.5px;
+    padding: 2px 8px;
+    border: 1px dashed var(--line); border-radius: 10px;
+    background: var(--surface); color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .sw-clear:hover { color: var(--accent); border-color: var(--accent); }
+  .sw-clear.cur { border-style: solid; border-color: var(--ink); color: var(--ink); }
+
+  /* ---------- canvas ---------- */
+  .canvas { flex: 1; overflow: auto; padding: 48px 64px; }
+  #tree { width: max-content; }
+
+  /* ---------- tree layout & connectors ---------- */
+  .row { display: flex; align-items: center; }
+  .kids { display: flex; flex-direction: column; margin-left: 26px; }
+  .branch {
+    display: flex; align-items: center; position: relative;
+    padding: 5px 0 5px 34px;
+    --lc: color-mix(in srgb, var(--bc, var(--edge)) 65%, var(--line));
+  }
+  /* middle child: straight stub + full-height trunk (T junction) */
+  .branch::before {
+    content: ""; position: absolute; left: 0; top: 50%;
+    width: 34px; border-top: 2px solid var(--lc);
+  }
+  .branch::after {
+    content: ""; position: absolute; left: 0; top: 0; height: 100%;
+    border-left: 2px solid var(--lc);
+  }
+  /* first child: rounded elbow curving down into the trunk */
+  .branch:first-child::before {
+    height: 50%;
+    border-left: 2px solid var(--lc);
+    border-top-left-radius: 14px;
+  }
+  .branch:first-child::after { display: none; }
+  /* last child: rounded elbow curving up into the trunk */
+  .branch:last-child::before {
+    top: 0; height: 50%;
+    border-top: none;
+    border-bottom: 2px solid var(--lc);
+    border-left: 2px solid var(--lc);
+    border-bottom-left-radius: 14px;
+  }
+  .branch:last-child::after { display: none; }
+  /* only child: one straight line, no trunk */
+  .branch:only-child::before {
+    top: 50%; height: 0;
+    border: none; border-top: 2px solid var(--lc);
+    border-radius: 0;
+  }
+
+  /* ---------- node card ---------- */
+  .card {
+    position: relative;
+    display: flex; align-items: center; gap: 8px;
+    max-width: 340px;
+    padding: 7px 12px;
+    background: color-mix(in srgb, var(--bc, var(--edge)) 7%, var(--surface));
+    border: 1px solid color-mix(in srgb, var(--bc, var(--edge)) 45%, var(--line));
+    border-left: 4px solid var(--bc, var(--edge));
+    border-radius: 7px;
+    box-shadow: var(--shadow);
+    font-size: 13.5px;
+    line-height: 1.45;
+    cursor: pointer;
+    user-select: none;
+  }
+  /* stub from a parent card out to its children's trunk */
+  .card.open::after {
+    content: ""; position: absolute; right: -26px; top: 50%;
+    width: 26px;
+    border-top: 2px solid color-mix(in srgb, var(--bc, var(--edge)) 65%, var(--line));
+  }
+  .card.depth-1 { font-weight: 650; font-size: 14px; }
+  .card.root {
+    background: var(--root-bg); color: var(--root-ink);
+    border-color: var(--root-bg);
+    font-size: 16px; font-weight: 700;
+    padding: 12px 18px; max-width: 260px;
+  }
+  .card.selected { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card .txt { min-width: 0; overflow-wrap: break-word; }
+  .card .txt[contenteditable="true"] {
+    cursor: text; user-select: text; outline: none;
+    border-bottom: 1px dashed var(--accent);
+  }
+
+  .toggle {
+    flex: none;
+    min-width: 20px; height: 20px; padding: 0 5px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    border: 1px solid color-mix(in srgb, var(--bc, var(--edge)) 55%, var(--line));
+    border-radius: 10px;
+    background: var(--surface); color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .toggle:hover { color: var(--accent); border-color: var(--accent); }
+  .card.root .toggle { background: transparent; color: var(--root-ink); border-color: color-mix(in srgb, var(--root-ink) 40%, transparent); }
+
+  .card .ops {
+    position: absolute; top: -11px; right: -8px;
+    display: none; gap: 4px;
+  }
+  .card:hover .ops { display: flex; }
+  .op {
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; line-height: 1;
+    border: 1px solid var(--line); border-radius: 50%;
+    background: var(--surface); color: var(--ink-soft);
+    cursor: pointer; box-shadow: var(--shadow);
+  }
+  .op:hover { color: var(--accent); border-color: var(--accent); }
+  .op.del:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* ---------- toast ---------- */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--root-bg); color: var(--root-ink);
+    padding: 9px 18px; border-radius: 8px;
+    font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    max-width: 80vw; text-align: center; z-index: 50;
+  }
+  #toast.show { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+
+  /* ---------- print document ---------- */
+  #printDoc { display: none; }
+  @media print {
+    .app, #toast { display: none !important; }
+    body { background: #fff; color: #1c2530; }
+    #printDoc { display: block; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif; }
+    @page { size: A4; margin: 12mm 12mm 14mm; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+    .p-head { border-bottom: 3px solid #22303c; padding-bottom: 10px; margin-bottom: 16px; }
+    .p-title { font-size: 23pt; font-weight: 700; margin: 0 0 6px; letter-spacing: 0.01em; }
+    .p-meta { font-size: 9pt; color: #5b6b78; display: flex; gap: 18px; }
+
+    .p-sec { margin: 14pt 0 0; break-inside: avoid-page; }
+    .p-sec + .p-sec { margin-top: 18pt; }
+    .p-h1 {
+      font-size: 14pt; font-weight: 700; margin: 0 0 6pt;
+      padding: 4pt 8pt; border-left: 5px solid var(--pc, #0e7c7b);
+      background: color-mix(in srgb, var(--pc, #0e7c7b) 8%, #fff);
+    }
+    .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4pt 18pt; align-items: start; }
+    .p-sub { break-inside: avoid; padding: 3pt 0; }
+    .p-h2 {
+      font-size: 10.5pt; font-weight: 650; margin: 0 0 2pt;
+      display: flex; align-items: baseline; gap: 6px;
+    }
+    .p-h2::before { content: ""; flex: none; width: 7px; height: 7px; background: var(--pc, #0e7c7b); align-self: center; }
+    .p-ul { margin: 0; padding-left: 16pt; font-size: 9.5pt; line-height: 1.55; color: #333d47; }
+    .p-ul .p-ul { font-size: 9pt; padding-left: 12pt; }
+    .p-foot { margin-top: 20pt; padding-top: 6pt; border-top: 1px solid #c6cfd6; font-size: 8pt; color: #8a98a3; }
+  }
+</style>
+
+<div class="app">
+  <div class="bar">
+    <div>
+      <h1 id="docTitle">EBA 合规规则库 · Compliance Rule Library</h1>
+      <div class="sub" id="stats"></div>
+    </div>
+    <div class="grow"></div>
+    <div class="btns">
+      <button class="btn" id="btnNew" title="新建一张空白思维导图">新建</button>
+      <button class="btn" id="btnImport" title="导入 Markdown 或 JSON 备份">导入</button>
+      <button class="btn" id="btnMd" title="导出为 Markdown 文件">导出 MD</button>
+      <button class="btn" id="btnBackup" title="下载 JSON 备份（含颜色与折叠状态）">备份</button>
+      <span class="sep"></span>
+      <button class="btn" id="btnExpand">展开</button>
+      <button class="btn" id="btnCollapse">折叠</button>
+      <span class="sep"></span>
+      <button class="btn" id="btnChild">＋ 子节点</button>
+      <button class="btn" id="btnSibling">＋ 同级</button>
+      <button class="btn danger" id="btnDel">删除</button>
+      <span class="sep"></span>
+      <button class="btn" id="btnReset" title="载入内置的 EBA 合规规则库示例">载入示例</button>
+      <button class="btn primary" id="btnPdf">导出 PDF</button>
+    </div>
+  </div>
+  <div class="hint">
+    <span>
+      <b>双击</b> 编辑文字 ·
+      <b>单击</b> 选中节点 ·
+      <b>Tab</b> 加子节点 ·
+      <b>Enter</b> 加同级 ·
+      <b>Delete</b> 删除 ·
+      自动保存 · MD 可再导入 · JSON 备份含颜色
+    </span>
+    <span class="grow"></span>
+    <span class="pal" id="palette">
+      <span class="pal-label">所选分支颜色</span>
+    </span>
+  </div>
+  <div class="canvas"><div id="tree"></div></div>
+</div>
+
+<input type="file" id="fileInput" accept=".md,.markdown,.txt,.json" hidden>
+<div id="toast" role="status"></div>
+<div id="printDoc"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DEFAULT = ["EBA Compliance Rule Library", [
+    ["A. 规则来源与优先级", [
+      ["National Employment Standards (NES)", [["最低法定权益"], ["最大周工时与灵活安排"], ["法定休假与公共假期"], ["终止通知与冗员"]]],
+      ["Modern Award / Award coverage", [["适用性与排除"], ["分类与最低工资"], ["Award 与 EBA 对照基线"], ["Better Off Overall Test 基准"]]],
+      ["Enterprise Agreement (EBA)", [["覆盖范围与适用员工"], ["名词定义与解释"], ["名义届满日与版本"], ["条款、附件、工资表及当地安排"]]],
+      ["Employment contract", [["合同高于最低标准的个人权益"], ["岗位、地点、薪酬与工时约定"], ["固定期限及特殊条款"]]],
+      ["Policies / procedures / custom & practice", [["企业政策"], ["操作程序与 SOP"], ["已形成惯例"], ["管理层书面批准的例外"]]],
+      ["Legislation & external obligations", [["Fair Work Act / Regulations"], ["Superannuation Guarantee"], ["Taxation / PAYG / STP"], ["State payroll tax / long service leave / workers compensation"], ["Privacy / record keeping / right to disconnect"]]]
+    ]],
+    ["B. Coverage & employee classification", [
+      ["Coverage determination", [["Legal entity / ABN"], ["Employing company"], ["Work location / state"], ["Business unit / function"], ["Employee cohort / excluded role"]]],
+      ["Employment status", [["Permanent full-time"], ["Permanent part-time"], ["Casual"], ["Fixed-term / maximum-term"], ["Apprentice / trainee / junior"]]],
+      ["Classification", [["Job family / job profile"], ["Grade / level / band"], ["Skill, licence and competency"], ["Higher duties / acting classification"], ["Progression and reclassification"]]]
+    ]],
+    ["C. Working time & attendance", [
+      ["Ordinary hours", [["Daily / weekly ordinary hours"], ["Span of hours"], ["Roster cycle / averaging period"], ["Full-time and part-time patterns"], ["Minimum engagement"]]],
+      ["Roster governance", [["Roster publication notice"], ["Roster change notice"], ["Employee consultation"], ["Shift start/end and handover"], ["Make-up time / flex arrangements"]]],
+      ["Breaks & rest", [["Meal break entitlement"], ["Paid rest break"], ["Break timing window"], ["Rest between shifts"], ["Missed or interrupted break consequence"]]],
+      ["Overtime triggers", [["Daily threshold"], ["Weekly / cycle threshold"], ["Outside span"], ["Rostered day off"], ["Recall / call-back / remote call"]]],
+      ["Availability controls", [["On-call / standby"], ["Right to disconnect"], ["Reasonable additional hours"], ["Fatigue and maximum shift length"]]]
+    ]],
+    ["D. Pay, penalties & allowances", [
+      ["Base remuneration", [["Minimum rate by classification"], ["Annualised salary / loaded rate"], ["Casual loading"], ["Apprentice / junior rate"], ["Salary absorption / set-off"]]],
+      ["Penalty rates", [["Afternoon / night shift"], ["Permanent night shift"], ["Saturday / Sunday"], ["Public holiday"], ["Early start / late finish"]]],
+      ["Overtime calculation"]
+    ]]
+  ]];
+
+  /* comfortable mainstream colors; hex values live in CSS vars per theme */
+  var PALETTE = [
+    { k: "teal",   n: "青绿" },
+    { k: "blue",   n: "蓝" },
+    { k: "indigo", n: "靛蓝" },
+    { k: "steel",  n: "青蓝" },
+    { k: "green",  n: "绿" },
+    { k: "orange", n: "橙" },
+    { k: "coral",  n: "珊瑚红" },
+    { k: "plum",   n: "梅红" },
+    { k: "purple", n: "紫" },
+    { k: "slate",  n: "灰蓝" }
+  ];
+  var DEFAULT_KEYS = ["teal", "indigo", "orange", "plum", "green", "purple"];
+  var PRINT_HEX = {
+    teal: "#0e7c7b", blue: "#2f6db4", indigo: "#4a5899", steel: "#2b7a94",
+    green: "#557a46", orange: "#b26a2b", coral: "#b3463c", plum: "#96496b",
+    purple: "#7d5ba6", slate: "#5b6b78"
+  };
+
+  var STORE = "eba-mindmap-v1";
+  var uid = 0;
+
+  function build(arr) {
+    var n = { id: "n" + (uid++), text: arr[0], collapsed: false, children: [] };
+    (arr[1] || []).forEach(function (c) { n.children.push(build(c)); });
+    return n;
+  }
+  function revive(o) {
+    o.id = "n" + (uid++);
+    if (typeof o.text !== "string") o.text = String(o.text || "节点");
+    if (!Array.isArray(o.children)) o.children = [];
+    o.children.forEach(revive);
+    return o;
+  }
+
+  var root;
+  try {
+    var saved = localStorage.getItem(STORE);
+    root = saved ? revive(JSON.parse(saved)) : build(DEFAULT);
+  } catch (e) { root = build(DEFAULT); }
+
+  var selectedId = root.id;
+  var pending = null;   /* two-click confirmation token */
+
+  function stripIds(node) {
+    return JSON.parse(JSON.stringify(node, function (k, v) {
+      return k === "id" ? undefined : v;
+    }));
+  }
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify(stripIds(root))); }
+    catch (e) { /* storage unavailable — session-only */ }
+  }
+
+  function findNode(id, node, parent) {
+    node = node || root; parent = parent || null;
+    if (node.id === id) return { node: node, parent: parent };
+    for (var i = 0; i < node.children.length; i++) {
+      var r = findNode(id, node.children[i], node);
+      if (r) return r;
+    }
+    return null;
+  }
+  function countNodes(n) {
+    return 1 + n.children.reduce(function (s, c) { return s + countNodes(c); }, 0);
+  }
+  /* resolved color key of a child node: own choice, else inherited */
+  function childKey(child, parentDepth, parentKey, idx) {
+    if (child.color && PRINT_HEX[child.color]) return child.color;
+    if (parentDepth === 0) return DEFAULT_KEYS[idx % DEFAULT_KEYS.length];
+    return parentKey;
+  }
+  /* two-click confirmation helper: returns true when confirmed */
+  function confirmTwice(token, msg) {
+    if (pending === token) { pending = null; return true; }
+    pending = token;
+    toast(msg);
+    setTimeout(function () { if (pending === token) pending = null; }, 4000);
+    return false;
+  }
+
+  /* ---------- render ---------- */
+  var treeEl = document.getElementById("tree");
+  var toastEl = document.getElementById("toast");
+  var toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2600);
+  }
+
+  function renderNode(node, depth, key) {
+    var row = document.createElement("div");
+    row.className = "row";
+
+    var card = document.createElement("div");
+    card.className = "card depth-" + depth + (depth === 0 ? " root" : "");
+    card.dataset.id = node.id;
+    if (key) card.style.setProperty("--bc", "var(--c-" + key + ")");
+    if (node.id === selectedId) card.classList.add("selected");
+    card.tabIndex = 0;
+
+    var txt = document.createElement("span");
+    txt.className = "txt";
+    txt.textContent = node.text;
+    card.appendChild(txt);
+
+    if (node.children.length) {
+      var tg = document.createElement("button");
+      tg.className = "toggle";
+      tg.title = node.collapsed ? "展开" : "折叠";
+      tg.textContent = node.collapsed ? String(countNodes(node) - 1) : "−";
+      tg.addEventListener("click", function (e) {
+        e.stopPropagation();
+        node.collapsed = !node.collapsed;
+        save(); render();
+      });
+      card.appendChild(tg);
+    }
+
+    var ops = document.createElement("span");
+    ops.className = "ops";
+    var addBtn = document.createElement("button");
+    addBtn.className = "op"; addBtn.textContent = "+"; addBtn.title = "添加子节点";
+    addBtn.addEventListener("click", function (e) { e.stopPropagation(); addChild(node.id); });
+    ops.appendChild(addBtn);
+    if (depth > 0) {
+      var delBtn = document.createElement("button");
+      delBtn.className = "op del"; delBtn.textContent = "×"; delBtn.title = "删除节点";
+      delBtn.addEventListener("click", function (e) { e.stopPropagation(); removeNode(node.id); });
+      ops.appendChild(delBtn);
+    }
+    card.appendChild(ops);
+
+    card.addEventListener("click", function () { select(node.id); });
+    card.addEventListener("dblclick", function () { startEdit(node.id); });
+    card.addEventListener("keydown", onCardKey);
+
+    row.appendChild(card);
+
+    if (node.children.length && !node.collapsed) {
+      card.classList.add("open");
+      var kids = document.createElement("div");
+      kids.className = "kids";
+      node.children.forEach(function (c, i) {
+        var ck = childKey(c, depth, key, i);
+        var b = document.createElement("div");
+        b.className = "branch";
+        if (ck) b.style.setProperty("--bc", "var(--c-" + ck + ")");
+        b.appendChild(renderNode(c, depth + 1, ck));
+        kids.appendChild(b);
+      });
+      row.appendChild(kids);
+    }
+    return row;
+  }
+
+  function render() {
+    treeEl.textContent = "";
+    treeEl.appendChild(renderNode(root, 0, null));
+    document.getElementById("stats").textContent =
+      "共 " + countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支";
+    document.title = root.text + " · Mindmap";
+    updatePalette();
+  }
+
+  function select(id) {
+    selectedId = id;
+    var prev = treeEl.querySelector(".card.selected");
+    if (prev) prev.classList.remove("selected");
+    var el = cardEl(id);
+    if (el) { el.classList.add("selected"); el.focus(); }
+    updatePalette();
+  }
+  function cardEl(id) {
+    return treeEl.querySelector('.card[data-id="' + id + '"]');
+  }
+
+  /* ---------- color palette ---------- */
+  var palEl = document.getElementById("palette");
+  PALETTE.forEach(function (p) {
+    var sw = document.createElement("button");
+    sw.className = "sw";
+    sw.dataset.key = p.k;
+    sw.title = p.n;
+    sw.setAttribute("aria-label", "颜色：" + p.n);
+    sw.style.setProperty("--sc", "var(--c-" + p.k + ")");
+    sw.addEventListener("click", function () { applyColor(p.k); });
+    palEl.appendChild(sw);
+  });
+  var clearBtn = document.createElement("button");
+  clearBtn.className = "sw-clear";
+  clearBtn.textContent = "默认";
+  clearBtn.title = "恢复默认 / 跟随上级颜色";
+  clearBtn.addEventListener("click", function () { applyColor(null); });
+  palEl.appendChild(clearBtn);
+
+  function applyColor(key) {
+    var r = findNode(selectedId);
+    if (!r || !r.parent) { toast("请先选中一个分支节点（根节点不着色）"); return; }
+    if (key) r.node.color = key; else delete r.node.color;
+    save(); render();
+  }
+  function updatePalette() {
+    var r = findNode(selectedId);
+    var cur = (r && r.node.color) || null;
+    palEl.querySelectorAll(".sw").forEach(function (sw) {
+      sw.classList.toggle("cur", sw.dataset.key === cur);
+    });
+    clearBtn.classList.toggle("cur", !cur);
+  }
+
+  /* ---------- editing ---------- */
+  function startEdit(id) {
+    var el = cardEl(id);
+    if (!el) return;
+    var txt = el.querySelector(".txt");
+    var r = findNode(id);
+    txt.contentEditable = "true";
+    txt.focus();
+    var range = document.createRange();
+    range.selectNodeContents(txt);
+    var sel = window.getSelection();
+    sel.removeAllRanges(); sel.addRange(range);
+
+    function commit(cancel) {
+      txt.contentEditable = "false";
+      var v = txt.textContent.replace(/\s+/g, " ").trim();
+      if (!cancel && v) { r.node.text = v; save(); }
+      render();
+    }
+    txt.addEventListener("blur", function () { commit(false); }, { once: true });
+    txt.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); txt.blur(); }
+      else if (e.key === "Escape") { e.preventDefault(); txt.removeEventListener("blur", commit); commit(true); }
+      e.stopPropagation();
+    });
+  }
+
+  /* ---------- structure ops ---------- */
+  function addChild(id) {
+    var r = findNode(id || selectedId);
+    if (!r) return;
+    var n = { id: "n" + (uid++), text: "新节点", collapsed: false, children: [] };
+    r.node.collapsed = false;
+    r.node.children.push(n);
+    selectedId = n.id;
+    save(); render(); startEdit(n.id);
+  }
+  function addSibling(id) {
+    var r = findNode(id || selectedId);
+    if (!r) return;
+    if (!r.parent) { addChild(root.id); return; }
+    var n = { id: "n" + (uid++), text: "新节点", collapsed: false, children: [] };
+    var idx = r.parent.children.indexOf(r.node);
+    r.parent.children.splice(idx + 1, 0, n);
+    selectedId = n.id;
+    save(); render(); startEdit(n.id);
+  }
+  function removeNode(id) {
+    id = id || selectedId;
+    var r = findNode(id);
+    if (!r) return;
+    if (!r.parent) { toast("根节点不能删除"); return; }
+    var kids = countNodes(r.node) - 1;
+    if (kids > 0 && !confirmTwice("del:" + id, "该节点含 " + kids + " 个子节点，再次点击删除以确认")) return;
+    var idx = r.parent.children.indexOf(r.node);
+    r.parent.children.splice(idx, 1);
+    selectedId = r.parent.children[Math.min(idx, r.parent.children.length - 1)]
+      ? r.parent.children[Math.min(idx, r.parent.children.length - 1)].id
+      : r.parent.id;
+    save(); render();
+    toast("已删除「" + r.node.text + "」");
+  }
+  function setAll(node, collapsed) {
+    if (node.children.length) node.collapsed = collapsed;
+    node.children.forEach(function (c) { setAll(c, collapsed); });
+  }
+
+  function onCardKey(e) {
+    var id = e.currentTarget.dataset.id;
+    if (e.key === "Tab") { e.preventDefault(); addChild(id); }
+    else if (e.key === "Enter") { e.preventDefault(); addSibling(id); }
+    else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); removeNode(id); }
+    else if (e.key === "F2" || e.key === " ") { e.preventDefault(); startEdit(id); }
+  }
+
+  /* ---------- file: new / import / export ---------- */
+  function download(name, text, type) {
+    var blob = new Blob([text], { type: type || "text/plain;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  }
+  function fileStamp() {
+    var d = new Date();
+    return d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+  }
+  function safeName(s) {
+    var v = s.replace(/[\\/:*?"<>|#]/g, "").trim().slice(0, 40);
+    return v || "mindmap";
+  }
+
+  function toMarkdown() {
+    var lines = ["# " + root.text, ""];
+    function walk(n, depth) {
+      lines.push("  ".repeat(depth) + "- " + n.text);
+      n.children.forEach(function (c) { walk(c, depth + 1); });
+    }
+    root.children.forEach(function (c) { walk(c, 0); });
+    return lines.join("\n") + "\n";
+  }
+
+  function parseMarkdown(text) {
+    var lines = text.split(/\r?\n/);
+    var rootText = null;
+    var items = [];
+    lines.forEach(function (ln) {
+      var h = ln.match(/^#{1,2}\s+(.+)/);
+      if (h && rootText === null && items.length === 0) { rootText = h[1].trim(); return; }
+      var m = ln.match(/^([ \t]*)[-*+]\s+(.+)/);
+      if (m) items.push({ indent: m[1].replace(/\t/g, "  ").length, text: m[2].trim() });
+    });
+    if (!items.length) return null;
+    var unit = null;
+    items.forEach(function (it) {
+      if (it.indent > 0 && (unit === null || it.indent < unit)) unit = it.indent;
+    });
+    unit = unit || 2;
+    var r = { id: "n" + (uid++), text: rootText || "导入的思维导图", collapsed: false, children: [] };
+    var stack = [{ node: r, level: -1 }];
+    items.forEach(function (it) {
+      var level = Math.round(it.indent / unit);
+      var n = { id: "n" + (uid++), text: it.text, collapsed: false, children: [] };
+      while (stack.length > 1 && stack[stack.length - 1].level >= level) stack.pop();
+      stack[stack.length - 1].node.children.push(n);
+      stack.push({ node: n, level: level });
+    });
+    return r;
+  }
+
+  function importText(text, name) {
+    var tree = null;
+    var trimmed = text.replace(/^﻿/, "").trim();
+    if (/\.json$/i.test(name) || trimmed.charAt(0) === "{") {
+      try {
+        var obj = JSON.parse(trimmed);
+        var raw = obj.tree || obj;
+        if (raw && typeof raw.text === "string") tree = revive(raw);
+      } catch (e) { /* fall through to error toast */ }
+    } else {
+      tree = parseMarkdown(text);
+    }
+    if (!tree) { toast("无法识别文件内容：需要 Markdown 列表或本应用的 JSON 备份"); return; }
+    root = tree;
+    selectedId = root.id;
+    save(); render();
+    toast("已导入「" + root.text + "」，共 " + countNodes(root) + " 个节点");
+  }
+
+  var fileInput = document.getElementById("fileInput");
+  fileInput.addEventListener("change", function () {
+    var f = fileInput.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () { importText(String(reader.result), f.name); };
+    reader.onerror = function () { toast("读取文件失败，请重试"); };
+    reader.readAsText(f, "utf-8");
+    fileInput.value = "";
+  });
+
+  document.getElementById("btnNew").addEventListener("click", function () {
+    if (!confirmTwice("NEW", "新建将清空当前画布（可先点「备份」保存），再次点击确认")) return;
+    root = { id: "n" + (uid++), text: "新思维导图", collapsed: false, children: [] };
+    selectedId = root.id;
+    save(); render(); startEdit(root.id);
+  });
+  document.getElementById("btnImport").addEventListener("click", function () { fileInput.click(); });
+  document.getElementById("btnMd").addEventListener("click", function () {
+    download(safeName(root.text) + "-" + fileStamp() + ".md", toMarkdown(), "text/markdown;charset=utf-8");
+    toast("已导出 Markdown（不含颜色；完整备份请用 JSON）");
+  });
+  document.getElementById("btnBackup").addEventListener("click", function () {
+    var payload = {
+      app: "eba-mindmap",
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      tree: stripIds(root)
+    };
+    download(safeName(root.text) + "-backup-" + fileStamp() + ".json",
+      JSON.stringify(payload, null, 2), "application/json;charset=utf-8");
+    toast("已下载 JSON 备份，含颜色与折叠状态");
+  });
+
+  /* ---------- toolbar ---------- */
+  document.getElementById("btnExpand").addEventListener("click", function () { setAll(root, false); save(); render(); });
+  document.getElementById("btnCollapse").addEventListener("click", function () {
+    root.children.forEach(function (c) { setAll(c, true); });
+    root.collapsed = false; save(); render();
+  });
+  document.getElementById("btnChild").addEventListener("click", function () { addChild(); });
+  document.getElementById("btnSibling").addEventListener("click", function () { addSibling(); });
+  document.getElementById("btnDel").addEventListener("click", function () { removeNode(); });
+  document.getElementById("btnReset").addEventListener("click", function () {
+    if (!confirmTwice("RESET", "将载入内置 EBA 示例并覆盖当前内容，再次点击确认")) return;
+    root = build(DEFAULT); selectedId = root.id;
+    save(); render(); toast("已载入 EBA 合规规则库示例");
+  });
+  document.getElementById("btnPdf").addEventListener("click", function () {
+    buildPrint();
+    toast("在打印对话框中选择「另存为 PDF / Save as PDF」");
+    setTimeout(function () { window.print(); }, 150);
+  });
+  window.addEventListener("beforeprint", buildPrint);
+
+  /* ---------- print document ---------- */
+  function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function leafList(nodes) {
+    if (!nodes.length) return "";
+    var h = '<ul class="p-ul">';
+    nodes.forEach(function (n) {
+      h += "<li>" + esc(n.text) + leafList(n.children) + "</li>";
+    });
+    return h + "</ul>";
+  }
+  function buildPrint() {
+    var d = new Date();
+    var date = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    var h = '<div class="p-head"><h1 class="p-title">' + esc(root.text) + "</h1>" +
+      '<div class="p-meta"><span>导出日期 ' + date + "</span><span>共 " +
+      countNodes(root) + " 个节点 · " + root.children.length + " 个一级分支</span></div></div>";
+
+    root.children.forEach(function (sec, i) {
+      var secKey = childKey(sec, 0, null, i);
+      h += '<div class="p-sec" style="--pc:' + PRINT_HEX[secKey] + '">' +
+        '<h2 class="p-h1">' + esc(sec.text) + "</h2>";
+      if (sec.children.length) {
+        h += '<div class="p-grid">';
+        sec.children.forEach(function (sub, j) {
+          var subKey = childKey(sub, 1, secKey, j);
+          var style = subKey !== secKey ? ' style="--pc:' + PRINT_HEX[subKey] + '"' : "";
+          h += '<div class="p-sub"' + style + '><h3 class="p-h2">' + esc(sub.text) + "</h3>" +
+            leafList(sub.children) + "</div>";
+        });
+        h += "</div>";
+      }
+      h += "</div>";
+    });
+    h += '<div class="p-foot">' + esc(root.text) + " · " + date + "</div>";
+    document.getElementById("printDoc").innerHTML = h;
+  }
+
+  render();
+})();
+</script>
