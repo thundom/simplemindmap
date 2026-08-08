@@ -22,6 +22,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Check translations are complete
+        run: node i18n-check.js
       - name: Stage static site
         run: |
           mkdir -p _site
