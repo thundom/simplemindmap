@@ -1,0 +1,38 @@
+{
+  "name": "eba-mindmap",
+  "productName": "EBA Mindmap",
+  "version": "1.0.0",
+  "description": "Interactive EBA compliance rule library mindmap — edit, color, export to Markdown/JSON/PDF",
+  "main": "electron/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "author": "Jarvis Qi",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.jarvisqi.ebamindmap",
+    "files": [
+      "index.html",
+      "electron/**"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
+  }
+}
