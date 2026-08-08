@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Simple Mindmap</title>
 <style>
   :root {
@@ -92,6 +93,12 @@
     color: var(--ink-soft);
   }
   #webNote b { color: var(--ink); }
+  #errBar {
+    background: color-mix(in srgb, var(--danger) 14%, var(--surface));
+    border-bottom: 1px solid color-mix(in srgb, var(--danger) 50%, var(--line));
+    color: var(--ink);
+  }
+  #errMsg { font-family: ui-monospace, Consolas, "Courier New", monospace; font-size: 11.5px; }
 
   /* ---------- toolbar ---------- */
   .bar {
@@ -429,15 +436,21 @@
 </style>
 
 <div class="app">
-  <div class="strip" id="roBar" hidden>
-    <span><b data-i18n="roTitle"></b> — <span data-i18n="roBody"></span></span>
+  <div class="strip" id="errBar" hidden>
+    <span><b>启动出错 / Startup error</b> — <span id="errMsg"></span></span>
     <span class="grow"></span>
-    <button class="btn" id="btnFork" data-i18n="fork"></button>
+    <button class="btn sm" id="btnErrReset">重置本地数据 / Reset local data</button>
+    <button class="btn sm" id="btnErrReload">重新加载 / Reload</button>
+  </div>
+  <div class="strip" id="roBar" hidden>
+    <span><b data-i18n="roTitle">Read-only shared view</b> — <span data-i18n="roBody">Someone shared this map with you. You can view, collapse and export it, but your changes are not saved and never reach the sender.</span></span>
+    <span class="grow"></span>
+    <button class="btn" id="btnFork" data-i18n="fork">Copy it to edit</button>
   </div>
   <div class="strip" id="webNote" hidden>
-    <span><b data-i18n="noteTitle"></b> — <span data-i18n="noteBody"></span></span>
+    <span><b data-i18n="noteTitle">Note</b> — <span data-i18n="noteBody">Maps are stored in this browser only and are never uploaded. They do not follow you to another device and are lost if you clear browsing data. To move one, use Backup to export JSON and Import at the other end.</span></span>
     <span class="grow"></span>
-    <button class="btn sm" id="btnDismissNote" data-i18n="gotIt"></button>
+    <button class="btn sm" id="btnDismissNote" data-i18n="gotIt">Got it</button>
   </div>
 
   <div class="bar">
@@ -453,49 +466,49 @@
         <option value="ja">日本語</option>
       </select>
       <span class="sep"></span>
-      <button class="btn" id="btnDrawer" data-i18n="myMaps" data-i18n-title="myMapsTip"></button>
-      <button class="btn" id="btnSave" data-i18n="save" data-i18n-title="saveTip"></button>
-      <button class="btn" id="btnShare" data-i18n="share" data-i18n-title="shareTip"></button>
+      <button class="btn" id="btnDrawer" data-i18n="myMaps" data-i18n-title="myMapsTip">My maps</button>
+      <button class="btn" id="btnSave" data-i18n="save" data-i18n-title="saveTip">Save</button>
+      <button class="btn" id="btnShare" data-i18n="share" data-i18n-title="shareTip">Share</button>
       <span class="sep"></span>
-      <button class="btn" id="btnNew" data-i18n="newMap" data-i18n-title="newMapTip"></button>
-      <button class="btn" id="btnImport" data-i18n="importBtn" data-i18n-title="importTip"></button>
-      <button class="btn" id="btnMd" data-i18n="exportMd" data-i18n-title="exportMdTip"></button>
-      <button class="btn" id="btnBackup" data-i18n="backup" data-i18n-title="backupTip"></button>
+      <button class="btn" id="btnNew" data-i18n="newMap" data-i18n-title="newMapTip">New</button>
+      <button class="btn" id="btnImport" data-i18n="importBtn" data-i18n-title="importTip">Import</button>
+      <button class="btn" id="btnMd" data-i18n="exportMd" data-i18n-title="exportMdTip">Export MD</button>
+      <button class="btn" id="btnBackup" data-i18n="backup" data-i18n-title="backupTip">Backup</button>
       <span class="sep"></span>
-      <button class="btn" id="btnExpand" data-i18n="expand"></button>
-      <button class="btn" id="btnCollapse" data-i18n="collapse"></button>
+      <button class="btn" id="btnExpand" data-i18n="expand">Expand</button>
+      <button class="btn" id="btnCollapse" data-i18n="collapse">Collapse</button>
       <span class="sep" id="sepEdit"></span>
-      <button class="btn" id="btnChild" data-i18n="addChild"></button>
-      <button class="btn" id="btnSibling" data-i18n="addSibling"></button>
-      <button class="btn danger" id="btnDel" data-i18n="del"></button>
+      <button class="btn" id="btnChild" data-i18n="addChild">＋ Child</button>
+      <button class="btn" id="btnSibling" data-i18n="addSibling">＋ Sibling</button>
+      <button class="btn danger" id="btnDel" data-i18n="del">Delete</button>
       <span class="sep"></span>
-      <button class="btn" id="btnReset" data-i18n="loadSample" data-i18n-title="loadSampleTip"></button>
-      <button class="btn primary" id="btnPdf" data-i18n="exportPdf"></button>
+      <button class="btn" id="btnReset" data-i18n="loadSample" data-i18n-title="loadSampleTip">Load sample</button>
+      <button class="btn primary" id="btnPdf" data-i18n="exportPdf">Export PDF</button>
     </div>
   </div>
 
   <div class="strip" id="sharePanel" hidden>
-    <span data-i18n="shareLabel"></span>
+    <span data-i18n="shareLabel">Read-only link</span>
     <input id="shareUrl" readonly aria-label="Share link">
-    <button class="btn sm" id="btnCopyShare" data-i18n="copy"></button>
+    <button class="btn sm" id="btnCopyShare" data-i18n="copy">Copy</button>
     <span id="shareSize"></span>
-    <button class="btn sm" id="btnCloseShare" data-i18n="close"></button>
+    <button class="btn sm" id="btnCloseShare" data-i18n="close">Close</button>
   </div>
 
   <div class="hint" id="hintBar">
-    <span id="hintText"></span>
+    <span id="hintText"><b>Double-click</b> to edit · <b>Drag</b> a node to change its parent or order; drop it on the left half of the centre node to move that branch to the left · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes</span>
     <span class="grow"></span>
     <span class="pal" id="palette">
-      <span class="pal-label" data-i18n="palLabel"></span>
+      <span class="pal-label" data-i18n="palLabel">Branch colour</span>
     </span>
   </div>
 
   <div class="body">
     <aside class="drawer closed" id="drawer">
       <div class="drawer-head">
-        <h2 data-i18n="myMaps"></h2>
+        <h2 data-i18n="myMaps">My maps</h2>
         <span class="grow"></span>
-        <button class="btn sm" id="btnSaveAs" data-i18n="saveAs" data-i18n-title="saveAsTip"></button>
+        <button class="btn sm" id="btnSaveAs" data-i18n="saveAs" data-i18n-title="saveAsTip">Save as new</button>
       </div>
       <div class="drawer-note" id="drawerNote"></div>
       <ul class="doc-list" id="docList"></ul>
@@ -507,6 +520,44 @@
 <input type="file" id="fileInput" accept=".md,.markdown,.txt,.json" hidden>
 <div id="toast" role="status"></div>
 <div id="printDoc"></div>
+
+<script>
+/* Surface failures instead of leaving a blank page. Registered before anything
+   else so it also catches a parse error in the main bundle below. */
+(function () {
+  "use strict";
+  var shown = false;
+  function show(detail) {
+    if (shown) return;
+    shown = true;
+    var bar = document.getElementById("errBar");
+    var msg = document.getElementById("errMsg");
+    if (!bar || !msg) return;
+    msg.textContent = String(detail).slice(0, 300);
+    bar.hidden = false;
+  }
+  window.__smmFail = show;
+  window.addEventListener("error", function (e) {
+    show((e.message || "script error") + (e.filename ? " @" + e.lineno + ":" + e.colno : ""));
+  });
+  window.addEventListener("unhandledrejection", function (e) {
+    show("unhandled promise rejection: " + (e.reason && e.reason.message ? e.reason.message : e.reason));
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    var reload = document.getElementById("btnErrReload");
+    var reset = document.getElementById("btnErrReset");
+    if (reload) reload.addEventListener("click", function () { location.reload(); });
+    if (reset) reset.addEventListener("click", function () {
+      try {
+        ["simplemindmap-v1", "eba-mindmap-v1", "simplemindmap-library-v1",
+         "simplemindmap-active-v1", "simplemindmap-lang-v1",
+         "simplemindmap-note-dismissed-v1"].forEach(function (k) { localStorage.removeItem(k); });
+      } catch (e) { /* nothing more we can do */ }
+      location.replace(location.pathname + location.search);
+    });
+  });
+})();
+</script>
 
 <script>
 (function () {
@@ -1937,9 +1988,15 @@
   });
 
   function finishBoot() {
-    applyMode();
-    applyLang();   /* also performs the first render */
-    save();        /* completes the migration from LEGACY_STORE on first run */
+    try {
+      applyMode();
+      applyLang();   /* also performs the first render */
+    } catch (e) {
+      /* the inline English labels stay put, so the toolbar is still readable */
+      if (window.__smmFail) window.__smmFail("interface setup failed: " + (e && e.message));
+      try { lang = "en"; applyLang(); } catch (e2) { /* leave the static markup */ }
+    }
+    try { save(); } catch (e) { /* completes the LEGACY_STORE migration; best effort */ }
     if (IS_DESKTOP) {
       window.desktop.folder().then(function (f) { desktopFolder = f; renderDrawerNote(); },
         function () { renderDrawerNote(); });
