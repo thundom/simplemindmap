@@ -28,6 +28,8 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html _site/
+          cp launch.html LICENSE _site/
+          cp -R assets _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
