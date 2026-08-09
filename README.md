@@ -37,10 +37,11 @@ Do not want to install Node.js? Open `index.html` directly. The complete web app
 | Persistent map tabs | Keep several mind maps open at once. Saving binds the current map to its own tab, `+` opens a new map without replacing the previous one, and open tabs return after a reload. Double-click a tab label to give it a persistent custom name. |
 | Flexible storage | The desktop app saves each map as an individual `.json` file in a folder you choose. The web app stores maps in the browser. |
 | Locked read-only sharing | Select Share to generate and copy a URL containing a compressed snapshot of the map. Recipients can view, collapse and export it, while editing, saving and adding it to My maps remain disabled. |
-| Standalone read-only HTML | Download the current map as one interactive HTML file from Share. It works offline and supports expand, collapse and printing, without any editing or saving controls. |
+| Standalone read-only HTML | Download the current map as one interactive HTML file from Share. It works offline and supports pan, zoom, fit, node centring, expand, collapse and printing, without any editing or saving controls. |
 | New maps | Open a blank mind map in a new tab without replacing or closing the maps already open. |
 | Fast editing | Double-click a node to edit its text. Press Tab to add a child, Enter to add a sibling, or Delete to remove a node. |
 | Canvas-based drag and drop | Drag any node at any depth. Drop near another node to change its parent or order, or drop into blank canvas space to promote it to a main branch. |
+| Canvas navigation | Drag blank canvas space to pan instead of using the scrollbars; Space-drag or middle-drag works anywhere. Zoom with the toolbar or `Ctrl`+wheel, fit the full map to the screen, centre the selected node, or reset the view. Arrow keys move between visible nodes. |
 | Two-sided layout | Drop a branch anywhere on the left or right side of the root to choose its direction. Left and right main branches coexist in a radial, snowflake-like map. |
 | Undo and history | Every move, rename, add, delete, colour, and collapse action is recorded in a visible session history. Use the Undo button, select a history entry, or press `Ctrl+Z`. |
 | Collapsible branches | Collapse any node to hide its descendants and display the hidden-node count. Expanding and collapsing use smooth animations. |
