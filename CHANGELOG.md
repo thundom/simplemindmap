@@ -2,6 +2,12 @@
 
 All notable Simple Mindmap releases are listed here.
 
+## v1.7.1 — 2026-08-10
+
+- Enabled the public GitHub Pages site with GitHub Actions as its deployment source, fixing the Web app link.
+- Replaced the GitHub README hero with the compact rounded brand card selected for the project homepage.
+- Replaced the Windows application icon with a matching six-branch Simple Mindmap brand mark.
+
 ## v1.7.0 — 2026-08-10
 
 - Added a safe one-time migration for the untouched 95-node mixed-language EBA sample stored by older installations.
