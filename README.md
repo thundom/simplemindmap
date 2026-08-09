@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://thundom.github.io/simplemindmap/launch.html">
-    <img src="assets/simplemindmap-hero-v2.png" alt="Simple Mindmap — Think clearly. Map freely. Share safely." width="1200">
+    <img src="assets/simplemindmap-home-card.png" alt="Simple Mindmap — Think clearly. Map freely. Share safely." width="700">
   </a>
 </p>
 

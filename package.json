@@ -1,7 +1,7 @@
 {
   "name": "simplemindmap",
   "productName": "Simple Mindmap",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Private, offline-first mind mapping in one HTML file — map freely and share safely",
   "main": "electron/main.js",
   "scripts": {
