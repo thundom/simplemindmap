@@ -827,7 +827,7 @@
       addSibling: "＋ Sibling",
       del: "Delete",
       loadSample: "Load sample",
-      loadSampleTip: "Load the bundled EBA compliance rule library",
+      loadSampleTip: "Load the bundled HRIS operating model example",
       exportPdf: "Export PDF",
       rename: "Rename",
       removeDoc: "Delete",
@@ -880,7 +880,7 @@
       tConfirmNew: "New will clear the canvas — save first if you need it. Click again to confirm.",
       tConfirmReset: "This replaces the current map with the bundled sample. Click again to confirm.",
       tConfirmDeleteDoc: function (name) { return "Delete “" + name + "”? Click again to confirm."; },
-      tSampleLoaded: "Loaded the EBA compliance rule library sample",
+      tSampleLoaded: "Loaded the HRIS operating model example",
       tImported: function (name, n) { return "Imported “" + name + "” — " + n + " nodes"; },
       tImportFail: "Unrecognised file: expected a Markdown list or a JSON backup from this app",
       tReadFail: "Could not read the file, please try again",
@@ -966,7 +966,7 @@
       addSibling: "＋ 同级",
       del: "删除",
       loadSample: "载入示例",
-      loadSampleTip: "载入内置的 EBA 合规规则库示例",
+      loadSampleTip: "载入内置的 HRIS 运营模型示例",
       exportPdf: "导出 PDF",
       rename: "重命名",
       removeDoc: "删除",
@@ -1019,7 +1019,7 @@
       tConfirmNew: "新建将清空当前画布（可先点「保存」存起来），再次点击确认",
       tConfirmReset: "将载入内置示例并覆盖当前内容，再次点击确认",
       tConfirmDeleteDoc: function (name) { return "确定删除「" + name + "」？再次点击确认"; },
-      tSampleLoaded: "已载入 EBA 合规规则库示例",
+      tSampleLoaded: "已载入 HRIS 运营模型示例",
       tImported: function (name, n) { return "已导入「" + name + "」，共 " + n + " 个节点"; },
       tImportFail: "无法识别文件内容：需要 Markdown 列表或本应用的 JSON 备份",
       tReadFail: "读取文件失败，请重试",
@@ -1105,7 +1105,7 @@
       addSibling: "＋ 兄弟",
       del: "削除",
       loadSample: "サンプル",
-      loadSampleTip: "内蔵の EBA コンプライアンス規則サンプルを読み込む",
+      loadSampleTip: "内蔵の HRIS 運用モデル例を読み込む",
       exportPdf: "PDF 書き出し",
       rename: "名称変更",
       removeDoc: "削除",
@@ -1158,7 +1158,7 @@
       tConfirmNew: "新規作成すると現在の内容が消えます（先に「保存」できます）。もう一度クリックで確定",
       tConfirmReset: "現在の内容を内蔵サンプルで置き換えます。もう一度クリックで確定",
       tConfirmDeleteDoc: function (name) { return "「" + name + "」を削除しますか？もう一度クリックで確定"; },
-      tSampleLoaded: "EBA コンプライアンス規則のサンプルを読み込みました",
+      tSampleLoaded: "HRIS 運用モデル例を読み込みました",
       tImported: function (name, n) { return "「" + name + "」を読み込みました（" + n + " ノード）"; },
       tImportFail: "ファイルを認識できません：Markdown のリストか、このアプリの JSON バックアップが必要です",
       tReadFail: "ファイルを読み込めませんでした。もう一度お試しください",
@@ -1216,32 +1216,50 @@
     return "en";
   }
 
-  var DEFAULT = ["EBA Compliance Rule Library", [
-    ["A. 规则来源与优先级", [
-      ["National Employment Standards (NES)", [["最低法定权益"], ["最大周工时与灵活安排"], ["法定休假与公共假期"], ["终止通知与冗员"]]],
-      ["Modern Award / Award coverage", [["适用性与排除"], ["分类与最低工资"], ["Award 与 EBA 对照基线"], ["Better Off Overall Test 基准"]]],
-      ["Enterprise Agreement (EBA)", [["覆盖范围与适用员工"], ["名词定义与解释"], ["名义届满日与版本"], ["条款、附件、工资表及当地安排"]]],
-      ["Employment contract", [["合同高于最低标准的个人权益"], ["岗位、地点、薪酬与工时约定"], ["固定期限及特殊条款"]]],
-      ["Policies / procedures / custom & practice", [["企业政策"], ["操作程序与 SOP"], ["已形成惯例"], ["管理层书面批准的例外"]]],
-      ["Legislation & external obligations", [["Fair Work Act / Regulations"], ["Superannuation Guarantee"], ["Taxation / PAYG / STP"], ["State payroll tax / long service leave / workers compensation"], ["Privacy / record keeping / right to disconnect"]]]
-    ]],
-    ["B. Coverage & employee classification", [
-      ["Coverage determination", [["Legal entity / ABN"], ["Employing company"], ["Work location / state"], ["Business unit / function"], ["Employee cohort / excluded role"]]],
-      ["Employment status", [["Permanent full-time"], ["Permanent part-time"], ["Casual"], ["Fixed-term / maximum-term"], ["Apprentice / trainee / junior"]]],
-      ["Classification", [["Job family / job profile"], ["Grade / level / band"], ["Skill, licence and competency"], ["Higher duties / acting classification"], ["Progression and reclassification"]]]
-    ]],
-    ["C. Working time & attendance", [
-      ["Ordinary hours", [["Daily / weekly ordinary hours"], ["Span of hours"], ["Roster cycle / averaging period"], ["Full-time and part-time patterns"], ["Minimum engagement"]]],
-      ["Roster governance", [["Roster publication notice"], ["Roster change notice"], ["Employee consultation"], ["Shift start/end and handover"], ["Make-up time / flex arrangements"]]],
-      ["Breaks & rest", [["Meal break entitlement"], ["Paid rest break"], ["Break timing window"], ["Rest between shifts"], ["Missed or interrupted break consequence"]]],
-      ["Overtime triggers", [["Daily threshold"], ["Weekly / cycle threshold"], ["Outside span"], ["Rostered day off"], ["Recall / call-back / remote call"]]],
-      ["Availability controls", [["On-call / standby"], ["Right to disconnect"], ["Reasonable additional hours"], ["Fatigue and maximum shift length"]]]
-    ]],
-    ["D. Pay, penalties & allowances", [
-      ["Base remuneration", [["Minimum rate by classification"], ["Annualised salary / loaded rate"], ["Casual loading"], ["Apprentice / junior rate"], ["Salary absorption / set-off"]]],
-      ["Penalty rates", [["Afternoon / night shift"], ["Permanent night shift"], ["Saturday / Sunday"], ["Public holiday"], ["Early start / late finish"]]],
-      ["Overtime calculation"]
-    ]]
+  var DEFAULT = ["HRIS Operating Model", [
+    ["Employee Master Data", [
+      ["Identity", [["Employee ID"], ["Legal and preferred name"], ["Date of birth"], ["Pronouns"], ["Photo"]]],
+      ["Contact details", [["Work email"], ["Personal email"], ["Phone numbers"], ["Home address"], ["Emergency contact"]]],
+      ["Employment details", [["Hire date"], ["Original service date"], ["Worker type"], ["Employment status"], ["Probation end date"]]],
+      ["Job details", [["Job profile"], ["Business title"], ["Job family"], ["Management level"], ["FTE"]]]
+    ], { side: "left", color: "teal" }],
+    ["Organisation Structure", [
+      ["Supervisory organisation", [["Sup Org ID"], ["Sup Org name"], ["Manager employee ID"], ["Manager name"], ["Organisation subtype"]]],
+      ["Company structure", [["Legal entity"], ["Business unit"], ["Division"], ["Department"], ["Cost centre"]]],
+      ["Location hierarchy", [["Country"], ["Region"], ["Site"], ["Work location"], ["Remote-work designation"]]],
+      ["Position management", [["Position ID"], ["Filled or vacant"], ["Position restrictions"], ["Headcount plan"]]]
+    ], { side: "left", color: "indigo" }],
+    ["Employment Lifecycle", [
+      ["Recruit and hire", [["Candidate conversion"], ["Pre-hire checks"], ["Offer approval"], ["Hire event"], ["Onboarding tasks"]]],
+      ["Job changes", [["Promotion"], ["Transfer"], ["Change job"], ["Change location"], ["Change manager"]]],
+      ["Leave and return", [["Leave request"], ["Last day worked"], ["Expected return"], ["Return from leave"]]],
+      ["Offboarding", [["Termination reason"], ["Last day of employment"], ["Knowledge transfer"], ["Access removal"], ["Final pay inputs"]]]
+    ], { side: "left", color: "orange" }],
+    ["Time and Absence", [
+      ["Work schedule", [["Standard hours"], ["Work pattern"], ["Shift assignment"], ["Roster cycle"]]],
+      ["Time tracking", [["Time entry"], ["Overtime"], ["Breaks"], ["On-call time"], ["Approvals"]]],
+      ["Absence", [["Leave type"], ["Eligibility"], ["Accrual"], ["Balance"], ["Request and approval"]]],
+      ["Calendar", [["Public holidays"], ["Shutdown periods"], ["Pay periods"]]]
+    ], { color: "plum" }],
+    ["Compensation and Benefits", [
+      ["Compensation", [["Base pay"], ["Salary plan"], ["Hourly rate"], ["Allowances"], ["Bonus target"]]],
+      ["Payroll inputs", [["Pay group"], ["Tax details"], ["Bank account"], ["Deductions"], ["One-time payments"]]],
+      ["Benefits", [["Benefit eligibility"], ["Plan enrolment"], ["Dependants"], ["Insurance coverage"]]],
+      ["Superannuation", [["Fund choice"], ["Member number"], ["Contribution rate"], ["Compliance status"]]]
+    ], { color: "green" }],
+    ["Security and Compliance", [
+      ["Access model", [["Role-based access"], ["Security groups"], ["Segregation of duties"], ["Privileged access"]]],
+      ["Privacy", [["Data classification"], ["Consent"], ["Retention"], ["Data subject requests"], ["Cross-border transfer"]]],
+      ["Audit", [["Business process history"], ["Field change history"], ["Approval evidence"], ["Access reviews"]]],
+      ["Data quality", [["Required fields"], ["Validation rules"], ["Duplicate detection"], ["Exception management"]]]
+    ], { color: "coral" }],
+    ["Integrations and Reporting", [
+      ["Inbound integrations", [["Recruiting"], ["Identity management"], ["Learning"], ["Background checks"]]],
+      ["Outbound integrations", [["Payroll"], ["Benefits providers"], ["Finance"], ["Directory services"], ["Data warehouse"]]],
+      ["Integration controls", [["File encryption"], ["Scheduling"], ["Error handling"], ["Reconciliation"], ["Monitoring"]]],
+      ["Reporting", [["Headcount"], ["Turnover"], ["Span of control"], ["Workforce diversity"], ["Compliance reporting"]]],
+      ["Data governance", [["Data owner"], ["Data steward"], ["Source of truth"], ["Definition catalogue"]]]
+    ], { color: "blue" }]
   ]];
 
   var PALETTE = [
@@ -1279,6 +1297,10 @@
 
   function build(arr) {
     var n = { id: "n" + (uid++), text: arr[0], collapsed: false, children: [] };
+    if (arr[2] && typeof arr[2] === "object") {
+      if (arr[2].side === "left") n.side = "left";
+      if (PRINT_HEX[arr[2].color]) n.color = arr[2].color;
+    }
     (arr[1] || []).forEach(function (c) { n.children.push(build(c)); });
     return n;
   }

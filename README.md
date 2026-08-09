@@ -1,12 +1,12 @@
 # Simple Mindmap
 
-A zero-dependency, single-file interactive mind map editor. Build and reorganize hierarchical maps, collapse branches, customize colors, import and export Markdown, back up data as JSON, and create polished PDF documents. The app includes an Australian Enterprise Agreement (EBA) compliance rule library as a ready-to-use example.
+A zero-dependency, single-file interactive mind map editor. Build and reorganize hierarchical maps, collapse branches, customize colors, import and export Markdown, back up data as JSON, and create polished PDF documents. The app includes a substantial HRIS operating model as a ready-to-use example.
 
 ## Try it online
 
 **<https://thundom.github.io/simplemindmap/>**
 
-See [CHANGELOG.md](CHANGELOG.md) for the complete version history.
+Explore the [product launch page](launch.html), use the ready-to-post [LinkedIn launch copy](LINKEDIN-LAUNCH.md), or see [CHANGELOG.md](CHANGELOG.md) for the complete version history.
 
 Open the page and start working immediately. Your maps are stored locally in your browser with `localStorage`; there is no server, account, or sign-in requirement.
 
@@ -50,7 +50,7 @@ Do not want to install Node.js? Open `index.html` directly. The complete web app
 | JSON backup | Create a complete backup that preserves content, colors, and collapsed states. |
 | Import | Import Markdown (`.md` or `.txt`) or a JSON backup created by Simple Mindmap. |
 | PDF export | Generate a structured, print-ready A4 document and save it as a PDF from the print dialog. |
-| Built-in example | Load the included EBA compliance rule library to explore the app with a substantial sample map. |
+| Built-in example | Load the included English HRIS operating model to explore employee master data, organisation structures, lifecycle events, time, compensation, security, integrations and reporting. |
 | Multilingual interface | Switch between Chinese, English, and Japanese from the top-left toolbar. All interface text and messages change together. |
 | Responsive interface | The toolbar, panels, saved-map drawer, touch controls and canvas spacing adapt to desktop, tablet and phone screen sizes. |
 | Automatic theme | The interface follows the system light or dark color scheme. |

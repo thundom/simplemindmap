@@ -2,6 +2,14 @@
 
 All notable Simple Mindmap releases are listed here.
 
+## v1.6.0 — 2026-08-10
+
+- Added a polished English product launch page for public sharing and LinkedIn promotion.
+- Added a dedicated 1200 × 627 social preview image and Open Graph metadata.
+- Replaced the mixed-language EBA example with a 170-node English HRIS operating model.
+- Distributed the HRIS sample across both sides of the centre node to demonstrate the radial layout immediately.
+- Updated the README and GitHub Pages package so all public-facing project documentation is English.
+
 ## v1.5.0 — 2026-08-09
 
 - Added drag-to-pan canvas navigation, including touch, Space-drag, and middle-mouse dragging.
