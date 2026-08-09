@@ -323,9 +323,19 @@
   .doc-act.del:hover { color: var(--danger); border-color: var(--danger); }
   .empty { padding: 18px 12px; font-size: 12px; color: var(--ink-soft); text-align: center; line-height: 1.6; }
 
-  /* ---------- canvas ---------- */
-  .canvas { flex: 1; overflow: auto; padding: 48px 64px; }
-  #tree { width: max-content; }
+  /* ---------- canvas navigation ---------- */
+  .canvas {
+    flex: 1; overflow: auto; padding: 0;
+    cursor: grab; overscroll-behavior: contain; touch-action: none;
+  }
+  .canvas.panning { cursor: grabbing; user-select: none; }
+  .canvas-stage {
+    min-width: 100%; min-height: 100%; width: max-content; height: max-content;
+    display: flex; align-items: center; justify-content: center;
+    padding: max(48px, 50vh) max(64px, 50vw);
+  }
+  #tree { width: max-content; flex: none; transform-origin: 0 0; }
+  .zoom-level { min-width: 58px; padding-left: 8px; padding-right: 8px; font-variant-numeric: tabular-nums; }
 
   /* ---------- tree layout & connectors ---------- */
   .row { display: flex; align-items: center; }
@@ -511,7 +521,6 @@
       transition: transform 0.25s ease, opacity 0.25s ease;
     }
     .drawer.closed { margin-left: 0; transform: translateX(-100%); }
-    .canvas { padding: 32px; overscroll-behavior: contain; }
     .history-panel { top: auto; right: 12px; bottom: 12px; max-height: min(560px, 70dvh); }
   }
 
@@ -545,7 +554,6 @@
     #hintText { flex: 1 1 100%; line-height: 1.45; }
     .pal { flex: 1 1 100%; max-width: 100%; overflow-x: auto; padding: 2px; }
     .pal > * { flex: none; }
-    .canvas { padding: 24px 18px; }
     .card { max-width: 260px; font-size: 12.5px; }
     .card.root { max-width: 220px; font-size: 14px; padding: 10px 14px; }
     .history-panel {
@@ -652,6 +660,13 @@
       <span class="sep"></span>
       <button class="btn" id="btnExpand" data-i18n="expand">Expand</button>
       <button class="btn" id="btnCollapse" data-i18n="collapse">Collapse</button>
+      <span class="sep"></span>
+      <button class="btn" id="btnZoomOut" data-i18n-title="zoomOutTip" aria-label="Zoom out">−</button>
+      <button class="btn zoom-level" id="btnZoomLevel" data-i18n-title="resetViewTip">100%</button>
+      <button class="btn" id="btnZoomIn" data-i18n-title="zoomInTip" aria-label="Zoom in">+</button>
+      <button class="btn" id="btnFit" data-i18n="fitView" data-i18n-title="fitViewTip">Fit</button>
+      <button class="btn" id="btnCenter" data-i18n="centerSelected" data-i18n-title="centerSelectedTip">Center</button>
+      <button class="btn" id="btnViewReset" data-i18n="resetView" data-i18n-title="resetViewTip">Reset view</button>
       <span class="sep" id="sepEdit"></span>
       <button class="btn" id="btnChild" data-i18n="addChild">＋ Child</button>
       <button class="btn" id="btnSibling" data-i18n="addSibling">＋ Sibling</button>
@@ -708,7 +723,7 @@
       <div class="drawer-note" id="drawerNote"></div>
       <ul class="doc-list" id="docList"></ul>
     </aside>
-    <div class="canvas" id="canvas"><div id="tree"></div></div>
+    <div class="canvas" id="canvas" tabindex="0" data-i18n-title="panCanvasTip"><div class="canvas-stage" id="canvasStage"><div id="tree"></div></div></div>
   </div>
 </div>
 
@@ -799,6 +814,15 @@
       backupTip: "Download a JSON backup including colours and collapse state",
       expand: "Expand",
       collapse: "Collapse",
+      zoomOutTip: "Zoom out (−)",
+      zoomInTip: "Zoom in (+)",
+      fitView: "Fit",
+      fitViewTip: "Fit the whole map to the current screen (F)",
+      centerSelected: "Center",
+      centerSelectedTip: "Move the selected node to the centre of the screen (C)",
+      resetView: "Reset view",
+      resetViewTip: "Return to 100% and centre the main node (0)",
+      panCanvasTip: "Drag blank canvas to pan; Space-drag or middle-drag works anywhere; Ctrl+wheel zooms",
       addChild: "＋ Child",
       addSibling: "＋ Sibling",
       del: "Delete",
@@ -807,7 +831,7 @@
       exportPdf: "Export PDF",
       rename: "Rename",
       removeDoc: "Delete",
-      hint: "<b>Double-click</b> to edit · <b>Drag anywhere on the canvas</b> to change parent, order or side · <b>Ctrl+Z</b> undo · <b>Tab</b> child · <b>Enter</b> sibling · <b>Delete</b> removes",
+      hint: "<b>Drag blank canvas</b> to pan · <b>Ctrl+wheel</b> zoom · drag a node to move it · <b>F</b> fit · <b>C</b> centre selected · <b>Ctrl+Z</b> undo",
       palLabel: "Branch colour",
       colorDefault: "Default",
       colorDefaultTip: "Reset to the inherited colour",
@@ -929,6 +953,15 @@
       backupTip: "下载 JSON 备份（含颜色与折叠状态）",
       expand: "展开",
       collapse: "折叠",
+      zoomOutTip: "缩小（−）",
+      zoomInTip: "放大（+）",
+      fitView: "适应屏幕",
+      fitViewTip: "将整个导图自动缩放到当前屏幕（F）",
+      centerSelected: "定位节点",
+      centerSelectedTip: "将当前选中节点移动到屏幕中央（C）",
+      resetView: "重置视图",
+      resetViewTip: "恢复到 100% 并居中主节点（0）",
+      panCanvasTip: "拖动画布空白处平移；空格拖动或鼠标中键可在任意位置平移；Ctrl+滚轮缩放",
       addChild: "＋ 子节点",
       addSibling: "＋ 同级",
       del: "删除",
@@ -937,7 +970,7 @@
       exportPdf: "导出 PDF",
       rename: "重命名",
       removeDoc: "删除",
-      hint: "<b>双击</b> 编辑 · <b>在画布上自由拖动</b> 可换父级、顺序或左右方向 · <b>Ctrl+Z</b> 回退 · <b>Tab</b> 子节点 · <b>Enter</b> 同级 · <b>Delete</b> 删除",
+      hint: "<b>拖动画布空白处</b> 平移 · <b>Ctrl+滚轮</b> 缩放 · 拖动节点调整结构 · <b>F</b> 适应屏幕 · <b>C</b> 定位节点 · <b>Ctrl+Z</b> 回退",
       palLabel: "所选分支颜色",
       colorDefault: "默认",
       colorDefaultTip: "恢复默认 / 跟随上级颜色",
@@ -1059,6 +1092,15 @@
       backupTip: "色と折りたたみ状態を含む JSON をダウンロード",
       expand: "展開",
       collapse: "折りたたむ",
+      zoomOutTip: "縮小（−）",
+      zoomInTip: "拡大（+）",
+      fitView: "画面に合わせる",
+      fitViewTip: "マップ全体を現在の画面に合わせます（F）",
+      centerSelected: "選択を中央へ",
+      centerSelectedTip: "選択中のノードを画面中央へ移動します（C）",
+      resetView: "表示をリセット",
+      resetViewTip: "100% に戻して中心ノードを中央に表示します（0）",
+      panCanvasTip: "空白をドラッグして移動。Space+ドラッグまたは中ボタンはどこでも使用可能。Ctrl+ホイールで拡大縮小",
       addChild: "＋ 子ノード",
       addSibling: "＋ 兄弟",
       del: "削除",
@@ -1067,7 +1109,7 @@
       exportPdf: "PDF 書き出し",
       rename: "名称変更",
       removeDoc: "削除",
-      hint: "<b>ダブルクリック</b>で編集 · <b>キャンバス上を自由にドラッグ</b>して親・順序・左右を変更 · <b>Ctrl+Z</b> 元に戻す · <b>Tab</b> 子ノード · <b>Enter</b> 兄弟 · <b>Delete</b> 削除",
+      hint: "<b>空白をドラッグ</b>して移動 · <b>Ctrl+ホイール</b>で拡大縮小 · ノードをドラッグして構造を変更 · <b>F</b> 全体表示 · <b>C</b> 選択を中央へ · <b>Ctrl+Z</b> 元に戻す",
       palLabel: "ブランチの色",
       colorDefault: "既定",
       colorDefaultTip: "継承した色に戻す",
@@ -1623,6 +1665,7 @@
   /* ---------- render ---------- */
   var treeEl = document.getElementById("tree");
   var canvasEl = document.getElementById("canvas");
+  var canvasStageEl = document.getElementById("canvasStage");
   var toastEl = document.getElementById("toast");
   var toastTimer;
   function toast(msg) {
@@ -1631,6 +1674,137 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 2600);
   }
+
+  /* ---------- shared canvas navigation ---------- */
+  var MIN_ZOOM = 0.02, MAX_ZOOM = 2.5, ZOOM_STEP = 0.15;
+  var viewZoom = 1;
+  var viewMode = "manual";
+  var panDrag = null;
+  var spaceHeld = false;
+  var zoomLevelEl = document.getElementById("btnZoomLevel");
+
+  function clampZoom(value) {
+    return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, Math.round(value * 100) / 100));
+  }
+  function updateZoomUi() {
+    zoomLevelEl.textContent = Math.round(viewZoom * 100) + "%";
+    document.getElementById("btnZoomOut").disabled = viewZoom <= MIN_ZOOM;
+    document.getElementById("btnZoomIn").disabled = viewZoom >= MAX_ZOOM;
+  }
+  function setViewZoom(value, clientX, clientY, mode) {
+    var next = clampZoom(value);
+    if (next === viewZoom) return;
+    var rect = canvasEl.getBoundingClientRect();
+    var anchorX = clientX == null ? canvasEl.clientWidth / 2 : clientX - rect.left;
+    var anchorY = clientY == null ? canvasEl.clientHeight / 2 : clientY - rect.top;
+    var contentX = (canvasEl.scrollLeft + anchorX) / viewZoom;
+    var contentY = (canvasEl.scrollTop + anchorY) / viewZoom;
+    viewZoom = next;
+    viewMode = mode || "manual";
+    treeEl.style.zoom = String(viewZoom);
+    updateZoomUi();
+    canvasEl.scrollLeft = contentX * viewZoom - anchorX;
+    canvasEl.scrollTop = contentY * viewZoom - anchorY;
+  }
+  function centerElementInCanvas(el) {
+    if (!el) return;
+    var canvasRect = canvasEl.getBoundingClientRect();
+    var rect = el.getBoundingClientRect();
+    canvasEl.scrollLeft += rect.left + rect.width / 2 - (canvasRect.left + canvasRect.width / 2);
+    canvasEl.scrollTop += rect.top + rect.height / 2 - (canvasRect.top + canvasRect.height / 2);
+  }
+  function centerSelectedNode() {
+    centerElementInCanvas(cardEl(selectedId) || cardEl(root.id));
+  }
+  function fitToScreen() {
+    viewMode = "fit";
+    if (viewZoom !== 1) {
+      viewZoom = 1;
+      treeEl.style.zoom = "1";
+    }
+    var availableWidth = Math.max(80, canvasEl.clientWidth - 48);
+    var availableHeight = Math.max(80, canvasEl.clientHeight - 48);
+    var baseRect = treeEl.getBoundingClientRect();
+    viewZoom = clampZoom(Math.min(1, availableWidth / Math.max(1, baseRect.width), availableHeight / Math.max(1, baseRect.height)));
+    treeEl.style.zoom = String(viewZoom);
+    for (var pass = 0; pass < 3; pass++) {
+      var renderedRect = treeEl.getBoundingClientRect();
+      var correction = Math.min(1, availableWidth / Math.max(1, renderedRect.width), availableHeight / Math.max(1, renderedRect.height));
+      if (correction > 0.995) break;
+      viewZoom = clampZoom(viewZoom * correction);
+      treeEl.style.zoom = String(viewZoom);
+    }
+    updateZoomUi();
+    requestAnimationFrame(function () { centerElementInCanvas(treeEl); });
+  }
+  function resetView() {
+    viewMode = "manual";
+    if (viewZoom !== 1) {
+      viewZoom = 1;
+      treeEl.style.zoom = "1";
+      updateZoomUi();
+    }
+    requestAnimationFrame(function () { centerElementInCanvas(cardEl(root.id)); });
+  }
+  function zoomBy(delta, clientX, clientY) {
+    setViewZoom(viewZoom + delta, clientX, clientY, "manual");
+  }
+
+  document.getElementById("btnZoomOut").addEventListener("click", function () { zoomBy(-ZOOM_STEP); });
+  document.getElementById("btnZoomIn").addEventListener("click", function () { zoomBy(ZOOM_STEP); });
+  zoomLevelEl.addEventListener("click", resetView);
+  document.getElementById("btnFit").addEventListener("click", fitToScreen);
+  document.getElementById("btnCenter").addEventListener("click", centerSelectedNode);
+  document.getElementById("btnViewReset").addEventListener("click", resetView);
+  canvasEl.addEventListener("wheel", function (e) {
+    if (!(e.ctrlKey || e.metaKey)) return;
+    e.preventDefault();
+    zoomBy(e.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP, e.clientX, e.clientY);
+  }, { passive: false });
+
+  canvasEl.addEventListener("pointerdown", function (e) {
+    var anywhere = e.button === 1 || spaceHeld;
+    if (e.button !== 0 && e.button !== 1) return;
+    if (!anywhere && e.target.closest(".card, button, input, select, a, [contenteditable='true']")) return;
+    e.preventDefault();
+    viewMode = "manual";
+    panDrag = {
+      pointerId: e.pointerId, x: e.clientX, y: e.clientY,
+      left: canvasEl.scrollLeft, top: canvasEl.scrollTop
+    };
+    canvasEl.classList.add("panning");
+    try { canvasEl.setPointerCapture(e.pointerId); } catch (err) { /* window listeners are the fallback */ }
+  });
+  window.addEventListener("pointermove", function (e) {
+    if (!panDrag || panDrag.pointerId !== e.pointerId) return;
+    e.preventDefault();
+    canvasEl.scrollLeft = panDrag.left - (e.clientX - panDrag.x);
+    canvasEl.scrollTop = panDrag.top - (e.clientY - panDrag.y);
+  });
+  function finishPan(e) {
+    if (!panDrag || panDrag.pointerId !== e.pointerId) return;
+    panDrag = null;
+    canvasEl.classList.remove("panning");
+  }
+  window.addEventListener("pointerup", finishPan);
+  window.addEventListener("pointercancel", finishPan);
+  window.addEventListener("keydown", function (e) {
+    var editable = e.target && e.target.closest && e.target.closest("input, textarea, select, [contenteditable='true']");
+    if (e.code === "Space" && !editable) {
+      spaceHeld = true;
+      if (!e.target.closest || !e.target.closest("button")) e.preventDefault();
+    }
+    if (editable || e.altKey) return;
+    var key = e.key.toLowerCase();
+    if (key === "f" && !e.ctrlKey && !e.metaKey) { e.preventDefault(); fitToScreen(); }
+    else if (key === "c" && !e.ctrlKey && !e.metaKey) { e.preventDefault(); centerSelectedNode(); }
+    else if (key === "0" && !e.ctrlKey && !e.metaKey) { e.preventDefault(); resetView(); }
+    else if (e.key === "+" || e.key === "=") { e.preventDefault(); zoomBy(ZOOM_STEP); }
+    else if (e.key === "-" || e.key === "_") { e.preventDefault(); zoomBy(-ZOOM_STEP); }
+  });
+  window.addEventListener("keyup", function (e) { if (e.code === "Space") spaceHeld = false; });
+  window.addEventListener("blur", function () { spaceHeld = false; panDrag = null; canvasEl.classList.remove("panning"); });
+  updateZoomUi();
 
   /* FLIP: record card positions in content space, then glide them to new spots */
   function snapshot() {
@@ -1811,20 +1985,14 @@
     document.title = root.text + " · Simple Mindmap";
     updatePalette();
     renderTabs();
+    if (viewMode === "fit") requestAnimationFrame(fitToScreen);
   }
 
   /* Keep the map discoverable on small screens and after device rotation. */
   var centerRootTimer = 0;
   var lastViewportWidth = window.innerWidth;
   function centerRootInCanvas() {
-    var card = cardEl(root.id);
-    if (!card) return;
-    var canvasRect = canvasEl.getBoundingClientRect();
-    var cardRect = card.getBoundingClientRect();
-    canvasEl.scrollLeft += cardRect.left - canvasRect.left -
-      Math.max(18, (canvasEl.clientWidth - cardRect.width) / 2);
-    canvasEl.scrollTop += cardRect.top - canvasRect.top -
-      Math.max(18, (canvasEl.clientHeight - cardRect.height) / 2);
+    centerElementInCanvas(cardEl(root.id));
   }
   function scheduleRootCenter() {
     clearTimeout(centerRootTimer);
@@ -1835,7 +2003,7 @@
   window.addEventListener("resize", function () {
     if (window.innerWidth === lastViewportWidth) return;
     lastViewportWidth = window.innerWidth;
-    scheduleRootCenter();
+    if (viewMode === "fit") fitToScreen(); else scheduleRootCenter();
   });
 
   function select(id) {
@@ -1907,7 +2075,7 @@
     if (depth === 0) return;
 
     card.addEventListener("pointerdown", function (e) {
-      if (!e.isPrimary || e.button !== 0) return;
+      if (!e.isPrimary || e.button !== 0 || spaceHeld) return;
       if (e.target.closest("button, [contenteditable='true']")) return;
       pointerDrag = {
         id: node.id,
@@ -2140,13 +2308,41 @@
     node.children.forEach(function (c) { setAll(c, collapsed); });
   }
 
+  function selectInDirection(key) {
+    var current = cardEl(selectedId) || cardEl(root.id);
+    if (!current) return;
+    var from = current.getBoundingClientRect();
+    var fx = from.left + from.width / 2, fy = from.top + from.height / 2;
+    var best = null, bestScore = Infinity;
+    treeEl.querySelectorAll(".card").forEach(function (card) {
+      if (card === current) return;
+      var r = card.getBoundingClientRect();
+      var dx = r.left + r.width / 2 - fx;
+      var dy = r.top + r.height / 2 - fy;
+      var primary, secondary;
+      if (key === "ArrowLeft" && dx < -2) { primary = -dx; secondary = Math.abs(dy); }
+      else if (key === "ArrowRight" && dx > 2) { primary = dx; secondary = Math.abs(dy); }
+      else if (key === "ArrowUp" && dy < -2) { primary = -dy; secondary = Math.abs(dx); }
+      else if (key === "ArrowDown" && dy > 2) { primary = dy; secondary = Math.abs(dx); }
+      else return;
+      var score = primary + secondary * 1.8;
+      if (score < bestScore) { best = card; bestScore = score; }
+    });
+    if (!best) return;
+    select(best.dataset.id);
+    centerSelectedNode();
+  }
+
   function onCardKey(e) {
-    if (readOnly) return;
     var id = e.currentTarget.dataset.id;
+    if (/^Arrow(Left|Right|Up|Down)$/.test(e.key)) {
+      e.preventDefault(); e.stopPropagation(); selectInDirection(e.key); return;
+    }
+    if (readOnly) return;
     if (e.key === "Tab") { e.preventDefault(); addChild(id); }
     else if (e.key === "Enter") { e.preventDefault(); addSibling(id); }
     else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); removeNode(id); }
-    else if (e.key === "F2" || e.key === " ") { e.preventDefault(); startEdit(id); }
+    else if (e.key === "F2") { e.preventDefault(); startEdit(id); }
   }
 
   /* ---------- saved-document library (files on desktop, localStorage on web) ---------- */
@@ -2427,6 +2623,12 @@
     var KEYS = ["teal", "indigo", "orange", "plum", "green", "purple"];
     var treeEl = document.getElementById("tree");
     var canvasEl = document.getElementById("canvas");
+    var stageEl = document.getElementById("canvasStage");
+    var selectedNode = data;
+    var selectedCard = null;
+    var viewZoom = 1, viewMode = "manual";
+    var MIN_ZOOM = 0.02, MAX_ZOOM = 2.5, ZOOM_STEP = 0.15;
+    var panDrag = null, suppressClickUntil = 0;
     document.documentElement.lang = copy.lang;
     document.title = data.text + " — " + copy.readOnly;
     document.getElementById("title").textContent = data.text;
@@ -2434,6 +2636,11 @@
     document.getElementById("btnExpand").textContent = copy.expand;
     document.getElementById("btnCollapse").textContent = copy.collapse;
     document.getElementById("btnPrint").textContent = copy.print;
+    document.getElementById("btnFit").textContent = copy.fit;
+    document.getElementById("btnCenter").textContent = copy.center;
+    document.getElementById("btnReset").textContent = copy.reset;
+    document.getElementById("btnZoomOut").title = copy.zoomOut;
+    document.getElementById("btnZoomIn").title = copy.zoomIn;
 
     function count(node) {
       return 1 + (node.children || []).reduce(function (sum, child) { return sum + count(child); }, 0);
@@ -2445,6 +2652,9 @@
     function makeCard(node, depth, key, mirror) {
       var card = document.createElement("div");
       card.className = "card depth-" + depth + (depth === 0 ? " root" : "") + (mirror ? " mirror-card" : "");
+      if (node === selectedNode) { card.classList.add("selected"); selectedCard = card; }
+      card.tabIndex = 0;
+      card.__node = node;
       card.style.setProperty("--bc", COLORS[key] || "#66788a");
       var text = document.createElement("span");
       text.textContent = node.text;
@@ -2455,13 +2665,23 @@
         toggle.type = "button";
         toggle.textContent = node.collapsed ? "+" : "−";
         toggle.title = node.collapsed ? copy.expand : copy.collapse;
-        toggle.addEventListener("click", function () {
+        toggle.addEventListener("click", function (event) {
+          event.stopPropagation();
           node.collapsed = !node.collapsed;
           render(false);
         });
         card.appendChild(toggle);
         if (!node.collapsed) card.classList.add("open");
       }
+      card.addEventListener("click", function () {
+        if (performance.now() < suppressClickUntil) return;
+        selectCard(card);
+      });
+      card.addEventListener("keydown", function (event) {
+        if (/^Arrow(Left|Right|Up|Down)$/.test(event.key)) {
+          event.preventDefault(); selectDirection(event.key);
+        }
+      });
       return card;
     }
     function renderNode(node, depth, key, mirror) {
@@ -2502,18 +2722,90 @@
       });
       return kids;
     }
-    function centerRoot() {
-      var rootCard = treeEl.querySelector(".card.root");
-      if (!rootCard) return;
+    function clampZoom(value) {
+      return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, Math.round(value * 100) / 100));
+    }
+    function updateZoom() {
+      document.getElementById("zoomLevel").textContent = Math.round(viewZoom * 100) + "%";
+      document.getElementById("btnZoomOut").disabled = viewZoom <= MIN_ZOOM;
+      document.getElementById("btnZoomIn").disabled = viewZoom >= MAX_ZOOM;
+    }
+    function setZoom(value, clientX, clientY, mode) {
+      var next = clampZoom(value);
+      if (next === viewZoom) return;
+      var rect = canvasEl.getBoundingClientRect();
+      var x = clientX == null ? canvasEl.clientWidth / 2 : clientX - rect.left;
+      var y = clientY == null ? canvasEl.clientHeight / 2 : clientY - rect.top;
+      var contentX = (canvasEl.scrollLeft + x) / viewZoom;
+      var contentY = (canvasEl.scrollTop + y) / viewZoom;
+      viewZoom = next; viewMode = mode || "manual";
+      treeEl.style.zoom = String(viewZoom);
+      updateZoom();
+      canvasEl.scrollLeft = contentX * viewZoom - x;
+      canvasEl.scrollTop = contentY * viewZoom - y;
+    }
+    function centerElement(el) {
+      if (!el) return;
       var canvasRect = canvasEl.getBoundingClientRect();
-      var cardRect = rootCard.getBoundingClientRect();
-      canvasEl.scrollLeft += cardRect.left - canvasRect.left -
-        Math.max(18, (canvasEl.clientWidth - cardRect.width) / 2);
-      canvasEl.scrollTop += cardRect.top - canvasRect.top -
-        Math.max(18, (canvasEl.clientHeight - cardRect.height) / 2);
+      var rect = el.getBoundingClientRect();
+      canvasEl.scrollLeft += rect.left + rect.width / 2 - (canvasRect.left + canvasRect.width / 2);
+      canvasEl.scrollTop += rect.top + rect.height / 2 - (canvasRect.top + canvasRect.height / 2);
+    }
+    function centerRoot() { centerElement(treeEl.querySelector(".card.root")); }
+    function centerSelected() { centerElement(selectedCard || treeEl.querySelector(".card.root")); }
+    function fitView() {
+      viewMode = "fit";
+      viewZoom = 1; treeEl.style.zoom = "1";
+      var availableWidth = Math.max(80, canvasEl.clientWidth - 48);
+      var availableHeight = Math.max(80, canvasEl.clientHeight - 48);
+      var baseRect = treeEl.getBoundingClientRect();
+      viewZoom = clampZoom(Math.min(1,
+        availableWidth / Math.max(1, baseRect.width), availableHeight / Math.max(1, baseRect.height)));
+      treeEl.style.zoom = String(viewZoom);
+      for (var pass = 0; pass < 3; pass++) {
+        var renderedRect = treeEl.getBoundingClientRect();
+        var correction = Math.min(1, availableWidth / Math.max(1, renderedRect.width), availableHeight / Math.max(1, renderedRect.height));
+        if (correction > 0.995) break;
+        viewZoom = clampZoom(viewZoom * correction);
+        treeEl.style.zoom = String(viewZoom);
+      }
+      updateZoom();
+      requestAnimationFrame(function () { centerElement(treeEl); });
+    }
+    function resetView() {
+      viewMode = "manual"; viewZoom = 1; treeEl.style.zoom = "1"; updateZoom();
+      requestAnimationFrame(centerRoot);
+    }
+    function selectCard(card) {
+      if (!card) return;
+      if (selectedCard) selectedCard.classList.remove("selected");
+      selectedCard = card; selectedNode = card.__node;
+      card.classList.add("selected"); card.focus();
+    }
+    function selectDirection(key) {
+      var current = selectedCard || treeEl.querySelector(".card.root");
+      if (!current) return;
+      var from = current.getBoundingClientRect();
+      var fx = from.left + from.width / 2, fy = from.top + from.height / 2;
+      var best = null, score = Infinity;
+      treeEl.querySelectorAll(".card").forEach(function (card) {
+        if (card === current) return;
+        var r = card.getBoundingClientRect();
+        var dx = r.left + r.width / 2 - fx, dy = r.top + r.height / 2 - fy;
+        var primary, secondary;
+        if (key === "ArrowLeft" && dx < -2) { primary = -dx; secondary = Math.abs(dy); }
+        else if (key === "ArrowRight" && dx > 2) { primary = dx; secondary = Math.abs(dy); }
+        else if (key === "ArrowUp" && dy < -2) { primary = -dy; secondary = Math.abs(dx); }
+        else if (key === "ArrowDown" && dy > 2) { primary = dy; secondary = Math.abs(dx); }
+        else return;
+        var nextScore = primary + secondary * 1.8;
+        if (nextScore < score) { best = card; score = nextScore; }
+      });
+      if (best) { selectCard(best); centerSelected(); }
     }
     function render(recenter) {
       treeEl.textContent = "";
+      selectedCard = null;
       var row = document.createElement("div");
       row.className = "row root-row";
       if (!data.collapsed) {
@@ -2528,7 +2820,8 @@
       treeEl.appendChild(row);
       document.getElementById("stats").textContent =
         count(data) + " " + copy.nodes + " · " + (data.children || []).length + " " + copy.branches;
-      if (recenter !== false) requestAnimationFrame(centerRoot);
+      if (viewMode === "fit") requestAnimationFrame(fitView);
+      else if (recenter !== false) requestAnimationFrame(centerRoot);
     }
     function setAll(node, collapsed) {
       if (node.children && node.children.length) node.collapsed = collapsed;
@@ -2541,26 +2834,72 @@
       (data.children || []).forEach(function (child) { setAll(child, true); });
       data.collapsed = false; render(true);
     });
+    document.getElementById("btnZoomOut").addEventListener("click", function () { setZoom(viewZoom - ZOOM_STEP); });
+    document.getElementById("btnZoomIn").addEventListener("click", function () { setZoom(viewZoom + ZOOM_STEP); });
+    document.getElementById("zoomLevel").addEventListener("click", resetView);
+    document.getElementById("btnFit").addEventListener("click", fitView);
+    document.getElementById("btnCenter").addEventListener("click", centerSelected);
+    document.getElementById("btnReset").addEventListener("click", resetView);
     document.getElementById("btnPrint").addEventListener("click", function () { window.print(); });
+    canvasEl.addEventListener("wheel", function (event) {
+      if (!(event.ctrlKey || event.metaKey)) return;
+      event.preventDefault();
+      setZoom(viewZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP), event.clientX, event.clientY);
+    }, { passive: false });
+    canvasEl.addEventListener("pointerdown", function (event) {
+      if (event.button !== 0 && event.button !== 1) return;
+      if (event.target.closest("button")) return;
+      event.preventDefault(); viewMode = "manual";
+      panDrag = { id: event.pointerId, x: event.clientX, y: event.clientY,
+        left: canvasEl.scrollLeft, top: canvasEl.scrollTop, moved: false };
+      canvasEl.classList.add("panning");
+      try { canvasEl.setPointerCapture(event.pointerId); } catch (error) { /* window listeners are the fallback */ }
+    });
+    window.addEventListener("pointermove", function (event) {
+      if (!panDrag || panDrag.id !== event.pointerId) return;
+      var dx = event.clientX - panDrag.x, dy = event.clientY - panDrag.y;
+      if (Math.hypot(dx, dy) > 4) panDrag.moved = true;
+      canvasEl.scrollLeft = panDrag.left - dx;
+      canvasEl.scrollTop = panDrag.top - dy;
+    });
+    function finishPan(event) {
+      if (!panDrag || panDrag.id !== event.pointerId) return;
+      if (panDrag.moved) suppressClickUntil = performance.now() + 250;
+      panDrag = null; canvasEl.classList.remove("panning");
+    }
+    window.addEventListener("pointerup", finishPan);
+    window.addEventListener("pointercancel", finishPan);
+    window.addEventListener("keydown", function (event) {
+      if (event.target && event.target.closest && event.target.closest("button")) return;
+      var key = event.key.toLowerCase();
+      if (key === "f" && !event.ctrlKey && !event.metaKey) { event.preventDefault(); fitView(); }
+      else if (key === "c" && !event.ctrlKey && !event.metaKey) { event.preventDefault(); centerSelected(); }
+      else if (key === "0") { event.preventDefault(); resetView(); }
+      else if (event.key === "+" || event.key === "=") { event.preventDefault(); setZoom(viewZoom + ZOOM_STEP); }
+      else if (event.key === "-" || event.key === "_") { event.preventDefault(); setZoom(viewZoom - ZOOM_STEP); }
+    });
     var resizeTimer = 0;
     window.addEventListener("resize", function () {
-      clearTimeout(resizeTimer); resizeTimer = setTimeout(centerRoot, 80);
+      clearTimeout(resizeTimer); resizeTimer = setTimeout(function () {
+        if (viewMode === "fit") fitView(); else centerRoot();
+      }, 80);
     });
+    updateZoom();
     render(true);
   }
 
   function buildReadonlyHtml() {
     var copies = {
-      en: { lang: "en", readOnly: "Read-only interactive snapshot", note: "View and collapse branches; editing and saving are disabled.", expand: "Expand all", collapse: "Collapse all", print: "Print / PDF", nodes: "nodes", branches: "main branches" },
-      zh: { lang: "zh-CN", readOnly: "互动只读快照", note: "可以查看和折叠分支，但不能编辑或保存。", expand: "全部展开", collapse: "全部折叠", print: "打印 / PDF", nodes: "个节点", branches: "个一级分支" },
-      ja: { lang: "ja", readOnly: "操作可能な読み取り専用スナップショット", note: "閲覧と折りたたみはできますが、編集と保存はできません。", expand: "すべて展開", collapse: "すべて折りたたむ", print: "印刷 / PDF", nodes: "ノード", branches: "メインブランチ" }
+      en: { lang: "en", readOnly: "Read-only interactive snapshot", note: "View, pan, zoom and collapse branches; editing and saving are disabled.", expand: "Expand all", collapse: "Collapse all", print: "Print / PDF", fit: "Fit", center: "Center", reset: "Reset view", zoomOut: "Zoom out", zoomIn: "Zoom in", nodes: "nodes", branches: "main branches" },
+      zh: { lang: "zh-CN", readOnly: "互动只读快照", note: "可以查看、拖动、缩放和折叠分支，但不能编辑或保存。", expand: "全部展开", collapse: "全部折叠", print: "打印 / PDF", fit: "适应屏幕", center: "定位节点", reset: "重置视图", zoomOut: "缩小", zoomIn: "放大", nodes: "个节点", branches: "个一级分支" },
+      ja: { lang: "ja", readOnly: "操作可能な読み取り専用スナップショット", note: "閲覧、移動、拡大縮小、折りたたみができます。編集と保存はできません。", expand: "すべて展開", collapse: "すべて折りたたむ", print: "印刷 / PDF", fit: "画面に合わせる", center: "選択を中央へ", reset: "表示をリセット", zoomOut: "縮小", zoomIn: "拡大", nodes: "ノード", branches: "メインブランチ" }
     };
     var copy = copies[lang] || copies.en;
     var json = JSON.stringify(stripIds(root)).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
     var copyJson = JSON.stringify(copy).replace(/</g, "\\u003c");
     var title = String(root.text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    var css = "*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Segoe UI,PingFang SC,Microsoft YaHei,system-ui,sans-serif;background:#f4f6f8;color:#22303c}body{display:flex;flex-direction:column}.notice{padding:7px 16px;background:#e7f4f3;border-bottom:1px solid #b8d9d6;font-size:12px;color:#405866}header{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 18px;background:#fff;border-bottom:1px solid #d8dee4}h1{margin:0;font-size:17px}.stats{margin-top:3px;color:#687987;font-size:12px}.actions{display:flex;gap:8px;margin-left:auto}.actions button,.toggle{font:inherit;border:1px solid #c7d0d8;border-radius:6px;background:#fff;color:#22303c;cursor:pointer}.actions button{padding:6px 10px}.actions button:hover,.toggle:hover{border-color:#0e7c7b;color:#0e7c7b}.canvas{flex:1;overflow:auto;padding:42px 56px;overscroll-behavior:contain}#tree{width:max-content}.row{display:flex;align-items:center}.kids{display:flex;flex-direction:column;margin-left:26px}.branch{display:flex;align-items:center;position:relative;padding:5px 0 5px 34px}.branch:before{content:'';position:absolute;left:0;top:50%;width:34px;border-top:2px solid var(--lc,#8a98a3)}.branch:after{content:'';position:absolute;left:0;top:0;height:100%;border-left:2px solid var(--lc,#8a98a3)}.branch:first-child:before{height:50%;border-left:2px solid var(--lc,#8a98a3);border-top-left-radius:14px}.branch:first-child:after,.branch:last-child:after{display:none}.branch:last-child:before{top:0;height:50%;border-top:0;border-bottom:2px solid var(--lc,#8a98a3);border-left:2px solid var(--lc,#8a98a3);border-bottom-left-radius:14px}.branch:only-child:before{top:50%;height:0;border:0;border-top:2px solid var(--lc,#8a98a3);border-radius:0}.mirror.row{flex-direction:row-reverse}.kids.mirror,.mirror .kids{margin-left:0;margin-right:26px}.branch.mirror,.mirror .branch{padding:5px 34px 5px 0;justify-content:flex-end}.branch.mirror:before,.mirror .branch:before{left:auto;right:0}.branch.mirror:after,.mirror .branch:after{left:auto;right:0;border-left:0;border-right:2px solid var(--lc,#8a98a3)}.branch.mirror:first-child:before,.mirror .branch:first-child:before{border-left:0;border-right:2px solid var(--lc,#8a98a3);border-top-left-radius:0;border-top-right-radius:14px}.branch.mirror:last-child:before,.mirror .branch:last-child:before{border-left:0;border-right:2px solid var(--lc,#8a98a3);border-bottom-left-radius:0;border-bottom-right-radius:14px}.branch.mirror:only-child:before,.mirror .branch:only-child:before{border:0;border-top:2px solid var(--lc,#8a98a3);border-radius:0}.card{position:relative;display:flex;align-items:center;gap:8px;max-width:340px;padding:7px 12px;background:color-mix(in srgb,var(--bc,#66788a) 7%,#fff);border:1px solid color-mix(in srgb,var(--bc,#66788a) 45%,#d8dee4);border-left:4px solid var(--bc,#66788a);border-radius:7px;box-shadow:0 1px 3px rgba(20,31,44,.12);font-size:13.5px;line-height:1.45}.card.depth-1{font-weight:650;font-size:14px}.card.root{background:#22303c;color:#fff;border-color:#22303c;font-size:16px;font-weight:700;padding:12px 18px;max-width:260px}.mirror-card{flex-direction:row-reverse;border-left-width:1px;border-right:4px solid var(--bc,#66788a)}.toggle{flex:none;width:20px;height:20px;padding:0;border-radius:50%;font-size:12px;line-height:18px}.card.root .toggle{color:#fff;background:transparent;border-color:#8fa0ae}.card.open:after{content:'';position:absolute;right:-26px;top:50%;width:26px;border-top:2px solid var(--bc,#8a98a3)}.mirror-card.open:after{right:auto;left:-26px}@media(max-width:700px){header{padding:9px 10px}.actions{width:100%;margin-left:0;overflow-x:auto;flex-wrap:nowrap}.actions button{flex:none;min-height:36px}.notice{padding:7px 10px}.canvas{padding:28px 20px}.card{max-width:260px;font-size:12.5px}.card.root{max-width:220px;font-size:14px}}@media(prefers-color-scheme:dark){html,body{background:#151b20;color:#e7edf2}.notice{background:#153331;border-color:#28504d;color:#bed1d0}header{background:#202830;border-color:#394550}.stats{color:#aebbc5}.actions button,.toggle{background:#202830;color:#e7edf2;border-color:#52606c}.card{background:color-mix(in srgb,var(--bc,#66788a) 14%,#202830);border-color:color-mix(in srgb,var(--bc,#66788a) 55%,#52606c)}}@media print{html,body{overflow:visible;height:auto}.notice,.actions{display:none}.canvas{overflow:visible;padding:20px}header{border:0}#tree{transform-origin:top left}}";
-    return "<!doctype html><html lang=\"" + copy.lang + "\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'\"><title>" + title + " — " + copy.readOnly + "</title><style>" + css + "</style></head><body><div class=\"notice\" id=\"notice\"></div><header><div><h1 id=\"title\"></h1><div class=\"stats\" id=\"stats\"></div></div><div class=\"actions\"><button id=\"btnExpand\"></button><button id=\"btnCollapse\"></button><button id=\"btnPrint\"></button></div></header><main class=\"canvas\" id=\"canvas\"><div id=\"tree\"></div></main><script>(" + readonlyViewerBoot.toString() + ")(" + json + "," + copyJson + ");<" + "/script></body></html>";
+    var css = "*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Segoe UI,PingFang SC,Microsoft YaHei,system-ui,sans-serif;background:#f4f6f8;color:#22303c}body{display:flex;flex-direction:column}.notice{padding:7px 16px;background:#e7f4f3;border-bottom:1px solid #b8d9d6;font-size:12px;color:#405866}header{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 18px;background:#fff;border-bottom:1px solid #d8dee4}h1{margin:0;font-size:17px}.stats{margin-top:3px;color:#687987;font-size:12px}.actions{display:flex;gap:8px;margin-left:auto;align-items:center;flex-wrap:wrap}.actions button,.toggle{font:inherit;border:1px solid #c7d0d8;border-radius:6px;background:#fff;color:#22303c;cursor:pointer}.actions button{padding:6px 10px}.actions button:hover,.toggle:hover{border-color:#0e7c7b;color:#0e7c7b}.zoom-level{min-width:56px;font-variant-numeric:tabular-nums}.canvas{flex:1;overflow:auto;padding:0;overscroll-behavior:contain;touch-action:none;cursor:grab}.canvas.panning{cursor:grabbing;user-select:none}.canvas-stage{min-width:100%;min-height:100%;width:max-content;height:max-content;display:flex;align-items:center;justify-content:center;padding:max(48px,50vh) max(64px,50vw)}#tree{width:max-content;flex:none;transform-origin:0 0}.row{display:flex;align-items:center}.kids{display:flex;flex-direction:column;margin-left:26px}.branch{display:flex;align-items:center;position:relative;padding:5px 0 5px 34px}.branch:before{content:'';position:absolute;left:0;top:50%;width:34px;border-top:2px solid var(--lc,#8a98a3)}.branch:after{content:'';position:absolute;left:0;top:0;height:100%;border-left:2px solid var(--lc,#8a98a3)}.branch:first-child:before{height:50%;border-left:2px solid var(--lc,#8a98a3);border-top-left-radius:14px}.branch:first-child:after,.branch:last-child:after{display:none}.branch:last-child:before{top:0;height:50%;border-top:0;border-bottom:2px solid var(--lc,#8a98a3);border-left:2px solid var(--lc,#8a98a3);border-bottom-left-radius:14px}.branch:only-child:before{top:50%;height:0;border:0;border-top:2px solid var(--lc,#8a98a3);border-radius:0}.mirror.row{flex-direction:row-reverse}.kids.mirror,.mirror .kids{margin-left:0;margin-right:26px}.branch.mirror,.mirror .branch{padding:5px 34px 5px 0;justify-content:flex-end}.branch.mirror:before,.mirror .branch:before{left:auto;right:0}.branch.mirror:after,.mirror .branch:after{left:auto;right:0;border-left:0;border-right:2px solid var(--lc,#8a98a3)}.branch.mirror:first-child:before,.mirror .branch:first-child:before{border-left:0;border-right:2px solid var(--lc,#8a98a3);border-top-left-radius:0;border-top-right-radius:14px}.branch.mirror:last-child:before,.mirror .branch:last-child:before{border-left:0;border-right:2px solid var(--lc,#8a98a3);border-bottom-left-radius:0;border-bottom-right-radius:14px}.branch.mirror:only-child:before,.mirror .branch:only-child:before{border:0;border-top:2px solid var(--lc,#8a98a3);border-radius:0}.card{position:relative;display:flex;align-items:center;gap:8px;max-width:340px;padding:7px 12px;background:color-mix(in srgb,var(--bc,#66788a) 7%,#fff);border:1px solid color-mix(in srgb,var(--bc,#66788a) 45%,#d8dee4);border-left:4px solid var(--bc,#66788a);border-radius:7px;box-shadow:0 1px 3px rgba(20,31,44,.12);font-size:13.5px;line-height:1.45}.card.selected{outline:2px solid #0e7c7b;outline-offset:2px}.card.depth-1{font-weight:650;font-size:14px}.card.root{background:#22303c;color:#fff;border-color:#22303c;font-size:16px;font-weight:700;padding:12px 18px;max-width:260px}.mirror-card{flex-direction:row-reverse;border-left-width:1px;border-right:4px solid var(--bc,#66788a)}.toggle{flex:none;width:20px;height:20px;padding:0;border-radius:50%;font-size:12px;line-height:18px}.card.root .toggle{color:#fff;background:transparent;border-color:#8fa0ae}.card.open:after{content:'';position:absolute;right:-26px;top:50%;width:26px;border-top:2px solid var(--bc,#8a98a3)}.mirror-card.open:after{right:auto;left:-26px}@media(max-width:700px){header{padding:9px 10px}.actions{width:100%;margin-left:0;overflow-x:auto;flex-wrap:nowrap}.actions button{flex:none;min-height:36px}.notice{padding:7px 10px}.card{max-width:260px;font-size:12.5px}.card.root{max-width:220px;font-size:14px}}@media(prefers-color-scheme:dark){html,body{background:#151b20;color:#e7edf2}.notice{background:#153331;border-color:#28504d;color:#bed1d0}header{background:#202830;border-color:#394550}.stats{color:#aebbc5}.actions button,.toggle{background:#202830;color:#e7edf2;border-color:#52606c}.card{background:color-mix(in srgb,var(--bc,#66788a) 14%,#202830);border-color:color-mix(in srgb,var(--bc,#66788a) 55%,#52606c)}}@media print{html,body{overflow:visible;height:auto}.notice,.actions{display:none}.canvas{overflow:visible}.canvas-stage{padding:20px;display:block}header{border:0}#tree{zoom:1!important;transform-origin:top left}}";
+    return "<!doctype html><html lang=\"" + copy.lang + "\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'\"><title>" + title + " — " + copy.readOnly + "</title><style>" + css + "</style></head><body><div class=\"notice\" id=\"notice\"></div><header><div><h1 id=\"title\"></h1><div class=\"stats\" id=\"stats\"></div></div><div class=\"actions\"><button id=\"btnExpand\"></button><button id=\"btnCollapse\"></button><button id=\"btnZoomOut\">−</button><button class=\"zoom-level\" id=\"zoomLevel\">100%</button><button id=\"btnZoomIn\">+</button><button id=\"btnFit\"></button><button id=\"btnCenter\"></button><button id=\"btnReset\"></button><button id=\"btnPrint\"></button></div></header><main class=\"canvas\" id=\"canvas\"><div class=\"canvas-stage\" id=\"canvasStage\"><div id=\"tree\"></div></div></main><script>(" + readonlyViewerBoot.toString() + ")(" + json + "," + copyJson + ");<" + "/script></body></html>";
   }
   var sharePanel = document.getElementById("sharePanel");
   var shareUrlEl = document.getElementById("shareUrl");

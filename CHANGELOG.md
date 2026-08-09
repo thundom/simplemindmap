@@ -2,6 +2,14 @@
 
 All notable Simple Mindmap releases are listed here.
 
+## v1.5.0 — 2026-08-09
+
+- Added drag-to-pan canvas navigation, including touch, Space-drag, and middle-mouse dragging.
+- Added zoom controls and pointer-centred `Ctrl`+wheel zooming.
+- Added Fit to screen, Center selected node, and Reset view controls.
+- Added keyboard navigation between visible nodes plus `F`, `C`, `0`, `+`, and `-` view shortcuts.
+- Added the same navigation module to standalone interactive read-only HTML exports.
+
 ## v1.4.0 — 2026-08-09
 
 - Added persistent custom tab names: double-click a tab label to rename it without changing the centre node.
