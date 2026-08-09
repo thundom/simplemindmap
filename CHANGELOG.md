@@ -2,6 +2,14 @@
 
 All notable Simple Mindmap releases are listed here.
 
+## v1.7.0 — 2026-08-10
+
+- Added a safe one-time migration for the untouched 95-node mixed-language EBA sample stored by older installations.
+- Ensured the web app, Windows application and standalone HTML application all load the same 170-node English HRIS operating model.
+- Added a build-time check that prevents CJK text from being added to the bundled sample.
+- Expanded the GitHub README into a complete branded product overview with positioning, use cases, privacy guidance, edition comparison and controls.
+- Added a corrected 1200 × 627 brand image with a topologically valid six-branch mind map and updated the Open Graph preview.
+
 ## v1.6.0 — 2026-08-10
 
 - Added a polished English product launch page for public sharing and LinkedIn promotion.
