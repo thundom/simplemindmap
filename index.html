@@ -165,6 +165,12 @@
     font: inherit; font-size: 12.5px; text-align: left;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
   }
+  .tab-rename {
+    min-width: 0; flex: 1; margin: 4px 3px 4px 6px; padding: 4px 5px;
+    border: 1px solid var(--accent); border-radius: 4px;
+    background: var(--surface); color: var(--ink); font: inherit; font-size: 12.5px;
+    outline: none;
+  }
   .tab-close {
     flex: none; width: 28px; height: 28px; margin-right: 2px;
     border: 0; border-radius: 5px; background: transparent;
@@ -531,9 +537,10 @@
     }
     #btnCopyShare { order: 3; }
     #btnOpenShare { order: 4; }
-    #shareSize { order: 5; margin-left: auto; }
-    #btnCloseShare { order: 6; }
-    .share-help { order: 7; line-height: 1.45; }
+    #btnDownloadShareHtml { order: 5; }
+    #shareSize { order: 6; margin-left: auto; }
+    #btnCloseShare { order: 7; }
+    .share-help { order: 8; line-height: 1.45; }
     .hint { gap: 8px; padding: 6px 9px; }
     #hintText { flex: 1 1 100%; line-height: 1.45; }
     .pal { flex: 1 1 100%; max-width: 100%; overflow-x: auto; padding: 2px; }
@@ -660,6 +667,7 @@
     <input id="shareUrl" readonly aria-label="Share link">
     <button class="btn sm" id="btnCopyShare" data-i18n="copy">Copy</button>
     <a class="btn sm" id="btnOpenShare" target="_blank" rel="noopener noreferrer" data-i18n="preview">Preview</a>
+    <a class="btn sm" id="btnDownloadShareHtml" download data-i18n="downloadHtml" data-i18n-title="downloadHtmlTip">Download HTML</a>
     <span id="shareSize"></span>
     <button class="btn sm" id="btnCloseShare" data-i18n="close">Close</button>
     <span class="share-help" data-i18n="shareHelp">Anyone with this link can view, collapse and export this snapshot. Editing and saving are disabled.</span>
@@ -764,6 +772,8 @@
       share: "Share",
       shareTip: "Create a read-only link",
       preview: "Preview",
+      downloadHtml: "Download HTML",
+      downloadHtmlTip: "Download an offline interactive read-only copy",
       shareHelp: "Anyone with this link can view, collapse and export this snapshot. Editing and saving are disabled.",
       undo: "Undo",
       undoTip: "Undo the last change (Ctrl+Z)",
@@ -779,6 +789,8 @@
       mapTabsLabel: "Open mind maps",
       newTab: "New mind map tab",
       closeTab: "Close tab",
+      renameTab: "Rename tab",
+      renameTabTip: "Double-click to give this tab a custom name",
       importBtn: "Import",
       importTip: "Import Markdown or a JSON backup",
       exportMd: "Export MD",
@@ -874,7 +886,9 @@
       tCopied: "Copied",
       tCopyFail: "Copy failed — please select and copy manually",
       tShareBroken: "That share link is damaged or incomplete — showing your own map instead",
+      tHtmlExported: "Interactive read-only HTML downloaded",
       tConfirmCloseTab: function (name) { return "Click close again to discard the unsaved tab “" + name + "”"; },
+      tTabRenamed: function (name) { return "Tab renamed to “" + name + "”"; },
       tReadOnlyGuard: "This shared snapshot is read-only"
     },
     zh: {
@@ -888,6 +902,8 @@
       share: "分享",
       shareTip: "生成只读分享链接",
       preview: "预览",
+      downloadHtml: "下载 HTML",
+      downloadHtmlTip: "下载可离线互动的只读副本",
       shareHelp: "任何获得链接的人都只能查看、折叠和导出此快照；编辑与保存功能已禁用。",
       undo: "回退",
       undoTip: "回退上一步修改（Ctrl+Z）",
@@ -903,6 +919,8 @@
       mapTabsLabel: "已打开的思维导图",
       newTab: "新建思维导图标签页",
       closeTab: "关闭标签页",
+      renameTab: "重命名标签页",
+      renameTabTip: "双击可自定义标签页名称",
       importBtn: "导入",
       importTip: "导入 Markdown 或 JSON 备份",
       exportMd: "导出 MD",
@@ -998,7 +1016,9 @@
       tCopied: "已复制",
       tCopyFail: "复制失败，请手动选择复制",
       tShareBroken: "分享链接已损坏或不完整，显示的是你自己的导图",
+      tHtmlExported: "互动只读 HTML 已下载",
       tConfirmCloseTab: function (name) { return "再次点击关闭，将丢弃未保存的标签页“" + name + "”"; },
+      tTabRenamed: function (name) { return "标签页已重命名为“" + name + "”"; },
       tReadOnlyGuard: "此分享快照为只读版本"
     },
     ja: {
@@ -1012,6 +1032,8 @@
       share: "共有",
       shareTip: "読み取り専用リンクを作成",
       preview: "プレビュー",
+      downloadHtml: "HTML をダウンロード",
+      downloadHtmlTip: "オフラインで操作できる読み取り専用コピーをダウンロード",
       shareHelp: "リンクを知っている人は、このスナップショットの閲覧・折りたたみ・書き出しのみ可能です。編集と保存は無効です。",
       undo: "元に戻す",
       undoTip: "直前の変更を元に戻す（Ctrl+Z）",
@@ -1027,6 +1049,8 @@
       mapTabsLabel: "開いているマインドマップ",
       newTab: "新しいマインドマップタブ",
       closeTab: "タブを閉じる",
+      renameTab: "タブ名を変更",
+      renameTabTip: "ダブルクリックでタブ名を変更",
       importBtn: "読み込み",
       importTip: "Markdown または JSON バックアップを読み込む",
       exportMd: "MD 書き出し",
@@ -1122,7 +1146,9 @@
       tCopied: "コピーしました",
       tCopyFail: "コピーに失敗しました。手動で選択してコピーしてください",
       tShareBroken: "共有リンクが壊れているか不完全です。ご自身のマップを表示しています",
+      tHtmlExported: "操作可能な読み取り専用 HTML をダウンロードしました",
       tConfirmCloseTab: function (name) { return "もう一度閉じると、未保存のタブ「" + name + "」を破棄します"; },
+      tTabRenamed: function (name) { return "タブ名を「" + name + "」に変更しました"; },
       tReadOnlyGuard: "この共有スナップショットは読み取り専用です"
     }
   };
@@ -1283,7 +1309,10 @@
       openTabs = state.tabs.filter(function (tab) {
         return tab && typeof tab.id === "string" && tab.tree && typeof tab.tree.text === "string";
       }).map(function (tab) {
-        return { id: tab.id, docId: tab.docId || null, name: tab.name || tab.tree.text, tree: tab.tree };
+        return {
+          id: tab.id, docId: tab.docId || null,
+          name: tab.name || tab.tree.text, label: tab.label || null, tree: tab.tree
+        };
       });
       activeTabId = state.activeId;
     }
@@ -1366,7 +1395,7 @@
     var idx = openTabs.findIndex(function (tab) { return tab.id === tabId; });
     if (idx < 0) return;
     var tab = openTabs[idx];
-    if (!tab.docId && !confirmTwice("close-tab:" + tab.id, t("tConfirmCloseTab", tab.name || tab.tree.text))) return;
+    if (!tab.docId && !confirmTwice("close-tab:" + tab.id, t("tConfirmCloseTab", tab.label || tab.name || tab.tree.text))) return;
     if (tab.id === activeTabId) captureActiveTab();
     openTabs.splice(idx, 1);
     if (!openTabs.length) {
@@ -1380,6 +1409,35 @@
     } else {
       persistTabs(); renderTabs();
     }
+  }
+  function renameMapTab(tab, wrap, currentLabel) {
+    var input = document.createElement("input");
+    input.className = "tab-rename";
+    input.type = "text";
+    input.value = tab.label || currentLabel;
+    input.setAttribute("aria-label", t("renameTab"));
+    var open = wrap.querySelector(".tab-open");
+    wrap.insertBefore(input, open);
+    wrap.removeChild(open);
+    input.focus(); input.select();
+    var done = false;
+    function commit(cancel) {
+      if (done) return;
+      done = true;
+      if (!cancel) {
+        var value = input.value.replace(/\s+/g, " ").trim();
+        tab.label = value || null;
+        persistTabs();
+        toast(t("tTabRenamed", tab.label || tab.name || tab.tree.text));
+      }
+      renderTabs();
+    }
+    input.addEventListener("blur", function () { commit(false); });
+    input.addEventListener("keydown", function (e) {
+      e.stopPropagation();
+      if (e.key === "Enter") { e.preventDefault(); commit(false); }
+      else if (e.key === "Escape") { e.preventDefault(); commit(true); }
+    });
   }
   function renderTabs() {
     if (!mapTabsEl) return;
@@ -1396,10 +1454,14 @@
       open.type = "button";
       open.setAttribute("role", "tab");
       open.setAttribute("aria-selected", tab.id === activeTabId ? "true" : "false");
-      var label = tab.id === activeTabId && !readOnly ? root.text : (tab.name || tab.tree.text);
+      var automaticLabel = tab.id === activeTabId && !readOnly ? root.text : (tab.name || tab.tree.text);
+      var label = tab.label || automaticLabel;
       open.textContent = label;
-      open.title = label;
+      open.title = label + " — " + t("renameTabTip");
       open.addEventListener("click", function () { activateTab(tab.id); });
+      open.addEventListener("dblclick", function (e) {
+        e.preventDefault(); e.stopPropagation(); renameMapTab(tab, wrap, automaticLabel);
+      });
       var close = document.createElement("button");
       close.className = "tab-close";
       close.type = "button";
@@ -2354,8 +2416,155 @@
     }).catch(function () { return null; });
   }
 
+  /* This function is serialized into exported read-only HTML snapshots. */
+  function readonlyViewerBoot(data, copy) {
+    "use strict";
+    var COLORS = {
+      teal: "#0e7c7b", blue: "#2f6db4", indigo: "#4a5899", steel: "#2b7a94",
+      green: "#557a46", orange: "#b26a2b", coral: "#b3463c", plum: "#96496b",
+      purple: "#7d5ba6", slate: "#5b6b78"
+    };
+    var KEYS = ["teal", "indigo", "orange", "plum", "green", "purple"];
+    var treeEl = document.getElementById("tree");
+    var canvasEl = document.getElementById("canvas");
+    document.documentElement.lang = copy.lang;
+    document.title = data.text + " — " + copy.readOnly;
+    document.getElementById("title").textContent = data.text;
+    document.getElementById("notice").textContent = copy.readOnly + " — " + copy.note;
+    document.getElementById("btnExpand").textContent = copy.expand;
+    document.getElementById("btnCollapse").textContent = copy.collapse;
+    document.getElementById("btnPrint").textContent = copy.print;
+
+    function count(node) {
+      return 1 + (node.children || []).reduce(function (sum, child) { return sum + count(child); }, 0);
+    }
+    function branchKey(node, depth, parentKey, index) {
+      if (node.color && COLORS[node.color]) return node.color;
+      return depth === 1 ? KEYS[index % KEYS.length] : parentKey;
+    }
+    function makeCard(node, depth, key, mirror) {
+      var card = document.createElement("div");
+      card.className = "card depth-" + depth + (depth === 0 ? " root" : "") + (mirror ? " mirror-card" : "");
+      card.style.setProperty("--bc", COLORS[key] || "#66788a");
+      var text = document.createElement("span");
+      text.textContent = node.text;
+      card.appendChild(text);
+      if (node.children && node.children.length) {
+        var toggle = document.createElement("button");
+        toggle.className = "toggle";
+        toggle.type = "button";
+        toggle.textContent = node.collapsed ? "+" : "−";
+        toggle.title = node.collapsed ? copy.expand : copy.collapse;
+        toggle.addEventListener("click", function () {
+          node.collapsed = !node.collapsed;
+          render(false);
+        });
+        card.appendChild(toggle);
+        if (!node.collapsed) card.classList.add("open");
+      }
+      return card;
+    }
+    function renderNode(node, depth, key, mirror) {
+      var row = document.createElement("div");
+      row.className = "row" + (mirror ? " mirror" : "");
+      var card = makeCard(node, depth, key, mirror);
+      row.appendChild(card);
+      if (!node.collapsed && node.children && node.children.length) {
+        var kids = document.createElement("div");
+        kids.className = "kids" + (mirror ? " mirror" : "");
+        node.children.forEach(function (child, index) {
+          var childKey = branchKey(child, depth + 1, key, index);
+          var branch = document.createElement("div");
+          branch.className = "branch" + (mirror ? " mirror" : "");
+          branch.style.setProperty("--lc", COLORS[childKey] || "#8a98a3");
+          branch.appendChild(renderNode(child, depth + 1, childKey, mirror));
+          kids.appendChild(branch);
+        });
+        row.appendChild(kids);
+      }
+      return row;
+    }
+    function rootSide(side, mirror) {
+      var nodes = (data.children || []).filter(function (child) {
+        return side === "left" ? child.side === "left" : child.side !== "left";
+      });
+      if (!nodes.length) return null;
+      var kids = document.createElement("div");
+      kids.className = "kids root-kids" + (mirror ? " mirror" : "");
+      nodes.forEach(function (child) {
+        var originalIndex = data.children.indexOf(child);
+        var key = branchKey(child, 1, null, originalIndex);
+        var branch = document.createElement("div");
+        branch.className = "branch" + (mirror ? " mirror" : "");
+        branch.style.setProperty("--lc", COLORS[key]);
+        branch.appendChild(renderNode(child, 1, key, mirror));
+        kids.appendChild(branch);
+      });
+      return kids;
+    }
+    function centerRoot() {
+      var rootCard = treeEl.querySelector(".card.root");
+      if (!rootCard) return;
+      var canvasRect = canvasEl.getBoundingClientRect();
+      var cardRect = rootCard.getBoundingClientRect();
+      canvasEl.scrollLeft += cardRect.left - canvasRect.left -
+        Math.max(18, (canvasEl.clientWidth - cardRect.width) / 2);
+      canvasEl.scrollTop += cardRect.top - canvasRect.top -
+        Math.max(18, (canvasEl.clientHeight - cardRect.height) / 2);
+    }
+    function render(recenter) {
+      treeEl.textContent = "";
+      var row = document.createElement("div");
+      row.className = "row root-row";
+      if (!data.collapsed) {
+        var left = rootSide("left", true);
+        if (left) row.appendChild(left);
+      }
+      row.appendChild(makeCard(data, 0, "teal", false));
+      if (!data.collapsed) {
+        var right = rootSide("right", false);
+        if (right) row.appendChild(right);
+      }
+      treeEl.appendChild(row);
+      document.getElementById("stats").textContent =
+        count(data) + " " + copy.nodes + " · " + (data.children || []).length + " " + copy.branches;
+      if (recenter !== false) requestAnimationFrame(centerRoot);
+    }
+    function setAll(node, collapsed) {
+      if (node.children && node.children.length) node.collapsed = collapsed;
+      (node.children || []).forEach(function (child) { setAll(child, collapsed); });
+    }
+    document.getElementById("btnExpand").addEventListener("click", function () {
+      setAll(data, false); render(true);
+    });
+    document.getElementById("btnCollapse").addEventListener("click", function () {
+      (data.children || []).forEach(function (child) { setAll(child, true); });
+      data.collapsed = false; render(true);
+    });
+    document.getElementById("btnPrint").addEventListener("click", function () { window.print(); });
+    var resizeTimer = 0;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer); resizeTimer = setTimeout(centerRoot, 80);
+    });
+    render(true);
+  }
+
+  function buildReadonlyHtml() {
+    var copies = {
+      en: { lang: "en", readOnly: "Read-only interactive snapshot", note: "View and collapse branches; editing and saving are disabled.", expand: "Expand all", collapse: "Collapse all", print: "Print / PDF", nodes: "nodes", branches: "main branches" },
+      zh: { lang: "zh-CN", readOnly: "互动只读快照", note: "可以查看和折叠分支，但不能编辑或保存。", expand: "全部展开", collapse: "全部折叠", print: "打印 / PDF", nodes: "个节点", branches: "个一级分支" },
+      ja: { lang: "ja", readOnly: "操作可能な読み取り専用スナップショット", note: "閲覧と折りたたみはできますが、編集と保存はできません。", expand: "すべて展開", collapse: "すべて折りたたむ", print: "印刷 / PDF", nodes: "ノード", branches: "メインブランチ" }
+    };
+    var copy = copies[lang] || copies.en;
+    var json = JSON.stringify(stripIds(root)).replace(/</g, "\\u003c").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+    var copyJson = JSON.stringify(copy).replace(/</g, "\\u003c");
+    var title = String(root.text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    var css = "*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Segoe UI,PingFang SC,Microsoft YaHei,system-ui,sans-serif;background:#f4f6f8;color:#22303c}body{display:flex;flex-direction:column}.notice{padding:7px 16px;background:#e7f4f3;border-bottom:1px solid #b8d9d6;font-size:12px;color:#405866}header{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 18px;background:#fff;border-bottom:1px solid #d8dee4}h1{margin:0;font-size:17px}.stats{margin-top:3px;color:#687987;font-size:12px}.actions{display:flex;gap:8px;margin-left:auto}.actions button,.toggle{font:inherit;border:1px solid #c7d0d8;border-radius:6px;background:#fff;color:#22303c;cursor:pointer}.actions button{padding:6px 10px}.actions button:hover,.toggle:hover{border-color:#0e7c7b;color:#0e7c7b}.canvas{flex:1;overflow:auto;padding:42px 56px;overscroll-behavior:contain}#tree{width:max-content}.row{display:flex;align-items:center}.kids{display:flex;flex-direction:column;margin-left:26px}.branch{display:flex;align-items:center;position:relative;padding:5px 0 5px 34px}.branch:before{content:'';position:absolute;left:0;top:50%;width:34px;border-top:2px solid var(--lc,#8a98a3)}.branch:after{content:'';position:absolute;left:0;top:0;height:100%;border-left:2px solid var(--lc,#8a98a3)}.branch:first-child:before{height:50%;border-left:2px solid var(--lc,#8a98a3);border-top-left-radius:14px}.branch:first-child:after,.branch:last-child:after{display:none}.branch:last-child:before{top:0;height:50%;border-top:0;border-bottom:2px solid var(--lc,#8a98a3);border-left:2px solid var(--lc,#8a98a3);border-bottom-left-radius:14px}.branch:only-child:before{top:50%;height:0;border:0;border-top:2px solid var(--lc,#8a98a3);border-radius:0}.mirror.row{flex-direction:row-reverse}.kids.mirror,.mirror .kids{margin-left:0;margin-right:26px}.branch.mirror,.mirror .branch{padding:5px 34px 5px 0;justify-content:flex-end}.branch.mirror:before,.mirror .branch:before{left:auto;right:0}.branch.mirror:after,.mirror .branch:after{left:auto;right:0;border-left:0;border-right:2px solid var(--lc,#8a98a3)}.branch.mirror:first-child:before,.mirror .branch:first-child:before{border-left:0;border-right:2px solid var(--lc,#8a98a3);border-top-left-radius:0;border-top-right-radius:14px}.branch.mirror:last-child:before,.mirror .branch:last-child:before{border-left:0;border-right:2px solid var(--lc,#8a98a3);border-bottom-left-radius:0;border-bottom-right-radius:14px}.branch.mirror:only-child:before,.mirror .branch:only-child:before{border:0;border-top:2px solid var(--lc,#8a98a3);border-radius:0}.card{position:relative;display:flex;align-items:center;gap:8px;max-width:340px;padding:7px 12px;background:color-mix(in srgb,var(--bc,#66788a) 7%,#fff);border:1px solid color-mix(in srgb,var(--bc,#66788a) 45%,#d8dee4);border-left:4px solid var(--bc,#66788a);border-radius:7px;box-shadow:0 1px 3px rgba(20,31,44,.12);font-size:13.5px;line-height:1.45}.card.depth-1{font-weight:650;font-size:14px}.card.root{background:#22303c;color:#fff;border-color:#22303c;font-size:16px;font-weight:700;padding:12px 18px;max-width:260px}.mirror-card{flex-direction:row-reverse;border-left-width:1px;border-right:4px solid var(--bc,#66788a)}.toggle{flex:none;width:20px;height:20px;padding:0;border-radius:50%;font-size:12px;line-height:18px}.card.root .toggle{color:#fff;background:transparent;border-color:#8fa0ae}.card.open:after{content:'';position:absolute;right:-26px;top:50%;width:26px;border-top:2px solid var(--bc,#8a98a3)}.mirror-card.open:after{right:auto;left:-26px}@media(max-width:700px){header{padding:9px 10px}.actions{width:100%;margin-left:0;overflow-x:auto;flex-wrap:nowrap}.actions button{flex:none;min-height:36px}.notice{padding:7px 10px}.canvas{padding:28px 20px}.card{max-width:260px;font-size:12.5px}.card.root{max-width:220px;font-size:14px}}@media(prefers-color-scheme:dark){html,body{background:#151b20;color:#e7edf2}.notice{background:#153331;border-color:#28504d;color:#bed1d0}header{background:#202830;border-color:#394550}.stats{color:#aebbc5}.actions button,.toggle{background:#202830;color:#e7edf2;border-color:#52606c}.card{background:color-mix(in srgb,var(--bc,#66788a) 14%,#202830);border-color:color-mix(in srgb,var(--bc,#66788a) 55%,#52606c)}}@media print{html,body{overflow:visible;height:auto}.notice,.actions{display:none}.canvas{overflow:visible;padding:20px}header{border:0}#tree{transform-origin:top left}}";
+    return "<!doctype html><html lang=\"" + copy.lang + "\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1,viewport-fit=cover\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'\"><title>" + title + " — " + copy.readOnly + "</title><style>" + css + "</style></head><body><div class=\"notice\" id=\"notice\"></div><header><div><h1 id=\"title\"></h1><div class=\"stats\" id=\"stats\"></div></div><div class=\"actions\"><button id=\"btnExpand\"></button><button id=\"btnCollapse\"></button><button id=\"btnPrint\"></button></div></header><main class=\"canvas\" id=\"canvas\"><div id=\"tree\"></div></main><script>(" + readonlyViewerBoot.toString() + ")(" + json + "," + copyJson + ");<" + "/script></body></html>";
+  }
   var sharePanel = document.getElementById("sharePanel");
   var shareUrlEl = document.getElementById("shareUrl");
+  var shareHtmlObjectUrl = "";
 
   function copyText(s) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -2379,6 +2588,11 @@
       var url = base + "#" + frag;
       shareUrlEl.value = url;
       document.getElementById("btnOpenShare").href = url;
+      if (shareHtmlObjectUrl) URL.revokeObjectURL(shareHtmlObjectUrl);
+      shareHtmlObjectUrl = URL.createObjectURL(new Blob([buildReadonlyHtml()], { type: "text/html;charset=utf-8" }));
+      var htmlLink = document.getElementById("btnDownloadShareHtml");
+      htmlLink.href = shareHtmlObjectUrl;
+      htmlLink.download = safeName(root.text) + "-readonly-" + fileStamp() + ".html";
       document.getElementById("shareSize").textContent = t("chars", url.length);
       sharePanel.hidden = false;
       shareUrlEl.focus(); shareUrlEl.select();
@@ -2391,7 +2605,17 @@
   document.getElementById("btnCopyShare").addEventListener("click", function () {
     copyText(shareUrlEl.value).then(function (ok) { toast(ok ? t("tCopied") : t("tCopyFail")); });
   });
-  document.getElementById("btnCloseShare").addEventListener("click", function () { sharePanel.hidden = true; });
+  document.getElementById("btnDownloadShareHtml").addEventListener("click", function () {
+    toast(t("tHtmlExported"));
+  });
+  document.getElementById("btnCloseShare").addEventListener("click", function () {
+    sharePanel.hidden = true;
+    if (shareHtmlObjectUrl) {
+      URL.revokeObjectURL(shareHtmlObjectUrl);
+      shareHtmlObjectUrl = "";
+      document.getElementById("btnDownloadShareHtml").removeAttribute("href");
+    }
+  });
 
   function exitReadOnly() {
     readOnly = false;
