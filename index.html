@@ -762,7 +762,8 @@
         ["simplemindmap-v1", "eba-mindmap-v1", "simplemindmap-library-v1",
          "simplemindmap-tabs-v1",
          "simplemindmap-active-v1", "simplemindmap-lang-v1",
-         "simplemindmap-note-dismissed-v1"].forEach(function (k) { localStorage.removeItem(k); });
+         "simplemindmap-note-dismissed-v1",
+         "simplemindmap-legacy-sample-migrated-v1"].forEach(function (k) { localStorage.removeItem(k); });
       } catch (e) { /* nothing more we can do */ }
       location.replace(location.pathname + location.search);
     });
@@ -1287,6 +1288,7 @@
   var ACTIVE_STORE = "simplemindmap-active-v1";
   var TABS_STORE = "simplemindmap-tabs-v1";
   var NOTE_STORE = "simplemindmap-note-dismissed-v1";
+  var LEGACY_SAMPLE_MIGRATION_STORE = "simplemindmap-legacy-sample-migrated-v1";
   /* share links from the desktop app point at the published web build */
   var SHARE_BASE = "https://thundom.github.io/simplemindmap/";
 
@@ -1312,13 +1314,48 @@
     return o;
   }
 
+  /* v1.6 replaced the bundled mixed-language EBA example with the English
+     HRIS model. Existing installations may still restore the untouched
+     95-node sample from localStorage or a persistent tab. Detect only that
+     exact legacy sample shape so personal maps are never overwritten. */
+  var legacySampleMigrationEnabled = true;
+  var legacySampleWasMigrated = false;
+  try {
+    legacySampleMigrationEnabled = localStorage.getItem(LEGACY_SAMPLE_MIGRATION_STORE) !== "1";
+  } catch (e) { /* storage unavailable — safe shape detection still applies */ }
+  function plainNodeCount(node) {
+    return node && Array.isArray(node.children)
+      ? 1 + node.children.reduce(function (sum, child) { return sum + plainNodeCount(child); }, 0)
+      : 1;
+  }
+  function plainTreeContains(node, text) {
+    if (!node) return false;
+    if (node.text === text) return true;
+    return Array.isArray(node.children) && node.children.some(function (child) {
+      return plainTreeContains(child, text);
+    });
+  }
+  function isUntouchedLegacySample(tree) {
+    return legacySampleMigrationEnabled && tree &&
+      tree.text === "EBA Compliance Rule Library" &&
+      plainNodeCount(tree) === 95 &&
+      plainTreeContains(tree, "A. 规则来源与优先级") &&
+      plainTreeContains(tree, "National Employment Standards (NES)");
+  }
+  function migrateLegacySample(tree) {
+    if (!isUntouchedLegacySample(tree)) return { tree: tree, changed: false };
+    legacySampleWasMigrated = true;
+    return { tree: stripIds(build(DEFAULT)), changed: true };
+  }
+
   lang = detectLang();
 
   var root;
   try {
     /* fall back to the pre-rename key so existing work survives the upgrade */
     var saved = localStorage.getItem(STORE) || localStorage.getItem(LEGACY_STORE);
-    root = saved ? revive(JSON.parse(saved)) : build(DEFAULT);
+    var restored = saved ? migrateLegacySample(JSON.parse(saved)).tree : null;
+    root = restored ? revive(restored) : build(DEFAULT);
   } catch (e) { root = build(DEFAULT); }
 
   var library = [];
@@ -1373,9 +1410,11 @@
       openTabs = state.tabs.filter(function (tab) {
         return tab && typeof tab.id === "string" && tab.tree && typeof tab.tree.text === "string";
       }).map(function (tab) {
+        var migrated = migrateLegacySample(tab.tree);
         return {
           id: tab.id, docId: tab.docId || null,
-          name: tab.name || tab.tree.text, label: tab.label || null, tree: tab.tree
+          name: migrated.changed ? migrated.tree.text : (tab.name || migrated.tree.text),
+          label: tab.label || null, tree: migrated.tree
         };
       });
       activeTabId = state.activeId;
@@ -1395,6 +1434,10 @@
     }
     selectedId = root.id;
     persistTabs();
+    try {
+      localStorage.setItem(LEGACY_SAMPLE_MIGRATION_STORE, "1");
+      if (legacySampleWasMigrated) localStorage.setItem(STORE, JSON.stringify(stripIds(root)));
+    } catch (e) { /* best effort */ }
   }
   function bindActiveTab(docId, name) {
     var tab = activeTab();

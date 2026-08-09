@@ -2,7 +2,7 @@
 
 I built Simple Mindmap because complex information should not require another cloud account.
 
-Simple Mindmap v1.6 is an open-source, offline-first mind map editor that runs in your browser, as a single HTML file, or as a Windows app.
+Simple Mindmap v1.7 is an open-source, offline-first mind map editor that runs in your browser, as a single HTML file, or as a Windows app.
 
 What makes it different:
 
@@ -14,7 +14,7 @@ What makes it different:
 - Import and export Markdown, JSON and PDF
 - Work without an account, backend or silent data upload
 
-The new release includes a 170-node English HRIS Operating Model covering employee master data, supervisory organisations, employment lifecycle events, time and absence, compensation, security, integrations and reporting.
+The release includes a 170-node English HRIS Operating Model covering employee master data, supervisory organisations, employment lifecycle events, time and absence, compensation, security, integrations and reporting. Existing installations also migrate the untouched mixed-language legacy sample to the current English model.
 
 Try it online:
 https://thundom.github.io/simplemindmap/

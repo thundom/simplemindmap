@@ -1,8 +1,8 @@
 {
   "name": "simplemindmap",
   "productName": "Simple Mindmap",
-  "version": "1.6.0",
-  "description": "Interactive mindmap editor — collapsible tree, branch colors, Markdown/JSON import-export, PDF output",
+  "version": "1.7.0",
+  "description": "Private, offline-first mind mapping in one HTML file — map freely and share safely",
   "main": "electron/main.js",
   "scripts": {
     "start": "electron .",
