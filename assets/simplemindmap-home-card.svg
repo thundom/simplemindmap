@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 756" role="img" aria-labelledby="title desc">
-  <title id="title">Simple Mindmap</title>
-  <desc id="desc">Think clearly. Map freely. Share safely. Private, offline-first and open source.</desc>
+  <title id="title">Simple Mind Map</title>
+  <desc id="desc">Simple Mind Map. Think clearly. Map freely. Share safely. One lightweight HTML file you can take anywhere and run offline.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#061419"/><stop offset=".55" stop-color="#071d22"/><stop offset="1" stop-color="#09282d"/></linearGradient>
     <radialGradient id="glow"><stop stop-color="#20d6ca" stop-opacity=".32"/><stop offset="1" stop-color="#20d6ca" stop-opacity="0"/></radialGradient>
@@ -20,9 +20,10 @@
     </g>
     <g><circle cx="18" cy="17" r="10" fill="#2bd0ca"/><circle cx="110" cy="17" r="10" fill="#3b88ff"/><circle cx="14" cy="64" r="10" fill="#ffb43f"/><circle cx="114" cy="64" r="10" fill="#9a67ea"/><circle cx="18" cy="111" r="10" fill="#ff6554"/><circle cx="110" cy="111" r="10" fill="#6bd35a"/><circle cx="64" cy="64" r="24" fill="url(#core)" stroke="#84fff7" stroke-width="5"/></g>
   </g>
-  <text x="88" y="388" fill="#f5fbfa" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="88" font-weight="760" letter-spacing="-3">Simple Mindmap</text>
-  <text x="92" y="466" fill="#d4e7e5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="34" font-weight="600">Think clearly. Map freely. Share safely.</text>
-  <text x="92" y="534" fill="#2bd0ca" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28">Private · Offline-first · Open source</text>
+  <text x="88" y="382" fill="#f5fbfa" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="64" font-weight="760" letter-spacing="-2">Simple Mind Map</text>
+  <text x="92" y="454" fill="#d4e7e5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="34" font-weight="600">Think clearly. Map freely. Share safely.</text>
+  <text x="92" y="516" fill="#2bd0ca" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28">Private · Offline-first · Open source</text>
+  <text x="92" y="570" fill="#91aaa8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23" font-weight="500">One lightweight HTML file. Take it anywhere.</text>
 
   <g fill="none" stroke-linecap="round" stroke-width="7">
     <path d="M964 344 C912 321 902 222 846 208" stroke="#2bd0ca"/>

@@ -1,16 +1,17 @@
 <p align="center">
   <a href="https://thundom.github.io/simplemindmap/launch.html">
-    <img src="assets/simplemindmap-home-card.svg" alt="Simple Mindmap — Think clearly. Map freely. Share safely." width="700">
+    <img src="assets/simplemindmap-home-card.svg" alt="Simple Mind Map — Think clearly. Map freely. Share safely." width="700">
   </a>
 </p>
 
-<h1 align="center">Simple Mind Map <sub>by Frank Liu</sub></h1>
+<h1 align="center">Simple Mind Map</h1>
 
 <p align="center"><strong>Think clearly. Map freely. Share safely.</strong></p>
 
 <p align="center">
   A private, offline-first mind map editor for serious knowledge work.<br>
-  One HTML file. No account. No backend. Your information stays under your control.
+  One lightweight HTML file. Take it anywhere. Run it offline.<br>
+  No account. No backend. Your information stays under your control.
 </p>
 
 <p align="center">
@@ -170,4 +171,4 @@ The interface supports English, Simplified Chinese, Traditional Chinese, Vietnam
 
 ## License
 
-Simple Mindmap is created by Frank Liu and released under the [MIT License](LICENSE). Use it, adapt it and build with it while retaining the license notice.
+Simple Mind Map is released under the [MIT License](LICENSE). Use it, adapt it and build with it while retaining the license notice.
