@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">Simple Mindmap</h1>
+<h1 align="center">Simple Mind Map <sub>by Frank Liu</sub></h1>
 
 <p align="center"><strong>Think clearly. Map freely. Share safely.</strong></p>
 
@@ -33,7 +33,7 @@ Simple Mindmap combines the freedom of a visual canvas with the discipline of a 
 
 | Private by default | Portable by design | Built for real restructuring |
 | --- | --- | --- |
-| Browser maps stay in local storage. The app has no account system, analytics service or silent data upload. | Run it online, open one standalone HTML file, or use the Windows installer or portable application. | Move any node, change its parent, reorder siblings, or promote a branch to either side of the centre. |
+| Browser maps stay in local storage. The app has no account system, analytics service or silent data upload. | Run it online or keep the complete editable application as one standalone HTML file. | Move any node, change its parent, reorder siblings, or promote a branch to either side of the centre. |
 
 ## What makes it different
 
@@ -41,10 +41,12 @@ Simple Mindmap combines the freedom of a visual canvas with the discipline of a 
 - **Direct manipulation** — drag nodes at any depth to change their parent, order or branch direction.
 - **Natural canvas navigation** — pan by dragging blank space, zoom around the pointer, fit the full map, centre the selected node and navigate with the keyboard.
 - **Persistent multi-map tabs** — keep several maps open, restore them after reload and double-click tab names to create memorable workspace labels.
+- **Office-style command ribbon** — use clearly grouped File, Edit, View, Format, Share and Help tabs, then collapse the ribbon to focus on the canvas.
+- **Six structural layouts** — transform the same hierarchy between Logic, Mind Map, Reverse Logic, Organisation Chart, Fishbone and Reverse Fishbone without changing its content.
 - **Editable outline sidebar** — navigate the entire hierarchy in a floating tree, rename nodes in place and add or remove structure without losing canvas context.
-- **Images on any node** — embed a local image or use a web image URL, with optional captions preserved in JSON backups and read-only HTML snapshots.
+- **Media and hyperlinks on any node** — embed a local or web image with an optional caption and add a separate clickable hyperlink beneath the node title.
 - **Nine display templates** — switch between classic, ocean, forest, sunset, violet, monochrome, soft, executive and midnight presentations.
-- **Cross-node relationships** — add labelled dashed arrows between nodes when an important relationship does not belong in the parent-child hierarchy.
+- **Cross-node relationships** — add selectable, labelled dashed arrows between nodes; vector anchors stay attached to node borders while the canvas is transformed.
 - **Undo you can see** — every edit, move, colour change, collapse and delete is added to session history; restore with the History panel or `Ctrl+Z`.
 - **Interactive read-only sharing** — export a self-contained HTML snapshot that viewers can pan, zoom, search, expand, collapse and print without editing the source.
 - **Open, practical formats** — import Markdown, export Markdown, create JSON backups and generate print-ready PDF documents.
@@ -72,19 +74,17 @@ Select **Load sample** to explore a 170-node HRIS model covering:
 - security, privacy, audit and data quality
 - integrations, reporting and data governance
 
-The sample is entirely English and deliberately uses branches on both sides of the centre node. Version 1.7 also migrates the untouched 95-node legacy EBA sample stored by earlier versions, so upgraded web, Windows and standalone HTML editions open the current English example.
+The sample is entirely English and deliberately uses branches on both sides of the centre node. Version 1.7 also migrates the untouched 95-node legacy EBA sample stored by earlier versions, so upgraded web and standalone HTML editions open the current English example.
 
 ## Choose the edition that fits your environment
 
 | Edition | Best for | Storage |
 | --- | --- | --- |
 | [Web app](https://thundom.github.io/simplemindmap/) | Immediate access in a modern browser | Browser `localStorage` |
-| Standalone HTML application | Restricted computers where `.exe` files cannot run | Browser storage beside a portable single-file app |
-| Windows installer | Regular desktop use with a chosen map folder | Individual JSON files in the selected folder |
-| Windows portable | Use without installation | Individual JSON files in the selected folder |
+| Standalone HTML application | Offline or restricted computers; no installation required | Browser storage used by the local single-file app |
 | Read-only HTML export | Sending an interactive snapshot to someone else | The map is embedded inside the exported file |
 
-All downloadable editions are available from [GitHub Releases](../../releases/latest).
+The standalone editable HTML application is available from [GitHub Releases](../../releases/latest).
 
 ## Start in seconds
 
@@ -94,12 +94,7 @@ Open <https://thundom.github.io/simplemindmap/>. No registration or sign-in is r
 
 ### Single-file application
 
-Download `Simple.Mindmap-x.x.x.html` from [Releases](../../releases/latest), save it anywhere and double-click it.
-
-### Windows
-
-- `Simple Mindmap-Setup-x.x.x.exe` — installer with a selectable installation directory
-- `Simple Mindmap-Portable-x.x.x.exe` — portable version that runs without installation
+Download `Simple.MindMap-x.x.x.html` from [Releases](../../releases/latest), save it anywhere and double-click it. The complete editable application runs locally from that one file.
 
 ## Core controls
 
@@ -116,9 +111,10 @@ Download `Simple.Mindmap-x.x.x.html` from [Releases](../../releases/latest), sav
 | Centre selected node | `C` |
 | Reset view | `0` |
 | Open editable outline | **Outline** |
-| Add an image | Select a node, then **Image** |
+| Add an image or hyperlink | Select a node, then **Add media & links to nodes** |
 | Add a dashed relationship | Select the source, choose **Cross-link**, then select the target |
 | Change visual style | **Templates** |
+| Change structural layout | **Layouts**, then choose Logic, Mind Map, Reverse Logic, Organisation Chart, Fishbone or Reverse Fishbone |
 
 ## Sharing without surrendering control
 
@@ -134,7 +130,6 @@ Recipients can explore, expand, collapse and print the snapshot, but editing, sa
 - There is no Simple Mindmap server or user database.
 - Browser maps remain in that browser profile and do not automatically follow you to another device.
 - Clearing browser data can remove browser-stored maps, so use **Backup** for important work.
-- The Windows edition stores map files locally in the folder you select.
 - Read-only links contain the shared snapshot in the URL; treat the link like the document itself.
 
 ## Data formats
@@ -155,19 +150,16 @@ Markdown stores content and hierarchy. Use JSON backup when you also need colour
 ## Local development
 
 ```bash
-npm install
-npm start        # Run the Electron desktop application
 npm test         # Validate all locales and the English HRIS sample
-npm run dist     # Build the Windows installer and portable application
 ```
 
-Do not want to install Node.js? Open `index.html` directly—the complete browser application lives in that single file.
+Open `index.html` directly—the complete editable application lives in that single file. Node.js is only needed to run the optional validation test.
 
-Pushing a `v*` tag automatically builds the Windows installer, portable application and standalone HTML application through GitHub Actions.
+Pushing a `v*` tag publishes only the versioned standalone HTML application through GitHub Actions.
 
 ## Localisation
 
-The interface supports English, Chinese and Japanese. Interface translations live together in the `I18N` dictionary in `index.html`; the built-in map content remains English in every interface language.
+The interface supports English, Simplified Chinese, Traditional Chinese, Vietnamese and Japanese. Interface translations live together in the `I18N` dictionary in `index.html`; the built-in map content remains English in every interface language.
 
 ## Project links
 

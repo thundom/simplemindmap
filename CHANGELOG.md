@@ -4,10 +4,17 @@ All notable Simple Mindmap releases are listed here.
 
 ## v1.8.0 — 2026-08-10
 
-- Added a floating right-side outline that shows the complete hierarchy and supports direct node renaming, creation, deletion and selection.
+- Added an Office-style ribbon with grouped File, Edit, View, Format, Share and Help tabs, polished vector icons and a full-width focus toggle.
+- Added a draggable floating tool rail that docks on either side, opens at mid-screen height and automatically collapses when inactive.
+- Added a floating editable outline that shows the complete hierarchy and supports direct node renaming, creation, deletion and selection.
 - Added embedded or URL-based images on any node, including captions and preservation in JSON backups and read-only HTML exports.
+- Added separate clickable node hyperlinks with custom labels, preserved in backups and read-only HTML snapshots.
 - Added nine display templates: Classic, Ocean, Forest, Sunset, Violet, Monochrome, Soft Rounded, Executive and Midnight.
-- Added labelled dashed cross-node relationship arrows without changing the underlying parent-child hierarchy.
+- Added six interchangeable structural layouts: Logic, Mind Map, Reverse Logic, Organisation Chart, Fishbone and Reverse Fishbone.
+- Added selectable labelled cross-node relationship arrows without changing the underlying hierarchy; vector endpoints remain attached to node borders through pan, zoom and layout changes.
+- Added English-first Simplified Chinese, Traditional Chinese, Vietnamese and Japanese interface support.
+- Added dynamic map statistics, improved responsive scaling and recalculated relationship geometry after Fit, zoom, reset, collapse and undo.
+- Simplified distribution to the editable standalone HTML application and interactive read-only HTML exports; Windows installer and portable executable packaging were removed.
 - Replaced the low-resolution README card with a scalable high-definition SVG and corrected every connector in the Launch preview.
 - Replaced the Launch navigation mark with the official six-branch Simple Mindmap icon.
 - Standardised the author and MIT copyright holder as Frank Liu while retaining `thundom` as the public GitHub identity.

@@ -1,40 +1,10 @@
 {
   "name": "simplemindmap",
-  "productName": "Simple Mindmap",
   "version": "1.8.0",
   "description": "Private, offline-first mind mapping in one HTML file — map freely and share safely",
-  "main": "electron/main.js",
   "scripts": {
-    "start": "electron .",
-    "dist": "electron-builder --win",
     "test": "node i18n-check.js"
   },
   "author": "Frank Liu",
-  "license": "MIT",
-  "devDependencies": {
-    "electron": "^33.2.0",
-    "electron-builder": "^25.1.8"
-  },
-  "build": {
-    "appId": "com.thundom.simplemindmap",
-    "files": [
-      "index.html",
-      "electron/**"
-    ],
-    "win": {
-      "icon": "build/icon.png",
-      "target": [
-        "nsis",
-        "portable"
-      ]
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "artifactName": "${productName}-Setup-${version}.${ext}"
-    },
-    "portable": {
-      "artifactName": "${productName}-Portable-${version}.${ext}"
-    }
-  }
+  "license": "MIT"
 }
