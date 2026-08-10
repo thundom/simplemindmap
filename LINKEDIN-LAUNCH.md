@@ -2,13 +2,16 @@
 
 I built Simple Mindmap because complex information should not require another cloud account.
 
-Simple Mindmap v1.7 is an open-source, offline-first mind map editor that runs in your browser, as a single HTML file, or as a Windows app.
+Simple Mindmap v1.8 is an open-source, offline-first mind map editor that runs in your browser, as a single HTML file, or as a Windows app.
 
 What makes it different:
 
 - Drag, pan, zoom, fit and centre large maps naturally
 - Arrange primary branches on both sides of the centre node
 - Keep several maps open in persistent tabs
+- Navigate and edit the complete hierarchy from a floating outline
+- Add images to nodes and choose from nine visual templates
+- Draw labelled dashed relationships across different branches
 - Undo changes and restore from modification history
 - Share an interactive, read-only HTML snapshot
 - Import and export Markdown, JSON and PDF
@@ -25,7 +28,7 @@ https://thundom.github.io/simplemindmap/launch.html
 Source and downloads:
 https://github.com/thundom/simplemindmap
 
-Released under the MIT License. Feedback, ideas and contributions are welcome.
+Created by Frank Liu and released under the MIT License. Feedback, ideas and contributions are welcome.
 
 #OpenSource #HRIS #FutureOfWork #Productivity #MindMapping
 

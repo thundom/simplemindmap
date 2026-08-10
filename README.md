@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://thundom.github.io/simplemindmap/launch.html">
-    <img src="assets/simplemindmap-home-card.png" alt="Simple Mindmap — Think clearly. Map freely. Share safely." width="700">
+    <img src="assets/simplemindmap-home-card.svg" alt="Simple Mindmap — Think clearly. Map freely. Share safely." width="700">
   </a>
 </p>
 
@@ -41,6 +41,10 @@ Simple Mindmap combines the freedom of a visual canvas with the discipline of a 
 - **Direct manipulation** — drag nodes at any depth to change their parent, order or branch direction.
 - **Natural canvas navigation** — pan by dragging blank space, zoom around the pointer, fit the full map, centre the selected node and navigate with the keyboard.
 - **Persistent multi-map tabs** — keep several maps open, restore them after reload and double-click tab names to create memorable workspace labels.
+- **Editable outline sidebar** — navigate the entire hierarchy in a floating tree, rename nodes in place and add or remove structure without losing canvas context.
+- **Images on any node** — embed a local image or use a web image URL, with optional captions preserved in JSON backups and read-only HTML snapshots.
+- **Nine display templates** — switch between classic, ocean, forest, sunset, violet, monochrome, soft, executive and midnight presentations.
+- **Cross-node relationships** — add labelled dashed arrows between nodes when an important relationship does not belong in the parent-child hierarchy.
 - **Undo you can see** — every edit, move, colour change, collapse and delete is added to session history; restore with the History panel or `Ctrl+Z`.
 - **Interactive read-only sharing** — export a self-contained HTML snapshot that viewers can pan, zoom, search, expand, collapse and print without editing the source.
 - **Open, practical formats** — import Markdown, export Markdown, create JSON backups and generate print-ready PDF documents.
@@ -111,6 +115,10 @@ Download `Simple.Mindmap-x.x.x.html` from [Releases](../../releases/latest), sav
 | Fit map | `F` |
 | Centre selected node | `C` |
 | Reset view | `0` |
+| Open editable outline | **Outline** |
+| Add an image | Select a node, then **Image** |
+| Add a dashed relationship | Select the source, choose **Cross-link**, then select the target |
+| Change visual style | **Templates** |
 
 ## Sharing without surrendering control
 
@@ -170,4 +178,4 @@ The interface supports English, Chinese and Japanese. Interface translations liv
 
 ## License
 
-Simple Mindmap is released under the [MIT License](LICENSE). Use it, adapt it and build with it while retaining the license notice.
+Simple Mindmap is created by Frank Liu and released under the [MIT License](LICENSE). Use it, adapt it and build with it while retaining the license notice.

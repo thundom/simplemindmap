@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="description" content="Simple Mindmap is a private, offline-first mind map editor that runs in one HTML file. Map ideas, organise HRIS knowledge and share interactive read-only snapshots.">
   <meta name="theme-color" content="#071719">
+  <link rel="icon" href="./assets/simplemindmap-mark.svg" type="image/svg+xml">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Simple Mindmap — Think clearly. Map freely. Share safely.">
   <meta property="og:description" content="A zero-dependency, offline-first mind map editor with no account, no server and no data upload.">
@@ -97,6 +98,7 @@
       letter-spacing: -.02em;
       text-decoration: none;
     }
+    .brand-logo { width: 36px; height: 36px; flex:none; border-radius:10px; }
     .brand-mark {
       position: relative;
       width: 34px;
@@ -262,6 +264,8 @@
     .e4 { --edge-color: var(--green); width: 230px; left: 51%; top: 46%; transform: rotate(-25deg); }
     .e5 { --edge-color: var(--coral); width: 220px; left: 52%; top: 50%; transform: rotate(-1deg); }
     .e6 { --edge-color: var(--teal); width: 224px; left: 51%; top: 52%; transform: rotate(23deg); }
+    .map-links { position:absolute; inset:0; z-index:1; width:100%; height:100%; overflow:visible; pointer-events:none; }
+    .map-links path { fill:none; stroke-width:2; stroke-linecap:round; vector-effect:non-scaling-stroke; opacity:.82; }
     .cursor-note { position: absolute; right: 20px; bottom: 16px; color: #76918f; font-size: 9px; }
 
     .proof-strip { position: relative; z-index: 1; border-block: 1px solid var(--line); background: rgba(11,36,38,.58); }
@@ -391,7 +395,7 @@
   <nav class="site-nav" aria-label="Primary navigation">
     <div class="wrap nav-inner">
       <a class="brand" href="./launch.html" aria-label="Simple Mindmap home">
-        <span class="brand-mark" aria-hidden="true"><span></span></span>
+        <img class="brand-logo" src="./assets/simplemindmap-mark.svg" alt="">
         <span>Simple Mindmap</span>
       </a>
       <div class="nav-links">
@@ -407,7 +411,7 @@
     <header class="hero">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <div class="version-pill"><i aria-hidden="true"></i> Open source · MIT licensed · v1.7.1</div>
+          <div class="version-pill"><i aria-hidden="true"></i> Open source · MIT licensed · v1.8.0</div>
           <h1>Think clearly.<br><span class="accent">Map freely.</span><br>Share safely.</h1>
           <p>A private, offline-first mind map editor that runs in one HTML file. No account, no server and no data upload—just a fast canvas for turning complex information into a clear structure.</p>
           <div class="hero-actions">
@@ -428,8 +432,14 @@
             <span class="window-tools"><span>100%</span><span>Fit</span><span>Share</span></span>
           </div>
           <div class="map-demo">
-            <i class="edge e1"></i><i class="edge e2"></i><i class="edge e3"></i>
-            <i class="edge e4"></i><i class="edge e5"></i><i class="edge e6"></i>
+            <svg class="map-links" viewBox="0 0 600 481" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M186 106 C230 108 205 194 226 226" stroke="#7fb6ff"/>
+              <path d="M174 236 C195 236 208 229 226 226" stroke="#b9a0ff"/>
+              <path d="M204 360 C245 354 206 255 226 226" stroke="#ffbd68"/>
+              <path d="M374 226 C398 191 382 100 421 88" stroke="#9cdb82"/>
+              <path d="M374 226 C395 226 414 226 433 226" stroke="#ff7e70"/>
+              <path d="M374 226 C399 260 383 351 403 360" stroke="#38d6c7"/>
+            </svg>
             <div class="map-node root">HRIS Operating Model</div>
             <div class="map-node n1">Employee Master Data<span class="mini-node">Identity · Job · Contact</span></div>
             <div class="map-node n2">Organisation Structure<span class="mini-node">Sup Org · Manager · Cost centre</span></div>
@@ -465,6 +475,9 @@
           <article class="feature-card reveal" style="--accent:var(--coral)"><div class="feature-index"><span>04</span><span class="feature-symbol">↶</span></div><h3>Undo with confidence</h3><p>Every structural change is recorded in session history. Use the Undo button or Ctrl+Z to step back safely.</p></article>
           <article class="feature-card reveal" style="--accent:var(--violet)"><div class="feature-index"><span>05</span><span class="feature-symbol">◎</span></div><h3>Read-only interactive sharing</h3><p>Export one standalone HTML snapshot that recipients can pan, zoom and explore without changing the source map.</p></article>
           <article class="feature-card reveal" style="--accent:var(--green)"><div class="feature-index"><span>06</span><span class="feature-symbol">⇄</span></div><h3>Open formats</h3><p>Import Markdown, export Markdown, create JSON backups and produce clean PDF documents from the same map.</p></article>
+          <article class="feature-card reveal" style="--accent:var(--blue)"><div class="feature-index"><span>07</span><span class="feature-symbol">☷</span></div><h3>Editable outline</h3><p>Navigate and edit the whole hierarchy in a floating tree without leaving the visual canvas.</p></article>
+          <article class="feature-card reveal" style="--accent:var(--amber)"><div class="feature-index"><span>08</span><span class="feature-symbol">▣</span></div><h3>Images and templates</h3><p>Add an image to any node and switch the map between nine carefully tuned display templates.</p></article>
+          <article class="feature-card reveal" style="--accent:var(--violet)"><div class="feature-index"><span>09</span><span class="feature-symbol">⌁</span></div><h3>Cross-node links</h3><p>Draw labelled dashed relationships across branches while preserving the clean parent-child structure.</p></article>
         </div>
       </div>
     </section>
@@ -535,8 +548,8 @@
 
   <footer>
     <div class="wrap footer-inner">
-      <a class="brand" href="./launch.html"><span class="brand-mark" aria-hidden="true"><span></span></span><span>Simple Mindmap</span></a>
-      <span>© 2026 Jarvis Qi. Released under the MIT License.</span>
+      <a class="brand" href="./launch.html"><img class="brand-logo" src="./assets/simplemindmap-mark.svg" alt=""><span>Simple Mindmap</span></a>
+      <span>© 2026 Frank Liu. Released under the MIT License.</span>
       <div class="footer-links"><a href="https://github.com/thundom/simplemindmap">Source</a><a href="https://github.com/thundom/simplemindmap/releases">Releases</a><a href="./LICENSE">License</a></div>
     </div>
   </footer>

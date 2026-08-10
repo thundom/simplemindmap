@@ -64,6 +64,42 @@
     --c-purple: #7d5ba6; --c-slate: #5b6b78;
   }
 
+  /* ---------- map display templates ---------- */
+  :root[data-map-template="ocean"] {
+    --accent: #2f6db4; --root-bg: #173d63; --edge: #7e9fba;
+    --c-teal: #178f9f; --c-blue: #2f6db4; --c-indigo: #536db8; --c-steel: #357f9e;
+  }
+  :root[data-map-template="forest"] {
+    --accent: #4d7f55; --root-bg: #274d35; --edge: #8fa890;
+    --c-teal: #3f8178; --c-blue: #547aa5; --c-indigo: #6e6d9e; --c-green: #4d7f55;
+  }
+  :root[data-map-template="sunset"] {
+    --accent: #c05d3d; --root-bg: #63372f; --edge: #b99887;
+    --c-teal: #398c8a; --c-orange: #c27a32; --c-coral: #c85646; --c-plum: #a84f71;
+  }
+  :root[data-map-template="violet"] {
+    --accent: #7656a8; --root-bg: #352b56; --edge: #9a91b0;
+    --c-teal: #3b8d93; --c-blue: #586cc2; --c-indigo: #6657a8; --c-purple: #7656a8;
+  }
+  :root[data-map-template="mono"] {
+    --accent: #4d5b66; --root-bg: #27333c; --edge: #87939c;
+    --c-teal: #53636e; --c-blue: #687783; --c-indigo: #465661; --c-steel: #71808a;
+    --c-green: #5b6962; --c-orange: #75675b; --c-coral: #735d5a; --c-plum: #6f5f69;
+    --c-purple: #655f70; --c-slate: #53636e;
+  }
+  :root[data-map-template="midnight"] {
+    --accent: #38d6c7; --root-bg: #0a3134; --root-ink: #f4fffd; --edge: #527174;
+    --c-teal: #38b9ae; --c-blue: #619ee4; --c-indigo: #7b85cf; --c-steel: #50a3ba;
+    --c-green: #78ad68; --c-orange: #d1954c; --c-coral: #d16b61; --c-plum: #b56f91;
+    --c-purple: #9b82c5; --c-slate: #7f9699;
+  }
+  :root[data-map-template="midnight"] .canvas { background: #111b20; }
+  :root[data-map-template="midnight"] .card:not(.root) { color: #e5f0ef; background: #1c292f; }
+  :root[data-map-template="soft"] .card { border-radius: 18px; box-shadow: none; padding-inline: 15px; }
+  :root[data-map-template="soft"] .card.root { border-radius: 20px; }
+  :root[data-map-template="executive"] .card { border-radius: 3px; box-shadow: 0 3px 10px rgba(34,48,60,.15); }
+  :root[data-map-template="executive"] .card.depth-1 { text-transform: uppercase; letter-spacing: .035em; }
+
   * { box-sizing: border-box; }
   html, body { height: 100%; }
   body {
@@ -262,7 +298,7 @@
   .sw-clear.cur { border-style: solid; border-color: var(--ink); color: var(--ink); }
 
   /* ---------- body split ---------- */
-  .body { display: flex; flex: 1; min-height: 0; }
+  .body { position: relative; display: flex; flex: 1; min-height: 0; }
 
   /* ---------- saved-document drawer ---------- */
   .drawer {
@@ -334,11 +370,55 @@
     display: flex; align-items: center; justify-content: center;
     padding: max(48px, 50vh) max(64px, 50vw);
   }
-  #tree { width: max-content; flex: none; transform-origin: 0 0; }
+  #tree { position: relative; width: max-content; flex: none; transform-origin: 0 0; }
   .zoom-level { min-width: 58px; padding-left: 8px; padding-right: 8px; font-variant-numeric: tabular-nums; }
 
+  /* ---------- floating outline / inspector ---------- */
+  .inspector {
+    position: absolute; inset: 0 0 0 auto; z-index: 28;
+    width: min(380px, 92vw); display: flex; flex-direction: column;
+    background: color-mix(in srgb, var(--surface) 96%, transparent);
+    border-left: 1px solid var(--line); box-shadow: -12px 0 34px rgba(20,31,44,.18);
+    backdrop-filter: blur(10px); transition: transform .22s ease, opacity .22s ease;
+  }
+  .inspector.closed { transform: translateX(100%); opacity: 0; pointer-events: none; }
+  .inspector-head { display:flex; align-items:center; gap:8px; padding:11px 12px; border-bottom:1px solid var(--line); }
+  .inspector-head h2 { margin:0; font-size:14px; }
+  .inspector-tabs { display:flex; gap:6px; padding:8px 10px; border-bottom:1px solid var(--line); }
+  .inspector-tab { flex:1; }
+  .inspector-tab.active { border-color:var(--accent); color:var(--accent); background:color-mix(in srgb,var(--accent) 9%,var(--surface)); }
+  .inspector-pane { min-height:0; flex:1; overflow:auto; padding:10px; }
+  .inspector-pane[hidden] { display:none; }
+  .inspector-section { margin-bottom:14px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .inspector-section:last-child { border-bottom:0; }
+  .inspector-label { display:block; margin:0 0 7px; color:var(--ink-soft); font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+  .field { width:100%; min-height:34px; padding:7px 9px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); font:inherit; font-size:12.5px; }
+  .field:focus { border-color:var(--accent); outline:2px solid color-mix(in srgb,var(--accent) 20%,transparent); }
+  .image-preview { width:100%; max-height:180px; object-fit:contain; margin:0 0 8px; border:1px solid var(--line); border-radius:8px; background:var(--bg); }
+  .image-preview[hidden] { display:none; }
+  .field-row { display:flex; gap:6px; margin-top:7px; }
+  .field-row .field { min-width:0; }
+  .outline-list, .outline-list ul { list-style:none; margin:0; padding:0; }
+  .outline-list ul { margin-left:17px; border-left:1px solid var(--line); }
+  .outline-row { display:grid; grid-template-columns:24px minmax(0,1fr) 25px 25px; align-items:center; gap:3px; padding:2px 0 2px 4px; }
+  .outline-row.active { background:color-mix(in srgb,var(--accent) 10%,transparent); border-radius:6px; }
+  .outline-toggle, .outline-op { width:24px; height:26px; padding:0; border:0; border-radius:5px; background:transparent; color:var(--ink-soft); cursor:pointer; }
+  .outline-toggle:hover, .outline-op:hover { color:var(--accent); background:color-mix(in srgb,var(--accent) 10%,transparent); }
+  .outline-name { min-width:0; padding:5px 6px; border:1px solid transparent; border-radius:5px; background:transparent; color:var(--ink); font:inherit; font-size:12px; }
+  .outline-name:hover, .outline-name:focus { border-color:var(--line); background:var(--surface); outline:none; }
+  .template-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .template-card { min-height:82px; padding:10px; border:1px solid var(--line); border-radius:9px; background:var(--bg); color:var(--ink); text-align:left; cursor:pointer; }
+  .template-card:hover, .template-card.active { border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+  .template-swatch { display:flex; align-items:center; gap:5px; height:30px; margin-bottom:7px; }
+  .template-swatch i { display:block; width:18px; height:9px; border-radius:6px; background:var(--swatch); }
+  .template-swatch i:nth-child(2) { width:28px; height:14px; }
+  .template-name { display:block; font-size:12px; font-weight:650; }
+  .relation-list { list-style:none; margin:8px 0 0; padding:0; }
+  .relation-item { display:grid; grid-template-columns:minmax(0,1fr) 26px; gap:5px; align-items:center; padding:5px 0; }
+  .relation-copy { min-width:0; color:var(--ink-soft); font-size:11.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
   /* ---------- tree layout & connectors ---------- */
-  .row { display: flex; align-items: center; }
+  .row { position: relative; z-index: 1; display: flex; align-items: center; }
   .kids { display: flex; flex-direction: column; margin-left: 26px; }
   .branch {
     display: flex; align-items: center; position: relative;
@@ -460,6 +540,17 @@
     cursor: text; user-select: text; outline: none;
     border-bottom: 1px dashed var(--accent);
   }
+  .node-image {
+    flex:none; width:84px; height:54px; object-fit:cover;
+    border:1px solid color-mix(in srgb,var(--bc,var(--edge)) 35%,var(--line));
+    border-radius:5px; background:var(--bg);
+  }
+  .card.root .node-image { width:96px; height:62px; border-color:color-mix(in srgb,var(--root-ink) 35%,transparent); }
+  .relation-layer { position:absolute; inset:0; z-index:0; overflow:visible; pointer-events:none; }
+  .relation-path { fill:none; stroke:var(--accent); stroke-width:2; stroke-dasharray:7 6; opacity:.82; vector-effect:non-scaling-stroke; }
+  .relation-label { fill:var(--ink-soft); font-size:10px; paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round; }
+  .relation-pending .card.selected { outline-style:dashed; animation:relation-pulse 1s ease-in-out infinite alternate; }
+  @keyframes relation-pulse { to { outline-offset:6px; } }
 
   /* drop-zone feedback */
   .dz { position: absolute; display: none; background: var(--accent); border-radius: 2px; }
@@ -538,6 +629,8 @@
     .tab-open { min-height: 36px; padding-top: 9px; padding-bottom: 9px; }
     .tab-close { width: 32px; height: 32px; }
     .tab-add { width: 36px; height: 36px; }
+    .inspector { width:100%; }
+    .template-grid { grid-template-columns:1fr 1fr; }
     #sharePanel { align-items: center; }
     #sharePanel > span:first-child { flex: 1 1 100%; }
     #shareUrl {
@@ -667,9 +760,13 @@
       <button class="btn" id="btnFit" data-i18n="fitView" data-i18n-title="fitViewTip">Fit</button>
       <button class="btn" id="btnCenter" data-i18n="centerSelected" data-i18n-title="centerSelectedTip">Center</button>
       <button class="btn" id="btnViewReset" data-i18n="resetView" data-i18n-title="resetViewTip">Reset view</button>
+      <button class="btn" id="btnOutline" data-i18n="outline" data-i18n-title="outlineTip">Outline</button>
+      <button class="btn" id="btnTemplates" data-i18n="templates" data-i18n-title="templatesTip">Templates</button>
       <span class="sep" id="sepEdit"></span>
       <button class="btn" id="btnChild" data-i18n="addChild">＋ Child</button>
       <button class="btn" id="btnSibling" data-i18n="addSibling">＋ Sibling</button>
+      <button class="btn" id="btnImage" data-i18n="nodeImage" data-i18n-title="nodeImageTip">Image</button>
+      <button class="btn" id="btnRelation" data-i18n="crossLink" data-i18n-title="crossLinkTip">Cross-link</button>
       <button class="btn danger" id="btnDel" data-i18n="del">Delete</button>
       <span class="sep"></span>
       <button class="btn" id="btnReset" data-i18n="loadSample" data-i18n-title="loadSampleTip">Load sample</button>
@@ -724,10 +821,51 @@
       <ul class="doc-list" id="docList"></ul>
     </aside>
     <div class="canvas" id="canvas" tabindex="0" data-i18n-title="panCanvasTip"><div class="canvas-stage" id="canvasStage"><div id="tree"></div></div></div>
+    <aside class="inspector closed" id="inspector" aria-label="Map inspector">
+      <div class="inspector-head">
+        <h2 data-i18n="inspectorTitle">Map tools</h2>
+        <span class="grow"></span>
+        <button class="btn sm" id="btnCloseInspector" data-i18n="close">Close</button>
+      </div>
+      <div class="inspector-tabs" role="tablist">
+        <button class="btn sm inspector-tab active" id="inspectorOutlineTab" data-pane="outline" data-i18n="outline">Outline</button>
+        <button class="btn sm inspector-tab" id="inspectorTemplatesTab" data-pane="templates" data-i18n="templates">Templates</button>
+      </div>
+      <div class="inspector-pane" id="outlinePane">
+        <section class="inspector-section" id="selectedNodeEditor">
+          <span class="inspector-label" data-i18n="selectedNode">Selected node</span>
+          <input class="field" id="selectedNodeText" data-i18n-title="selectedNodeTip" aria-label="Selected node text">
+          <div class="field-row">
+            <button class="btn sm" id="btnChooseImage" data-i18n="chooseImage">Choose image</button>
+            <button class="btn sm danger" id="btnRemoveImage" data-i18n="removeImage">Remove image</button>
+          </div>
+          <img class="image-preview" id="nodeImagePreview" alt="" hidden>
+          <div class="field-row">
+            <input class="field" id="nodeImageUrl" inputmode="url" placeholder="https://…" aria-label="Image URL">
+            <button class="btn sm" id="btnApplyImageUrl" data-i18n="apply">Apply</button>
+          </div>
+          <input class="field" id="nodeImageCaption" data-i18n-title="imageCaptionTip" placeholder="Image caption / alt text" aria-label="Image caption">
+        </section>
+        <section class="inspector-section">
+          <span class="inspector-label" data-i18n="outlineTree">Editable structure</span>
+          <ul class="outline-list" id="outlineTree"></ul>
+        </section>
+        <section class="inspector-section">
+          <span class="inspector-label" data-i18n="crossLinks">Cross-node links</span>
+          <p class="drawer-note" data-i18n="crossLinkHelp">Select a source node, choose Cross-link, then select the target node.</p>
+          <ul class="relation-list" id="relationList"></ul>
+        </section>
+      </div>
+      <div class="inspector-pane" id="templatesPane" hidden>
+        <span class="inspector-label" data-i18n="displayTemplates">Display templates</span>
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+    </aside>
   </div>
 </div>
 
 <input type="file" id="fileInput" accept=".md,.markdown,.txt,.json" hidden>
+<input type="file" id="imageInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
 <div id="toast" role="status"></div>
 <div id="printDoc"></div>
 
@@ -823,6 +961,36 @@
       centerSelectedTip: "Move the selected node to the centre of the screen (C)",
       resetView: "Reset view",
       resetViewTip: "Return to 100% and centre the main node (0)",
+      outline: "Outline",
+      outlineTip: "Open the editable tree outline",
+      templates: "Templates",
+      templatesTip: "Choose a display template",
+      inspectorTitle: "Map tools",
+      selectedNode: "Selected node",
+      selectedNodeTip: "Edit the selected node text",
+      outlineTree: "Editable structure",
+      nodeImage: "Image",
+      nodeImageTip: "Add or edit an image on the selected node",
+      chooseImage: "Choose image",
+      removeImage: "Remove image",
+      apply: "Apply",
+      imageCaptionTip: "Image caption or alternative text",
+      crossLink: "Cross-link",
+      crossLinkTip: "Draw a dashed relationship between two nodes",
+      crossLinks: "Cross-node links",
+      crossLinkHelp: "Select a source node, choose Cross-link, then select the target node.",
+      displayTemplates: "Display templates",
+      relationEmpty: "No cross-node links yet.",
+      relationFromTo: function (from, to) { return from + " → " + to; },
+      templateClassic: "Classic",
+      templateOcean: "Ocean",
+      templateForest: "Forest",
+      templateSunset: "Sunset",
+      templateViolet: "Violet",
+      templateMono: "Monochrome",
+      templateSoft: "Soft rounded",
+      templateExecutive: "Executive",
+      templateMidnight: "Midnight",
       panCanvasTip: "Drag blank canvas to pan; Space-drag or middle-drag works anywhere; Ctrl+wheel zooms",
       addChild: "＋ Child",
       addSibling: "＋ Sibling",
@@ -902,7 +1070,17 @@
       hNewMap: "Create a new map",
       hImport: "Import a map",
       hLoadSample: "Load the sample map",
+      hImage: function (name) { return "Change image on “" + name + "”"; },
+      hRelation: "Change a cross-node link",
+      hTemplate: "Change the display template",
       tNoCycle: "A node cannot be moved inside its own subtree",
+      tRelationStart: function (name) { return "Linking from “" + name + "” — select the target node"; },
+      tRelationAdded: function (from, to) { return "Linked “" + from + "” to “" + to + "”"; },
+      tRelationDuplicate: "Those nodes are already linked",
+      tImageAdded: function (name) { return "Added an image to “" + name + "”"; },
+      tImageRemoved: function (name) { return "Removed the image from “" + name + "”"; },
+      tImageInvalid: "Choose a PNG, JPEG, WebP or GIF image, or enter an http(s) image URL",
+      tImageTooLarge: "The image is too large. Choose a file under 10 MB.",
       tPickBranchFirst: "Select a branch node first (the centre node has no colour)",
       tShareCopied: "Read-only link copied to the clipboard",
       tShareManual: "Link ready — copy it manually",
@@ -962,6 +1140,36 @@
       centerSelectedTip: "将当前选中节点移动到屏幕中央（C）",
       resetView: "重置视图",
       resetViewTip: "恢复到 100% 并居中主节点（0）",
+      outline: "大纲",
+      outlineTip: "打开可编辑的树状大纲",
+      templates: "模板",
+      templatesTip: "选择显示模板",
+      inspectorTitle: "导图工具",
+      selectedNode: "当前节点",
+      selectedNodeTip: "编辑当前节点文字",
+      outlineTree: "可编辑树状结构",
+      nodeImage: "图片",
+      nodeImageTip: "为当前节点添加或修改图片",
+      chooseImage: "选择图片",
+      removeImage: "移除图片",
+      apply: "应用",
+      imageCaptionTip: "图片标题或替代文字",
+      crossLink: "关联线",
+      crossLinkTip: "在两个节点之间添加虚线关系",
+      crossLinks: "跨节点关联",
+      crossLinkHelp: "选中起点，点击「关联线」，再选择目标节点。",
+      displayTemplates: "显示模板",
+      relationEmpty: "还没有跨节点关联线。",
+      relationFromTo: function (from, to) { return from + " → " + to; },
+      templateClassic: "经典",
+      templateOcean: "海洋",
+      templateForest: "森林",
+      templateSunset: "日落",
+      templateViolet: "紫罗兰",
+      templateMono: "黑白",
+      templateSoft: "柔和圆角",
+      templateExecutive: "商务",
+      templateMidnight: "午夜",
       panCanvasTip: "拖动画布空白处平移；空格拖动或鼠标中键可在任意位置平移；Ctrl+滚轮缩放",
       addChild: "＋ 子节点",
       addSibling: "＋ 同级",
@@ -1041,7 +1249,17 @@
       hNewMap: "新建导图",
       hImport: "导入导图",
       hLoadSample: "载入示例导图",
+      hImage: function (name) { return "修改「" + name + "」的图片"; },
+      hRelation: "修改跨节点关联线",
+      hTemplate: "修改显示模板",
       tNoCycle: "不能把节点移动到它自己的子树里",
+      tRelationStart: function (name) { return "从「" + name + "」开始关联，请选择目标节点"; },
+      tRelationAdded: function (from, to) { return "已关联「" + from + "」和「" + to + "」"; },
+      tRelationDuplicate: "这两个节点已经有关联线",
+      tImageAdded: function (name) { return "已为「" + name + "」添加图片"; },
+      tImageRemoved: function (name) { return "已移除「" + name + "」的图片"; },
+      tImageInvalid: "请选择 PNG、JPEG、WebP 或 GIF 图片，或输入 http(s) 图片地址",
+      tImageTooLarge: "图片过大，请选择小于 10 MB 的文件",
       tPickBranchFirst: "请先选中一个分支节点（根节点不着色）",
       tShareCopied: "只读链接已复制到剪贴板",
       tShareManual: "链接已生成，请手动复制",
@@ -1101,6 +1319,36 @@
       centerSelectedTip: "選択中のノードを画面中央へ移動します（C）",
       resetView: "表示をリセット",
       resetViewTip: "100% に戻して中心ノードを中央に表示します（0）",
+      outline: "アウトライン",
+      outlineTip: "編集可能なツリーアウトラインを開く",
+      templates: "テンプレート",
+      templatesTip: "表示テンプレートを選ぶ",
+      inspectorTitle: "マップツール",
+      selectedNode: "選択中のノード",
+      selectedNodeTip: "選択中のノード名を編集",
+      outlineTree: "編集可能な構造",
+      nodeImage: "画像",
+      nodeImageTip: "選択中のノードに画像を追加または編集",
+      chooseImage: "画像を選択",
+      removeImage: "画像を削除",
+      apply: "適用",
+      imageCaptionTip: "画像のキャプションまたは代替テキスト",
+      crossLink: "関連線",
+      crossLinkTip: "2つのノード間に破線の関連線を追加",
+      crossLinks: "ノード間リンク",
+      crossLinkHelp: "始点を選び「関連線」を押してから、対象ノードを選択します。",
+      displayTemplates: "表示テンプレート",
+      relationEmpty: "ノード間リンクはまだありません。",
+      relationFromTo: function (from, to) { return from + " → " + to; },
+      templateClassic: "クラシック",
+      templateOcean: "オーシャン",
+      templateForest: "フォレスト",
+      templateSunset: "サンセット",
+      templateViolet: "バイオレット",
+      templateMono: "モノクロ",
+      templateSoft: "ソフトラウンド",
+      templateExecutive: "エグゼクティブ",
+      templateMidnight: "ミッドナイト",
       panCanvasTip: "空白をドラッグして移動。Space+ドラッグまたは中ボタンはどこでも使用可能。Ctrl+ホイールで拡大縮小",
       addChild: "＋ 子ノード",
       addSibling: "＋ 兄弟",
@@ -1180,7 +1428,17 @@
       hNewMap: "新しいマップを作成",
       hImport: "マップを読み込み",
       hLoadSample: "サンプルマップを読み込み",
+      hImage: function (name) { return "「" + name + "」の画像を変更"; },
+      hRelation: "ノード間リンクを変更",
+      hTemplate: "表示テンプレートを変更",
       tNoCycle: "ノードを自分の子孫の中へ移動することはできません",
+      tRelationStart: function (name) { return "「" + name + "」からリンクします。対象ノードを選択してください"; },
+      tRelationAdded: function (from, to) { return "「" + from + "」と「" + to + "」をリンクしました"; },
+      tRelationDuplicate: "この2つのノードはすでにリンクされています",
+      tImageAdded: function (name) { return "「" + name + "」に画像を追加しました"; },
+      tImageRemoved: function (name) { return "「" + name + "」の画像を削除しました"; },
+      tImageInvalid: "PNG、JPEG、WebP、GIF、または http(s) の画像 URL を選択してください",
+      tImageTooLarge: "画像が大きすぎます。10 MB 未満のファイルを選択してください",
       tPickBranchFirst: "先にブランチノードを選択してください（中心ノードには色を設定できません）",
       tShareCopied: "読み取り専用リンクをクリップボードにコピーしました",
       tShareManual: "リンクを作成しました。手動でコピーしてください",
@@ -1281,6 +1539,17 @@
     green: "#557a46", orange: "#b26a2b", coral: "#b3463c", plum: "#96496b",
     purple: "#7d5ba6", slate: "#5b6b78"
   };
+  var MAP_TEMPLATES = [
+    { key: "classic", name: "templateClassic", colors: ["#0e7c7b", "#22303c", "#b26a2b"] },
+    { key: "ocean", name: "templateOcean", colors: ["#178f9f", "#173d63", "#2f6db4"] },
+    { key: "forest", name: "templateForest", colors: ["#3f8178", "#274d35", "#78a66a"] },
+    { key: "sunset", name: "templateSunset", colors: ["#c27a32", "#63372f", "#c85646"] },
+    { key: "violet", name: "templateViolet", colors: ["#6657a8", "#352b56", "#9b78c4"] },
+    { key: "mono", name: "templateMono", colors: ["#687783", "#27333c", "#87939c"] },
+    { key: "soft", name: "templateSoft", colors: ["#4d9b92", "#31505a", "#d29a58"] },
+    { key: "executive", name: "templateExecutive", colors: ["#2b6d83", "#1f3544", "#8f6a3d"] },
+    { key: "midnight", name: "templateMidnight", colors: ["#38d6c7", "#0a3134", "#619ee4"] }
+  ];
 
   var STORE = "simplemindmap-v1";
   var LEGACY_STORE = "eba-mindmap-v1";
@@ -1296,21 +1565,56 @@
   var readOnly = false;
   var desktopFolder = "";
   var uid = 0;
+  var keyUid = 0;
 
-  function build(arr) {
-    var n = { id: "n" + (uid++), text: arr[0], collapsed: false, children: [] };
+  function newNodeKey() {
+    return "k" + Date.now().toString(36) + (keyUid++).toString(36) + Math.random().toString(36).slice(2, 6);
+  }
+  function safeImageSource(src) {
+    src = String(src || "").trim();
+    if (/^data:image\/(png|jpeg|webp|gif);base64,/i.test(src)) return src;
+    if (/^https?:\/\//i.test(src)) return src;
+    return "";
+  }
+  function normaliseRootData(tree) {
+    if (!Array.isArray(tree.relations)) tree.relations = [];
+    tree.relations = tree.relations.filter(function (relation) {
+      return relation && typeof relation.from === "string" && typeof relation.to === "string" && relation.from !== relation.to;
+    }).map(function (relation) {
+      return {
+        relKey: relation.relKey || ("r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)),
+        from: relation.from,
+        to: relation.to,
+        label: typeof relation.label === "string" ? relation.label.slice(0, 100) : ""
+      };
+    });
+    var validTemplates = ["classic", "ocean", "forest", "sunset", "violet", "mono", "soft", "executive", "midnight"];
+    if (validTemplates.indexOf(tree.template) < 0) tree.template = "classic";
+    return tree;
+  }
+
+  function build(arr, nested) {
+    var n = { id: "n" + (uid++), key: newNodeKey(), text: arr[0], collapsed: false, children: [] };
     if (arr[2] && typeof arr[2] === "object") {
       if (arr[2].side === "left") n.side = "left";
       if (PRINT_HEX[arr[2].color]) n.color = arr[2].color;
     }
-    (arr[1] || []).forEach(function (c) { n.children.push(build(c)); });
+    (arr[1] || []).forEach(function (c) { n.children.push(build(c, true)); });
+    if (!nested) normaliseRootData(n);
     return n;
   }
-  function revive(o) {
+  function revive(o, nested) {
     o.id = "n" + (uid++);
+    if (typeof o.key !== "string" || !o.key) o.key = newNodeKey();
     if (typeof o.text !== "string") o.text = String(o.text || "node");
     if (!Array.isArray(o.children)) o.children = [];
-    o.children.forEach(revive);
+    if (o.image) {
+      var imageSource = safeImageSource(o.image.src);
+      if (imageSource) o.image = { src: imageSource, caption: String(o.image.caption || "").slice(0, 200) };
+      else delete o.image;
+    }
+    o.children.forEach(function (child) { revive(child, true); });
+    if (!nested) normaliseRootData(o);
     return o;
   }
 
@@ -1700,6 +2004,27 @@
     }
     return null;
   }
+  function findNodeByKey(key, node, parent) {
+    node = node || root; parent = parent || null;
+    if (node.key === key) return { node: node, parent: parent };
+    for (var i = 0; i < node.children.length; i++) {
+      var r = findNodeByKey(key, node.children[i], node);
+      if (r) return r;
+    }
+    return null;
+  }
+  function subtreeKeys(node, result) {
+    result = result || {};
+    result[node.key] = true;
+    node.children.forEach(function (child) { subtreeKeys(child, result); });
+    return result;
+  }
+  function pruneRelations(node) {
+    var removed = subtreeKeys(node);
+    root.relations = (root.relations || []).filter(function (relation) {
+      return !removed[relation.from] && !removed[relation.to];
+    });
+  }
   function countNodes(n) {
     return 1 + (n.children || []).reduce(function (s, c) { return s + countNodes(c); }, 0);
   }
@@ -1920,10 +2245,21 @@
     var card = document.createElement("div");
     card.className = "card depth-" + depth + (depth === 0 ? " root" : "");
     card.dataset.id = node.id;
+    card.dataset.key = node.key;
     card.dataset.depth = String(depth);
     if (key) card.style.setProperty("--bc", "var(--c-" + key + ")");
     if (node.id === selectedId) card.classList.add("selected");
     card.tabIndex = 0;
+
+    if (node.image && safeImageSource(node.image.src)) {
+      var image = document.createElement("img");
+      image.className = "node-image";
+      image.src = safeImageSource(node.image.src);
+      image.alt = node.image.caption || node.text;
+      image.loading = "lazy";
+      image.addEventListener("error", function () { image.hidden = true; });
+      card.appendChild(image);
+    }
 
     var txt = document.createElement("span");
     txt.className = "txt";
@@ -2042,7 +2378,79 @@
     return row;
   }
 
+  function applyMapTemplate() {
+    document.documentElement.dataset.mapTemplate = root.template || "classic";
+  }
+
+  function renderRelations() {
+    var existing = treeEl.querySelector(".relation-layer");
+    if (existing) existing.remove();
+    if (!root.relations || !root.relations.length) return;
+    var width = Math.max(1, treeEl.offsetWidth);
+    var height = Math.max(1, treeEl.offsetHeight);
+    var treeRect = treeEl.getBoundingClientRect();
+    var scaleX = treeRect.width / width || 1;
+    var scaleY = treeRect.height / height || 1;
+    var ns = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(ns, "svg");
+    svg.classList.add("relation-layer");
+    svg.setAttribute("width", width);
+    svg.setAttribute("height", height);
+    svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+    var defs = document.createElementNS(ns, "defs");
+    var marker = document.createElementNS(ns, "marker");
+    marker.setAttribute("id", "relationArrow");
+    marker.setAttribute("viewBox", "0 0 10 10");
+    marker.setAttribute("refX", "9"); marker.setAttribute("refY", "5");
+    marker.setAttribute("markerWidth", "6"); marker.setAttribute("markerHeight", "6");
+    marker.setAttribute("orient", "auto-start-reverse");
+    var arrow = document.createElementNS(ns, "path");
+    arrow.setAttribute("d", "M 0 0 L 10 5 L 0 10 z");
+    arrow.setAttribute("fill", "var(--accent)");
+    marker.appendChild(arrow); defs.appendChild(marker); svg.appendChild(defs);
+
+    root.relations.forEach(function (relation) {
+      var from = treeEl.querySelector('.card[data-key="' + relation.from + '"]');
+      var to = treeEl.querySelector('.card[data-key="' + relation.to + '"]');
+      if (!from || !to) return;
+      var a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
+      var acx = (a.left + a.width / 2 - treeRect.left) / scaleX;
+      var acy = (a.top + a.height / 2 - treeRect.top) / scaleY;
+      var bcx = (b.left + b.width / 2 - treeRect.left) / scaleX;
+      var bcy = (b.top + b.height / 2 - treeRect.top) / scaleY;
+      var horizontal = Math.abs(bcx - acx) >= Math.abs(bcy - acy);
+      var x1 = acx, y1 = acy, x2 = bcx, y2 = bcy, d;
+      if (horizontal) {
+        x1 += (bcx >= acx ? a.width / 2 : -a.width / 2) / scaleX;
+        x2 += (bcx >= acx ? -b.width / 2 : b.width / 2) / scaleX;
+        var bendX = Math.max(38, Math.abs(x2 - x1) * .45) * (x2 >= x1 ? 1 : -1);
+        d = "M" + x1 + "," + y1 + " C" + (x1 + bendX) + "," + y1 + " " + (x2 - bendX) + "," + y2 + " " + x2 + "," + y2;
+      } else {
+        y1 += (bcy >= acy ? a.height / 2 : -a.height / 2) / scaleY;
+        y2 += (bcy >= acy ? -b.height / 2 : b.height / 2) / scaleY;
+        var bendY = Math.max(38, Math.abs(y2 - y1) * .45) * (y2 >= y1 ? 1 : -1);
+        d = "M" + x1 + "," + y1 + " C" + x1 + "," + (y1 + bendY) + " " + x2 + "," + (y2 - bendY) + " " + x2 + "," + y2;
+      }
+      var path = document.createElementNS(ns, "path");
+      path.classList.add("relation-path");
+      path.setAttribute("d", d);
+      path.setAttribute("marker-end", "url(#relationArrow)");
+      svg.appendChild(path);
+      if (relation.label) {
+        var label = document.createElementNS(ns, "text");
+        label.classList.add("relation-label");
+        label.setAttribute("x", (x1 + x2) / 2);
+        label.setAttribute("y", (y1 + y2) / 2 - 5);
+        label.setAttribute("text-anchor", "middle");
+        label.textContent = relation.label;
+        svg.appendChild(label);
+      }
+    });
+    treeEl.insertBefore(svg, treeEl.firstChild);
+  }
+
   function render() {
+    applyMapTemplate();
     treeEl.textContent = "";
     treeEl.appendChild(renderRoot());
     document.getElementById("stats").textContent =
@@ -2050,6 +2458,8 @@
     document.title = root.text + " · Simple Mindmap";
     updatePalette();
     renderTabs();
+    renderInspector();
+    requestAnimationFrame(renderRelations);
     if (viewMode === "fit") requestAnimationFrame(fitToScreen);
   }
 
@@ -2072,12 +2482,20 @@
   });
 
   function select(id) {
+    if (relationSourceKey) {
+      var pendingTarget = findNode(id);
+      if (pendingTarget && pendingTarget.node.key !== relationSourceKey) {
+        completeCrossLink(pendingTarget.node);
+        return;
+      }
+    }
     selectedId = id;
     var prev = treeEl.querySelector(".card.selected");
     if (prev) prev.classList.remove("selected");
     var el = cardEl(id);
     if (el) { el.classList.add("selected"); el.focus(); }
     updatePalette();
+    renderInspector();
   }
   function cardEl(id) {
     return treeEl.querySelector('.card[data-id="' + id + '"]');
@@ -2331,7 +2749,7 @@
     if (guard()) return;
     var r = findNode(id || selectedId);
     if (!r) return;
-    var n = { id: "n" + (uid++), text: t("defNewNode"), collapsed: false, children: [] };
+    var n = { id: "n" + (uid++), key: newNodeKey(), text: t("defNewNode"), collapsed: false, children: [] };
     recordHistory("hAdd", n.text);
     r.node.collapsed = false;
     r.node.children.push(n);
@@ -2343,7 +2761,7 @@
     var r = findNode(id || selectedId);
     if (!r) return;
     if (!r.parent) { addChild(root.id); return; }
-    var n = { id: "n" + (uid++), text: t("defNewNode"), collapsed: false, children: [] };
+    var n = { id: "n" + (uid++), key: newNodeKey(), text: t("defNewNode"), collapsed: false, children: [] };
     recordHistory("hAdd", n.text);
     if (r.parent === root && r.node.side === "left") n.side = "left";
     var idx = r.parent.children.indexOf(r.node);
@@ -2360,6 +2778,7 @@
     var kids = countNodes(r.node) - 1;
     if (kids > 0 && !confirmTwice("del:" + id, t("tConfirmDelete", kids))) return;
     recordHistory("hDelete", r.node.text);
+    pruneRelations(r.node);
     var idx = r.parent.children.indexOf(r.node);
     r.parent.children.splice(idx, 1);
     selectedId = r.parent.children[Math.min(idx, r.parent.children.length - 1)]
@@ -2409,6 +2828,249 @@
     else if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); removeNode(id); }
     else if (e.key === "F2") { e.preventDefault(); startEdit(id); }
   }
+
+  /* ---------- floating editable outline, images, templates & cross-links ---------- */
+  var inspectorEl = document.getElementById("inspector");
+  var outlineTreeEl = document.getElementById("outlineTree");
+  var templateGridEl = document.getElementById("templateGrid");
+  var relationListEl = document.getElementById("relationList");
+  var selectedNodeTextEl = document.getElementById("selectedNodeText");
+  var nodeImagePreviewEl = document.getElementById("nodeImagePreview");
+  var nodeImageUrlEl = document.getElementById("nodeImageUrl");
+  var nodeImageCaptionEl = document.getElementById("nodeImageCaption");
+  var imageInputEl = document.getElementById("imageInput");
+  var btnRelationEl = document.getElementById("btnRelation");
+  var relationSourceKey = null;
+  var inspectorPane = "outline";
+
+  function setInspectorPane(name) {
+    inspectorPane = name === "templates" ? "templates" : "outline";
+    document.getElementById("outlinePane").hidden = inspectorPane !== "outline";
+    document.getElementById("templatesPane").hidden = inspectorPane !== "templates";
+    document.querySelectorAll(".inspector-tab").forEach(function (tab) {
+      tab.classList.toggle("active", tab.dataset.pane === inspectorPane);
+    });
+  }
+  function openInspector(name) {
+    setInspectorPane(name || "outline");
+    inspectorEl.classList.remove("closed");
+    document.getElementById("btnOutline").classList.toggle("on", inspectorPane === "outline");
+    document.getElementById("btnTemplates").classList.toggle("on", inspectorPane === "templates");
+    renderInspector();
+  }
+  function closeInspector() {
+    inspectorEl.classList.add("closed");
+    document.getElementById("btnOutline").classList.remove("on");
+    document.getElementById("btnTemplates").classList.remove("on");
+  }
+  document.getElementById("btnOutline").addEventListener("click", function () {
+    if (!inspectorEl.classList.contains("closed") && inspectorPane === "outline") closeInspector();
+    else openInspector("outline");
+  });
+  document.getElementById("btnTemplates").addEventListener("click", function () { openInspector("templates"); });
+  document.getElementById("btnCloseInspector").addEventListener("click", closeInspector);
+  document.querySelectorAll(".inspector-tab").forEach(function (tab) {
+    tab.addEventListener("click", function () { setInspectorPane(tab.dataset.pane); renderInspector(); });
+  });
+
+  function selectedNodeRecord() { return findNode(selectedId) || findNode(root.id); }
+  function commitSelectedText() {
+    if (guard()) return;
+    var record = selectedNodeRecord();
+    var value = selectedNodeTextEl.value.replace(/\s+/g, " ").trim();
+    if (!record || !value || value === record.node.text) return;
+    recordHistory("hRename", record.node.text);
+    record.node.text = value; save(); render();
+  }
+  selectedNodeTextEl.addEventListener("change", commitSelectedText);
+  selectedNodeTextEl.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") { event.preventDefault(); selectedNodeTextEl.blur(); }
+    if (event.key === "Escape") { event.preventDefault(); renderInspector(); selectedNodeTextEl.blur(); }
+  });
+
+  function renderOutlineNode(node) {
+    var item = document.createElement("li");
+    var row = document.createElement("div");
+    row.className = "outline-row" + (node.id === selectedId ? " active" : "");
+    var toggle = document.createElement("button");
+    toggle.className = "outline-toggle";
+    toggle.textContent = node.children.length ? (node.collapsed ? "▸" : "▾") : "·";
+    toggle.disabled = !node.children.length;
+    toggle.addEventListener("click", function () {
+      if (readOnly || !node.children.length) return;
+      recordHistory("hToggle", node.text); node.collapsed = !node.collapsed; save(); render();
+    });
+    var input = document.createElement("input");
+    input.className = "outline-name"; input.value = node.text; input.readOnly = readOnly;
+    input.addEventListener("pointerdown", function () {
+      selectedId = node.id;
+      treeEl.querySelectorAll(".card.selected").forEach(function (card) { card.classList.remove("selected"); });
+      var card = cardEl(node.id); if (card) card.classList.add("selected");
+      outlineTreeEl.querySelectorAll(".outline-row.active").forEach(function (active) { active.classList.remove("active"); });
+      row.classList.add("active"); selectedNodeTextEl.value = node.text; updatePalette();
+    });
+    input.addEventListener("change", function () {
+      var value = input.value.replace(/\s+/g, " ").trim();
+      if (!value || value === node.text) { input.value = node.text; return; }
+      recordHistory("hRename", node.text); node.text = value; save(); render();
+    });
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") { event.preventDefault(); input.blur(); }
+      if (event.key === "Escape") { event.preventDefault(); input.value = node.text; input.blur(); }
+    });
+    var add = document.createElement("button");
+    add.className = "outline-op"; add.textContent = "+"; add.title = t("addChild"); add.disabled = readOnly;
+    add.addEventListener("click", function () { addChild(node.id); });
+    var del = document.createElement("button");
+    del.className = "outline-op"; del.textContent = node === root ? "" : "×"; del.title = t("del");
+    del.disabled = readOnly || node === root;
+    del.addEventListener("click", function () { removeNode(node.id); });
+    row.appendChild(toggle); row.appendChild(input); row.appendChild(add); row.appendChild(del); item.appendChild(row);
+    if (node.children.length) {
+      var list = document.createElement("ul");
+      node.children.forEach(function (child) { list.appendChild(renderOutlineNode(child)); });
+      item.appendChild(list);
+    }
+    return item;
+  }
+
+  function renderTemplateGrid() {
+    templateGridEl.textContent = "";
+    MAP_TEMPLATES.forEach(function (template) {
+      var button = document.createElement("button");
+      button.className = "template-card" + ((root.template || "classic") === template.key ? " active" : "");
+      button.disabled = readOnly;
+      var swatch = document.createElement("span"); swatch.className = "template-swatch";
+      template.colors.forEach(function (color) { var dot = document.createElement("i"); dot.style.setProperty("--swatch", color); swatch.appendChild(dot); });
+      var name = document.createElement("span"); name.className = "template-name"; name.textContent = t(template.name);
+      button.appendChild(swatch); button.appendChild(name);
+      button.addEventListener("click", function () {
+        if (guard() || root.template === template.key) return;
+        recordHistory("hTemplate"); root.template = template.key; save(); render();
+      });
+      templateGridEl.appendChild(button);
+    });
+  }
+
+  function renderRelationList() {
+    relationListEl.textContent = "";
+    if (!root.relations.length) {
+      var empty = document.createElement("li"); empty.className = "empty"; empty.textContent = t("relationEmpty"); relationListEl.appendChild(empty); return;
+    }
+    root.relations.forEach(function (relation) {
+      var from = findNodeByKey(relation.from), to = findNodeByKey(relation.to);
+      if (!from || !to) return;
+      var item = document.createElement("li"); item.className = "relation-item";
+      var input = document.createElement("input"); input.className = "field";
+      input.value = relation.label || ""; input.placeholder = t("relationFromTo", from.node.text, to.node.text); input.disabled = readOnly;
+      input.title = t("relationFromTo", from.node.text, to.node.text);
+      function commitRelationLabel() {
+        var next = input.value.trim().slice(0, 100);
+        if (next === relation.label) return;
+        recordHistory("hRelation"); relation.label = next; save(); render();
+      }
+      input.addEventListener("change", commitRelationLabel);
+      input.addEventListener("blur", commitRelationLabel);
+      input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") { event.preventDefault(); input.blur(); }
+      });
+      var del = document.createElement("button"); del.className = "outline-op"; del.textContent = "×"; del.disabled = readOnly;
+      del.addEventListener("click", function () {
+        recordHistory("hRelation"); root.relations = root.relations.filter(function (item) { return item.relKey !== relation.relKey; }); save(); render();
+      });
+      item.appendChild(input); item.appendChild(del); relationListEl.appendChild(item);
+    });
+  }
+
+  function renderInspector() {
+    if (!inspectorEl) return;
+    var record = selectedNodeRecord();
+    if (!record) return;
+    selectedNodeTextEl.value = record.node.text;
+    selectedNodeTextEl.disabled = readOnly;
+    var source = record.node.image && safeImageSource(record.node.image.src);
+    nodeImagePreviewEl.hidden = !source;
+    if (source) { nodeImagePreviewEl.src = source; nodeImagePreviewEl.alt = record.node.image.caption || record.node.text; }
+    else nodeImagePreviewEl.removeAttribute("src");
+    nodeImageUrlEl.value = source && /^https?:/i.test(source) ? source : "";
+    nodeImageCaptionEl.value = record.node.image ? record.node.image.caption || "" : "";
+    nodeImageCaptionEl.disabled = readOnly || !record.node.image;
+    document.getElementById("btnChooseImage").disabled = readOnly;
+    document.getElementById("btnRemoveImage").disabled = readOnly || !record.node.image;
+    document.getElementById("btnApplyImageUrl").disabled = readOnly;
+    outlineTreeEl.textContent = ""; outlineTreeEl.appendChild(renderOutlineNode(root));
+    renderRelationList(); renderTemplateGrid();
+  }
+
+  function setNodeImage(src, caption) {
+    var record = selectedNodeRecord(); if (!record) return;
+    var safe = safeImageSource(src); if (!safe) { toast(t("tImageInvalid")); return; }
+    recordHistory("hImage", record.node.text);
+    record.node.image = { src: safe, caption: String(caption || record.node.text).slice(0, 200) };
+    save(); render(); toast(t("tImageAdded", record.node.text));
+  }
+  function removeSelectedImage() {
+    if (guard()) return;
+    var record = selectedNodeRecord(); if (!record || !record.node.image) return;
+    recordHistory("hImage", record.node.text); delete record.node.image; save(); render(); toast(t("tImageRemoved", record.node.text));
+  }
+  function openImagePicker() { if (!guard()) imageInputEl.click(); }
+  document.getElementById("btnImage").addEventListener("click", function () { openInspector("outline"); openImagePicker(); });
+  document.getElementById("btnChooseImage").addEventListener("click", openImagePicker);
+  document.getElementById("btnRemoveImage").addEventListener("click", removeSelectedImage);
+  document.getElementById("btnApplyImageUrl").addEventListener("click", function () {
+    setNodeImage(nodeImageUrlEl.value, nodeImageCaptionEl.value);
+  });
+  nodeImageCaptionEl.addEventListener("change", function () {
+    if (guard()) return;
+    var record = selectedNodeRecord(); if (!record || !record.node.image) return;
+    recordHistory("hImage", record.node.text); record.node.image.caption = nodeImageCaptionEl.value.trim().slice(0, 200); save(); render();
+  });
+  imageInputEl.addEventListener("change", function () {
+    var file = imageInputEl.files && imageInputEl.files[0]; imageInputEl.value = "";
+    if (!file) return;
+    if (!/^image\/(png|jpeg|webp|gif)$/i.test(file.type)) { toast(t("tImageInvalid")); return; }
+    if (file.size > 10 * 1024 * 1024) { toast(t("tImageTooLarge")); return; }
+    var reader = new FileReader();
+    reader.onload = function () {
+      var raw = String(reader.result || "");
+      if (file.type === "image/gif") { setNodeImage(raw, nodeImageCaptionEl.value); return; }
+      var image = new Image();
+      image.onload = function () {
+        var scale = Math.min(1, 1000 / image.width, 700 / image.height);
+        var canvas = document.createElement("canvas"); canvas.width = Math.max(1, Math.round(image.width * scale)); canvas.height = Math.max(1, Math.round(image.height * scale));
+        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+        var type = file.type === "image/png" ? "image/png" : "image/jpeg";
+        setNodeImage(canvas.toDataURL(type, .86), nodeImageCaptionEl.value);
+      };
+      image.onerror = function () { toast(t("tImageInvalid")); };
+      image.src = raw;
+    };
+    reader.onerror = function () { toast(t("tReadFail")); };
+    reader.readAsDataURL(file);
+  });
+
+  function cancelCrossLink() {
+    relationSourceKey = null; btnRelationEl.classList.remove("on"); document.body.classList.remove("relation-pending");
+  }
+  function completeCrossLink(targetNode) {
+    var source = findNodeByKey(relationSourceKey); if (!source || !targetNode) { cancelCrossLink(); return; }
+    var duplicate = root.relations.some(function (relation) {
+      return (relation.from === source.node.key && relation.to === targetNode.key) || (relation.from === targetNode.key && relation.to === source.node.key);
+    });
+    if (duplicate) { cancelCrossLink(); toast(t("tRelationDuplicate")); return; }
+    recordHistory("hRelation");
+    root.relations.push({ relKey: "r" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), from: source.node.key, to: targetNode.key, label: "" });
+    var fromName = source.node.text; cancelCrossLink(); selectedId = targetNode.id; save(); render();
+    toast(t("tRelationAdded", fromName, targetNode.text)); openInspector("outline");
+  }
+  btnRelationEl.addEventListener("click", function () {
+    if (guard()) return;
+    if (relationSourceKey) { cancelCrossLink(); return; }
+    var record = selectedNodeRecord(); if (!record) return;
+    relationSourceKey = record.node.key; btnRelationEl.classList.add("on"); document.body.classList.add("relation-pending");
+    toast(t("tRelationStart", record.node.text));
+  });
 
   /* ---------- saved-document library (files on desktop, localStorage on web) ---------- */
   var drawerEl = document.getElementById("drawer");
@@ -2694,6 +3356,9 @@
     var viewZoom = 1, viewMode = "manual";
     var MIN_ZOOM = 0.02, MAX_ZOOM = 2.5, ZOOM_STEP = 0.15;
     var panDrag = null, suppressClickUntil = 0;
+    var runtimeStyle = document.createElement("style");
+    runtimeStyle.textContent = "#tree{position:relative}.row{position:relative;z-index:1}.node-image{flex:none;width:84px;height:54px;object-fit:cover;border:1px solid #b9c5cd;border-radius:5px;background:#f4f6f8}.card.root .node-image{width:96px;height:62px}.relation-layer{position:absolute;inset:0;z-index:0;overflow:visible;pointer-events:none}.relation-path{fill:none;stroke:#0e7c7b;stroke-width:2;stroke-dasharray:7 6;opacity:.82;vector-effect:non-scaling-stroke}";
+    document.head.appendChild(runtimeStyle);
     document.documentElement.lang = copy.lang;
     document.title = data.text + " — " + copy.readOnly;
     document.getElementById("title").textContent = data.text;
@@ -2720,7 +3385,14 @@
       if (node === selectedNode) { card.classList.add("selected"); selectedCard = card; }
       card.tabIndex = 0;
       card.__node = node;
+      card.dataset.key = node.key || "";
       card.style.setProperty("--bc", COLORS[key] || "#66788a");
+      if (node.image && /^(data:image\/(png|jpeg|webp|gif);base64,|https?:\/\/)/i.test(node.image.src || "")) {
+        var image = document.createElement("img");
+        image.className = "node-image"; image.src = node.image.src; image.alt = node.image.caption || node.text; image.loading = "lazy";
+        image.addEventListener("error", function () { image.hidden = true; });
+        card.appendChild(image);
+      }
       var text = document.createElement("span");
       text.textContent = node.text;
       card.appendChild(text);
@@ -2786,6 +3458,35 @@
         kids.appendChild(branch);
       });
       return kids;
+    }
+    function renderRelations() {
+      if (!data.relations || !data.relations.length) return;
+      var width = Math.max(1, treeEl.offsetWidth), height = Math.max(1, treeEl.offsetHeight);
+      var treeRect = treeEl.getBoundingClientRect(), scaleX = treeRect.width / width || 1, scaleY = treeRect.height / height || 1;
+      var ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg");
+      svg.classList.add("relation-layer"); svg.setAttribute("width", width); svg.setAttribute("height", height); svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+      var defs = document.createElementNS(ns, "defs"), marker = document.createElementNS(ns, "marker"), arrow = document.createElementNS(ns, "path");
+      marker.setAttribute("id", "roRelationArrow"); marker.setAttribute("viewBox", "0 0 10 10"); marker.setAttribute("refX", "9"); marker.setAttribute("refY", "5"); marker.setAttribute("markerWidth", "6"); marker.setAttribute("markerHeight", "6"); marker.setAttribute("orient", "auto-start-reverse");
+      arrow.setAttribute("d", "M0 0 L10 5 L0 10z"); arrow.setAttribute("fill", "#0e7c7b"); marker.appendChild(arrow); defs.appendChild(marker); svg.appendChild(defs);
+      data.relations.forEach(function (relation) {
+        var from = treeEl.querySelector('.card[data-key="' + relation.from + '"]'), to = treeEl.querySelector('.card[data-key="' + relation.to + '"]');
+        if (!from || !to) return;
+        var a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
+        var x1 = (a.left + a.width / 2 - treeRect.left) / scaleX, y1 = (a.top + a.height / 2 - treeRect.top) / scaleY;
+        var x2 = (b.left + b.width / 2 - treeRect.left) / scaleX, y2 = (b.top + b.height / 2 - treeRect.top) / scaleY;
+        var horizontal = Math.abs(x2 - x1) >= Math.abs(y2 - y1), d;
+        if (horizontal) {
+          x1 += (x2 >= x1 ? a.width / 2 : -a.width / 2) / scaleX; x2 += (x2 >= x1 ? -b.width / 2 : b.width / 2) / scaleX;
+          var bx = Math.max(38, Math.abs(x2 - x1) * .45) * (x2 >= x1 ? 1 : -1);
+          d = "M" + x1 + "," + y1 + " C" + (x1 + bx) + "," + y1 + " " + (x2 - bx) + "," + y2 + " " + x2 + "," + y2;
+        } else {
+          y1 += (y2 >= y1 ? a.height / 2 : -a.height / 2) / scaleY; y2 += (y2 >= y1 ? -b.height / 2 : b.height / 2) / scaleY;
+          var by = Math.max(38, Math.abs(y2 - y1) * .45) * (y2 >= y1 ? 1 : -1);
+          d = "M" + x1 + "," + y1 + " C" + x1 + "," + (y1 + by) + " " + x2 + "," + (y2 - by) + " " + x2 + "," + y2;
+        }
+        var path = document.createElementNS(ns, "path"); path.classList.add("relation-path"); path.setAttribute("d", d); path.setAttribute("marker-end", "url(#roRelationArrow)"); svg.appendChild(path);
+      });
+      treeEl.insertBefore(svg, treeEl.firstChild);
     }
     function clampZoom(value) {
       return Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, Math.round(value * 100) / 100));
@@ -2885,6 +3586,7 @@
       treeEl.appendChild(row);
       document.getElementById("stats").textContent =
         count(data) + " " + copy.nodes + " · " + (data.children || []).length + " " + copy.branches;
+      requestAnimationFrame(renderRelations);
       if (viewMode === "fit") requestAnimationFrame(fitView);
       else if (recenter !== false) requestAnimationFrame(centerRoot);
     }
@@ -2993,7 +3695,7 @@
       shareUrlEl.value = url;
       document.getElementById("btnOpenShare").href = url;
       if (shareHtmlObjectUrl) URL.revokeObjectURL(shareHtmlObjectUrl);
-      shareHtmlObjectUrl = URL.createObjectURL(new Blob([buildReadonlyHtml()], { type: "text/html;charset=utf-8" }));
+      shareHtmlObjectUrl = URL.createObjectURL(new Blob([buildReadonlyHtml().replace("default-src 'none'; style-src", "default-src 'none'; img-src data: https:; style-src")], { type: "text/html;charset=utf-8" }));
       var htmlLink = document.getElementById("btnDownloadShareHtml");
       htmlLink.href = shareHtmlObjectUrl;
       htmlLink.download = safeName(root.text) + "-readonly-" + fileStamp() + ".html";
@@ -3077,9 +3779,10 @@
     document.getElementById("roBar").hidden = !readOnly;
     document.getElementById("hintBar").hidden = readOnly;
     tabsBarEl.hidden = readOnly;
-    ["btnDrawer", "btnSave", "btnSaveAs", "btnShare", "btnNew", "btnImport", "btnUndo", "btnHistory", "btnChild", "btnSibling", "btnDel", "btnReset", "sepEdit"]
+    ["btnDrawer", "btnSave", "btnSaveAs", "btnShare", "btnNew", "btnImport", "btnUndo", "btnHistory", "btnChild", "btnSibling", "btnImage", "btnRelation", "btnTemplates", "btnDel", "btnReset", "sepEdit"]
       .forEach(function (id) { document.getElementById(id).hidden = readOnly; });
     if (readOnly) {
+      cancelCrossLink();
       historyPanelEl.hidden = true;
       drawerEl.classList.add("closed");
       btnDrawer.classList.remove("on");
@@ -3139,11 +3842,11 @@
       if (it.indent > 0 && (unit === null || it.indent < unit)) unit = it.indent;
     });
     unit = unit || 2;
-    var r = { id: "n" + (uid++), text: rootText || t("defImported"), collapsed: false, children: [] };
+    var r = { id: "n" + (uid++), key: newNodeKey(), text: rootText || t("defImported"), collapsed: false, children: [], relations: [], template: "classic" };
     var stack = [{ node: r, level: -1 }];
     items.forEach(function (it) {
       var level = Math.round(it.indent / unit);
-      var n = { id: "n" + (uid++), text: it.text, collapsed: false, children: [] };
+      var n = { id: "n" + (uid++), key: newNodeKey(), text: it.text, collapsed: false, children: [] };
       while (stack.length > 1 && stack[stack.length - 1].level >= level) stack.pop();
       stack[stack.length - 1].node.children.push(n);
       stack.push({ node: n, level: level });

@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 756" role="img" aria-labelledby="title desc">
+  <title id="title">Simple Mindmap</title>
+  <desc id="desc">Think clearly. Map freely. Share safely. Private, offline-first and open source.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#061419"/><stop offset=".55" stop-color="#071d22"/><stop offset="1" stop-color="#09282d"/></linearGradient>
+    <radialGradient id="glow"><stop stop-color="#20d6ca" stop-opacity=".32"/><stop offset="1" stop-color="#20d6ca" stop-opacity="0"/></radialGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#20d6ca"/><stop offset="1" stop-color="#087e88"/></linearGradient>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#8fe9e2" stroke-opacity=".045"/></pattern>
+    <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#000" flood-opacity=".42"/></filter>
+  </defs>
+  <rect x="4" y="4" width="1392" height="748" rx="54" fill="url(#bg)" stroke="#173b41" stroke-width="8"/>
+  <rect x="8" y="8" width="1384" height="740" rx="50" fill="url(#grid)"/>
+  <circle cx="1020" cy="378" r="230" fill="url(#glow)"/>
+
+  <g transform="translate(90 152)">
+    <g fill="none" stroke-linecap="round" stroke-width="8">
+      <path d="M50 50 C35 34 31 20 18 17" stroke="#2bd0ca"/><path d="M78 50 C92 34 97 20 110 17" stroke="#3b88ff"/>
+      <path d="M45 64 H14" stroke="#ffb43f"/><path d="M83 64 H114" stroke="#9a67ea"/>
+      <path d="M50 78 C35 94 31 108 18 111" stroke="#ff6554"/><path d="M78 78 C92 94 97 108 110 111" stroke="#6bd35a"/>
+    </g>
+    <g><circle cx="18" cy="17" r="10" fill="#2bd0ca"/><circle cx="110" cy="17" r="10" fill="#3b88ff"/><circle cx="14" cy="64" r="10" fill="#ffb43f"/><circle cx="114" cy="64" r="10" fill="#9a67ea"/><circle cx="18" cy="111" r="10" fill="#ff6554"/><circle cx="110" cy="111" r="10" fill="#6bd35a"/><circle cx="64" cy="64" r="24" fill="url(#core)" stroke="#84fff7" stroke-width="5"/></g>
+  </g>
+  <text x="88" y="388" fill="#f5fbfa" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="88" font-weight="760" letter-spacing="-3">Simple Mindmap</text>
+  <text x="92" y="466" fill="#d4e7e5" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="34" font-weight="600">Think clearly. Map freely. Share safely.</text>
+  <text x="92" y="534" fill="#2bd0ca" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="28">Private · Offline-first · Open source</text>
+
+  <g fill="none" stroke-linecap="round" stroke-width="7">
+    <path d="M964 344 C912 321 902 222 846 208" stroke="#2bd0ca"/>
+    <path d="M846 208 C808 198 800 170 764 170" stroke="#2bd0ca"/><path d="M846 208 C808 218 800 246 764 246" stroke="#2bd0ca"/>
+    <path d="M1076 344 C1128 321 1138 222 1194 208" stroke="#3b88ff"/>
+    <path d="M1194 208 C1232 198 1240 170 1276 170" stroke="#3b88ff"/><path d="M1194 208 C1232 218 1240 246 1276 246" stroke="#3b88ff"/>
+    <path d="M958 378 H846" stroke="#ffb43f"/><path d="M846 378 C808 366 800 336 764 336" stroke="#ffb43f"/><path d="M846 378 C808 390 800 420 764 420" stroke="#ffb43f"/>
+    <path d="M1082 378 H1194" stroke="#9a67ea"/><path d="M1194 378 C1232 366 1240 336 1276 336" stroke="#9a67ea"/><path d="M1194 378 C1232 390 1240 420 1276 420" stroke="#9a67ea"/>
+    <path d="M964 412 C912 435 902 534 846 548" stroke="#ff6554"/><path d="M846 548 C808 538 800 510 764 510" stroke="#ff6554"/><path d="M846 548 C808 558 800 586 764 586" stroke="#ff6554"/>
+    <path d="M1076 412 C1128 435 1138 534 1194 548" stroke="#6bd35a"/><path d="M1194 548 C1232 538 1240 510 1276 510" stroke="#6bd35a"/><path d="M1194 548 C1232 558 1240 586 1276 586" stroke="#6bd35a"/>
+  </g>
+  <g filter="url(#shadow)">
+    <g fill="#2bd0ca"><rect x="684" y="145" width="80" height="50" rx="25"/><rect x="684" y="221" width="80" height="50" rx="25"/></g>
+    <g fill="#3b88ff"><rect x="1276" y="145" width="80" height="50" rx="25"/><rect x="1276" y="221" width="80" height="50" rx="25"/></g>
+    <g fill="#ffb43f"><rect x="684" y="311" width="80" height="50" rx="25"/><rect x="684" y="395" width="80" height="50" rx="25"/></g>
+    <g fill="#9a67ea"><rect x="1276" y="311" width="80" height="50" rx="25"/><rect x="1276" y="395" width="80" height="50" rx="25"/></g>
+    <g fill="#ff6554"><rect x="684" y="485" width="80" height="50" rx="25"/><rect x="684" y="561" width="80" height="50" rx="25"/></g>
+    <g fill="#6bd35a"><rect x="1276" y="485" width="80" height="50" rx="25"/><rect x="1276" y="561" width="80" height="50" rx="25"/></g>
+    <circle cx="1020" cy="378" r="62" fill="url(#core)" stroke="#8afff6" stroke-width="8"/>
+  </g>
+</svg>

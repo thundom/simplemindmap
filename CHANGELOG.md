@@ -2,6 +2,16 @@
 
 All notable Simple Mindmap releases are listed here.
 
+## v1.8.0 — 2026-08-10
+
+- Added a floating right-side outline that shows the complete hierarchy and supports direct node renaming, creation, deletion and selection.
+- Added embedded or URL-based images on any node, including captions and preservation in JSON backups and read-only HTML exports.
+- Added nine display templates: Classic, Ocean, Forest, Sunset, Violet, Monochrome, Soft Rounded, Executive and Midnight.
+- Added labelled dashed cross-node relationship arrows without changing the underlying parent-child hierarchy.
+- Replaced the low-resolution README card with a scalable high-definition SVG and corrected every connector in the Launch preview.
+- Replaced the Launch navigation mark with the official six-branch Simple Mindmap icon.
+- Standardised the author and MIT copyright holder as Frank Liu while retaining `thundom` as the public GitHub identity.
+
 ## v1.7.1 — 2026-08-10
 
 - Enabled the public GitHub Pages site with GitHub Actions as its deployment source, fixing the Web app link.
