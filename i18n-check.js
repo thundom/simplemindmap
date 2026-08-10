@@ -16,9 +16,14 @@ if (start < 0) {
   process.exit(1);
 }
 const tail = script.slice(start);
-const end = tail.indexOf("\n  };");
-const source = tail.slice(0, end + 5).replace(/^var I18N = /, "");
-const I18N = eval("(" + source.replace(/;$/, "") + ")");
+const end = tail.indexOf("\n  var LANG_STORE");
+if (end < 0) {
+  console.error("i18n-check: could not find the end of the locale setup");
+  process.exit(1);
+}
+const localeContext = {};
+vm.runInNewContext(tail.slice(0, end), localeContext);
+const I18N = localeContext.I18N;
 
 const locales = Object.keys(I18N);
 const base = "en";
