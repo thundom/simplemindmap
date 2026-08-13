@@ -161,6 +161,9 @@
   .download-app-cta::before { content:"\2193"; font-size:16px; line-height:1; }
   .download-app-cta:hover { filter:saturate(1.08) brightness(.98); transform:translateY(-1px); box-shadow:0 6px 16px rgba(234,88,12,.34); }
   .download-app-cta:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+  .download-app-cta.local-copy { border-color:var(--line); background:var(--surface); color:var(--ink-soft); box-shadow:none; font-weight:600; }
+  .download-app-cta.local-copy::before { display:none; }
+  .download-app-cta.local-copy:hover { border-color:var(--ink-soft); background:color-mix(in srgb,var(--ink-soft) 7%,var(--surface)); color:var(--ink); box-shadow:none; }
   .download-label-short { display:none; }
   .ribbon-toggle {
     width:100%; height:18px; padding:0; display:flex; align-items:center; justify-content:center;
@@ -1163,6 +1166,9 @@
       downloadApp: "Download the one-file app",
       downloadAppShort: "Download app",
       downloadAppTip: "Download the complete portable tool as one HTML file",
+      downloadAnotherApp: "Download another copy of the app",
+      downloadAnotherAppShort: "Download another copy",
+      downloadAnotherAppTip: "Download another copy of the portable HTML app",
       myMaps: "My maps",
       myMapsTip: "Show the list of saved maps",
       save: "Save",
@@ -1381,6 +1387,9 @@
       downloadApp: "下载单文件应用",
       downloadAppShort: "下载应用",
       downloadAppTip: "将完整的便携工具下载为一个 HTML 文件",
+      downloadAnotherApp: "再次下载一个应用副本",
+      downloadAnotherAppShort: "再次下载副本",
+      downloadAnotherAppTip: "再次下载便携 HTML 应用副本",
       myMaps: "我的导图",
       myMapsTip: "打开保存的导图列表",
       save: "保存",
@@ -1599,6 +1608,9 @@
       downloadApp: "1ファイル版をダウンロード",
       downloadAppShort: "アプリを保存",
       downloadAppTip: "完全なポータブルツールを1つのHTMLファイルとしてダウンロード",
+      downloadAnotherApp: "アプリをもう一部ダウンロード",
+      downloadAnotherAppShort: "もう一部保存",
+      downloadAnotherAppTip: "ポータブルHTMLアプリをもう一部ダウンロード",
       myMaps: "マイマップ",
       myMapsTip: "保存したマップの一覧を開く",
       save: "保存",
@@ -1844,6 +1856,7 @@
   I18N.vi = Object.assign({}, I18N.en, {
     langName: "Tiếng Việt",
     downloadApp: "Tải ứng dụng một tệp", downloadAppShort: "Tải ứng dụng", downloadAppTip: "Tải toàn bộ công cụ di động dưới dạng một tệp HTML",
+    downloadAnotherApp: "Tải thêm một bản ứng dụng", downloadAnotherAppShort: "Tải thêm một bản", downloadAnotherAppTip: "Tải thêm một bản ứng dụng HTML di động",
     myMaps: "Sơ đồ của tôi", myMapsTip: "Hiển thị danh sách sơ đồ đã lưu",
     save: "Lưu", saveTip: "Lưu sơ đồ hiện tại", saveAs: "Lưu thành bản mới", saveAsTip: "Lưu sơ đồ hiện tại thành một mục riêng",
     share: "Chia sẻ", shareTip: "Tạo liên kết chỉ đọc", preview: "Xem trước",
@@ -1926,6 +1939,14 @@
   var LANG_STORE = "simplemindmap-lang-v1";
   var lang = "en";
 
+  function languageStoreKey() {
+    /* Each downloaded HTML file starts in English, then remembers an explicit
+       language choice for that exact local copy. */
+    return location.protocol === "file:"
+      ? LANG_STORE + "::file::" + encodeURIComponent(location.pathname)
+      : LANG_STORE;
+  }
+
   function t(key) {
     var dict = I18N[lang] || I18N.en;
     var v = dict[key];
@@ -1935,7 +1956,7 @@
   }
   function detectLang() {
     try {
-      var stored = localStorage.getItem(LANG_STORE);
+      var stored = localStorage.getItem(languageStoreKey());
       if (stored && I18N[stored]) return stored;
     } catch (e) { /* storage unavailable */ }
     /* English is the product default; an explicit saved choice still wins. */
@@ -4912,13 +4933,20 @@
   });
   selectRibbonTab(mobileRibbonDefault ? "view" : "file", false);
   var langSel = document.getElementById("langSel");
+  var downloadAppEl = document.getElementById("btnDownloadApp");
+  if (location.protocol === "file:") {
+    downloadAppEl.classList.add("local-copy");
+    downloadAppEl.querySelector(".download-label").dataset.i18n = "downloadAnotherApp";
+    downloadAppEl.querySelector(".download-label-short").dataset.i18n = "downloadAnotherAppShort";
+    downloadAppEl.dataset.i18nTitle = "downloadAnotherAppTip";
+  }
   langSel.addEventListener("change", function () {
     setLang(langSel.value);
   });
   function setLang(next) {
     if (!I18N[next]) return;
     lang = next;
-    try { localStorage.setItem(LANG_STORE, lang); } catch (e) { /* best effort */ }
+    try { localStorage.setItem(languageStoreKey(), lang); } catch (e) { /* best effort */ }
     applyLang();
   }
   function applyLang() {
