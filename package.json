@@ -1,6 +1,6 @@
 {
   "name": "simplemindmap",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "Private, offline-first mind mapping in one HTML file — map freely and share safely",
   "scripts": {
     "test": "node i18n-check.js"

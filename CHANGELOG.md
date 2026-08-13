@@ -2,6 +2,13 @@
 
 All notable Simple Mindmap releases are listed here.
 
+## v1.8.1 — 2026-08-13
+
+- Added a high-visibility one-file app download button beside the language selector.
+- Enabled one-finger canvas panning from both nodes and blank canvas space on touch devices while preserving precise desktop node dragging.
+- Made the View ribbon the default on phone and touch-first layouts so pan, zoom, Fit and Center controls are immediately available.
+- Rewrote download calls to action around the portable one-file benefit and added an explicit text link to the product overview on the GitHub homepage.
+
 ## v1.8.0 — 2026-08-10
 
 - Added an Office-style ribbon with grouped File, Edit, View, Format, Share and Help tabs, polished vector icons and a full-width focus toggle.
