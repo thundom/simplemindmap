@@ -152,6 +152,16 @@
   .bar .sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
   .grow { flex: 1; }
   .ribbon-quick { display:flex; align-items:center; gap:7px; }
+  .download-app-cta {
+    display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:34px; padding:6px 11px;
+    border:1px solid #d65b08; border-radius:7px; background:linear-gradient(180deg,#fb923c,#f97316);
+    color:#17212b; box-shadow:0 4px 12px rgba(234,88,12,.26); font-size:12px; font-weight:750;
+    line-height:1.15; text-decoration:none; white-space:nowrap; transition:filter .15s ease,transform .15s ease,box-shadow .15s ease;
+  }
+  .download-app-cta::before { content:"\2193"; font-size:16px; line-height:1; }
+  .download-app-cta:hover { filter:saturate(1.08) brightness(.98); transform:translateY(-1px); box-shadow:0 6px 16px rgba(234,88,12,.34); }
+  .download-app-cta:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+  .download-label-short { display:none; }
   .ribbon-toggle {
     width:100%; height:18px; padding:0; display:flex; align-items:center; justify-content:center;
     border:0; border-top:1px solid color-mix(in srgb,var(--accent) 18%,var(--line)); border-radius:0;
@@ -776,6 +786,11 @@
     .ribbon-title-row { padding:7px 9px; }
     .bar h1 { font-size: 15px; }
     .bar .sub { font-size: 11px; }
+    .ribbon-quick { gap:5px; }
+    .download-app-cta { min-height:34px; padding:5px 8px; font-size:11px; }
+    .download-label { display:none; }
+    .download-label-short { display:inline; }
+    #langSel { max-width:84px; }
     .btns { gap: 6px; }
     .btn { min-height: 36px; padding: 7px 10px; font-size: 12px; }
     .btn.sm { min-height: 32px; padding: 5px 8px; font-size: 11.5px; }
@@ -896,6 +911,7 @@
       </div>
       <div class="grow"></div>
       <div class="ribbon-quick">
+        <a class="download-app-cta" id="btnDownloadApp" href="https://github.com/thundom/simplemindmap/releases/latest/download/Simple.MindMap-1.8.1.html" data-i18n-title="downloadAppTip"><span class="download-label" data-i18n="downloadApp">Download the one-file app</span><span class="download-label-short" data-i18n="downloadAppShort">Download app</span></a>
         <select class="btn" id="langSel" aria-label="Language">
           <option value="en">English</option>
           <option value="zh">简体中文</option>
@@ -1144,6 +1160,9 @@
   var I18N = {
     en: {
       langName: "English",
+      downloadApp: "Download the one-file app",
+      downloadAppShort: "Download app",
+      downloadAppTip: "Download the complete portable tool as one HTML file",
       myMaps: "My maps",
       myMapsTip: "Show the list of saved maps",
       save: "Save",
@@ -1359,6 +1378,9 @@
     },
     zh: {
       langName: "中文",
+      downloadApp: "下载单文件应用",
+      downloadAppShort: "下载应用",
+      downloadAppTip: "将完整的便携工具下载为一个 HTML 文件",
       myMaps: "我的导图",
       myMapsTip: "打开保存的导图列表",
       save: "保存",
@@ -1574,6 +1596,9 @@
     },
     ja: {
       langName: "日本語",
+      downloadApp: "1ファイル版をダウンロード",
+      downloadAppShort: "アプリを保存",
+      downloadAppTip: "完全なポータブルツールを1つのHTMLファイルとしてダウンロード",
       myMaps: "マイマップ",
       myMapsTip: "保存したマップの一覧を開く",
       save: "保存",
@@ -1818,6 +1843,7 @@
 
   I18N.vi = Object.assign({}, I18N.en, {
     langName: "Tiếng Việt",
+    downloadApp: "Tải ứng dụng một tệp", downloadAppShort: "Tải ứng dụng", downloadAppTip: "Tải toàn bộ công cụ di động dưới dạng một tệp HTML",
     myMaps: "Sơ đồ của tôi", myMapsTip: "Hiển thị danh sách sơ đồ đã lưu",
     save: "Lưu", saveTip: "Lưu sơ đồ hiện tại", saveAs: "Lưu thành bản mới", saveAsTip: "Lưu sơ đồ hiện tại thành một mục riêng",
     share: "Chia sẻ", shareTip: "Tạo liên kết chỉ đọc", preview: "Xem trước",
@@ -2641,14 +2667,16 @@
       if (e.target.closest(".card")) return;
       e.preventDefault(); return;
     }
-    var anywhere = e.button === 1 || spaceHeld;
+    var touchPan = e.pointerType === "touch";
+    var anywhere = e.button === 1 || spaceHeld || touchPan;
     if (e.button !== 0 && e.button !== 1) return;
+    if (touchPan && e.target.closest(".relation-hit, button, input, select, a, [contenteditable='true']")) return;
     if (!anywhere && e.target.closest(".card, .relation-hit, button, input, select, a, [contenteditable='true']")) return;
     e.preventDefault();
     viewMode = "manual";
     panDrag = {
       pointerId: e.pointerId, x: e.clientX, y: e.clientY,
-      left: canvasEl.scrollLeft, top: canvasEl.scrollTop
+      left: canvasEl.scrollLeft, top: canvasEl.scrollTop, moved: false
     };
     canvasEl.classList.add("panning");
     try { canvasEl.setPointerCapture(e.pointerId); } catch (err) { /* window listeners are the fallback */ }
@@ -2656,11 +2684,14 @@
   window.addEventListener("pointermove", function (e) {
     if (!panDrag || panDrag.pointerId !== e.pointerId) return;
     e.preventDefault();
-    canvasEl.scrollLeft = panDrag.left - (e.clientX - panDrag.x);
-    canvasEl.scrollTop = panDrag.top - (e.clientY - panDrag.y);
+    var dx = e.clientX - panDrag.x, dy = e.clientY - panDrag.y;
+    if (Math.hypot(dx, dy) > 4) panDrag.moved = true;
+    canvasEl.scrollLeft = panDrag.left - dx;
+    canvasEl.scrollTop = panDrag.top - dy;
   });
   function finishPan(e) {
     if (!panDrag || panDrag.pointerId !== e.pointerId) return;
+    if (panDrag.moved) suppressClickUntil = performance.now() + 250;
     panDrag = null;
     canvasEl.classList.remove("panning");
   }
@@ -3280,7 +3311,7 @@
     if (depth === 0) return;
 
     card.addEventListener("pointerdown", function (e) {
-      if (relationSourceKey || !e.isPrimary || e.button !== 0 || spaceHeld) return;
+      if (relationSourceKey || !e.isPrimary || e.button !== 0 || spaceHeld || e.pointerType === "touch") return;
       if (e.target.closest("button, [contenteditable='true']")) return;
       pointerDrag = {
         id: node.id,
@@ -4847,8 +4878,9 @@
       try { localStorage.setItem(RIBBON_STORE, collapsed ? "1" : "0"); } catch (error) { /* best effort */ }
     }
   }
+  var mobileRibbonDefault = window.matchMedia("(max-width: 700px), (pointer: coarse)").matches;
   var ribbonStartsCollapsed = false;
-  try { ribbonStartsCollapsed = localStorage.getItem(RIBBON_STORE) === "1"; } catch (error) { /* storage unavailable */ }
+  try { ribbonStartsCollapsed = !mobileRibbonDefault && localStorage.getItem(RIBBON_STORE) === "1"; } catch (error) { /* storage unavailable */ }
   setRibbonCollapsed(ribbonStartsCollapsed, false);
   btnRibbonToggleEl.addEventListener("click", function () { setRibbonCollapsed(!ribbonEl.classList.contains("ribbon-collapsed"), true); });
   function selectRibbonTab(name, expand) {
@@ -4878,7 +4910,7 @@
       ribbonTabs[nextIndex].focus();
     });
   });
-  selectRibbonTab("file", false);
+  selectRibbonTab(mobileRibbonDefault ? "view" : "file", false);
   var langSel = document.getElementById("langSel");
   langSel.addEventListener("change", function () {
     setLang(langSel.value);

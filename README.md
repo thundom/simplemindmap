@@ -4,6 +4,11 @@
   </a>
 </p>
 
+<p align="center">
+  <strong><a href="https://thundom.github.io/simplemindmap/launch.html">Explore the product overview and feature tour →</a></strong><br>
+  <sub>See the layouts, offline workflow, sharing options and real-world use cases.</sub>
+</p>
+
 <h1 align="center">Simple Mind Map</h1>
 
 <p align="center"><strong>Think clearly. Map freely. Share safely.</strong></p>
@@ -17,7 +22,7 @@
 <p align="center">
   <a href="https://thundom.github.io/simplemindmap/"><strong>Open the web app</strong></a>
   · <a href="https://thundom.github.io/simplemindmap/launch.html">Product overview</a>
-  · <a href="../../releases/latest">Download</a>
+  · <a href="../../releases/latest"><strong>Download the one-file app</strong></a>
   · <a href="CHANGELOG.md">Version history</a>
 </p>
 
